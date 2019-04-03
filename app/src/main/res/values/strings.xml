@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Trip Planner</string>
+
+    <!--Sign In Screen-->
+    <string name="welcome">Welcome</string>
+    <string name="trip_plan">Let\'s plan your trip together</string>
+    <string name="classical">OR BE CLASSICAL</string>
+    <string name="email_hint">E-mail address</string>
+    <string name="password_hint">Password</string>
+    <string name="account_new">New to Trip Planner?</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_up_bg_image">Sign Up Background Image</string>
+    <string name="button_close">Button Close</string>
+    <string name="username_hint">Username</string>
+
+    <!--Sign Up Screen-->
 </resources>

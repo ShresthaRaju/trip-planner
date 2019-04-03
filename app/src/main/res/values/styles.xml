@@ -1,11 +1,37 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme" parent="BaseTheme" />
+
+    <!--TextInputLayout theme white-->
+    <style name="EditText.White" parent="@style/AppTheme">
+        <item name="colorControlActivated">@color/colorWhite</item>
+        <item name="colorControlHighlight">@color/colorWhite</item>
+        <item name="colorControlNormal">@color/colorWhite</item>
+    </style>
+
+    <style name="EditText.White.Hint" parent="@style/EditText.White">
+        <item name="colorAccent">@color/colorWhite</item>
+        <item name="android:textColorHint">@color/colorWhite</item>
+    </style>
+
+    <!--TextInputLayout theme blue_grey900-->
+    <style name="EditText.BlueGrey900" parent="@style/AppTheme">
+        <item name="colorControlActivated">@color/blue_grey_900</item>
+        <item name="colorControlHighlight">@color/blue_grey_900</item>
+        <item name="colorControlNormal">@color/blue_grey_900</item>
+    </style>
+
+    <style name="EditText.BlueGrey900.Hint" parent="@style/EditText.BlueGrey900">
+        <item name="colorAccent">@color/blue_grey_900</item>
+        <item name="android:textColorHint">@color/blue_grey_900</item>
     </style>
 
 </resources>
