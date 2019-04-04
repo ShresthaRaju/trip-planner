@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputLayout;
+import com.raju.tripplanner.MainActivity;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.utils.EditTextValidation;
 
@@ -32,7 +33,7 @@ public class SignInActivity extends AppCompatActivity {
 
     public void signIn(View view) {
         if (EditTextValidation.validateField(signInEmail) && EditTextValidation.validateField(signInPassword)) {
-            Toast.makeText(this, "Signed In", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, MainActivity.class));
         }
     }
 

@@ -18,6 +18,7 @@
     <color name="colorTransparent">#00FFFFFF</color>
     <color name="blue_grey_800">#37474F</color>
     <color name="blue_grey_900">#263238</color>
+    <color name="green_A400">#00E676</color>
 
     <!--material colors from material.io-->
     <color name="red_50">#FFEBEE</color>
@@ -77,7 +78,6 @@
     <color name="green_900">#1B5E20</color>
     <color name="green_A100">#B9F6CA</color>
     <color name="green_A200">#69F0AE</color>
-    <color name="green_A400">#00E676</color>
     <color name="green_A700">#00C853</color>
 
     <color name="yellow_50">#FFFDE7</color>

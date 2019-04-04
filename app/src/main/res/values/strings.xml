@@ -9,9 +9,15 @@
     <string name="password_hint">Password</string>
     <string name="account_new">New to Trip Planner?</string>
     <string name="sign_up">Sign Up</string>
+
+    <!--Sign Up Screen-->
     <string name="sign_up_bg_image">Sign Up Background Image</string>
     <string name="button_close">Button Close</string>
     <string name="username_hint">Username</string>
 
-    <!--Sign Up Screen-->
+    <!--Bottom navigation-->
+    <string name="nav_home">Home</string>
+    <string name="nav_invitations">Invitations</string>
+    <string name="nav_profile">Profile</string>
+
 </resources>
