@@ -1,6 +1,6 @@
-# STW300CEM Android Application Project 
+# STW300CEM Android Application Project
 
-<p align="center"> # Trip Planner </p>
+# Trip Planner
 
 ## Introduction
 Trip planner is a mobile application specifically developed for android users for the time being, with a substantial aim of helping them plan a trip to their favorite destination dexterously. The goal is to save the time and effort of the users by reducing their job of carrying out the lengthy and mundane task of making plans prior to going for a trip.
