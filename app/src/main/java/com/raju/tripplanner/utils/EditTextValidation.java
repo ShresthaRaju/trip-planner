@@ -4,13 +4,13 @@ import com.google.android.material.textfield.TextInputLayout;
 
 public class EditTextValidation {
 
-    public static boolean validateField(TextInputLayout textInputLayout) {
+    public static boolean isEmpty(TextInputLayout textInputLayout) {
         if (textInputLayout.getEditText().getText().toString().trim().isEmpty()) {
             textInputLayout.setError(textInputLayout.getEditText().getHint().toString() + " is required");
-            return false;
+            return true;
         } else {
             textInputLayout.setError(null);
-            return true;
+            return false;
         }
     }
 

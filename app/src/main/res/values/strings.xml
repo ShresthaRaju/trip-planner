@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Trip Planner</string>
 
+    <!--user session preference key-->
+    <string name="user_session">User_Session</string>
+
     <!--Sign In Screen-->
     <string name="welcome">Welcome</string>
     <string name="trip_plan">Let\'s plan your trip together</string>
@@ -19,5 +22,14 @@
     <string name="nav_home">Home</string>
     <string name="nav_invitations">Invitations</string>
     <string name="nav_profile">Profile</string>
+
+    <!--create trip dialog-->
+    <string name="create_trip">CREATE YOUR TRIP</string>
+    <string name="trip_title">Trip Title</string>
+    <string name="trip_name">Trip to somewhere</string>
+    <string name="start_date">Start Date</string>
+    <string name="end_date">End Date</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="btn_create">Create Now</string>
 
 </resources>

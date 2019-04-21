@@ -10,21 +10,28 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".activities.CreateTripActivity"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:name=".authentication.SignUpActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AuthenticationTheme"></activity>
+            android:theme="@style/AuthenticationTheme" />
         <activity
             android:name=".authentication.SignInActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AuthenticationTheme"></activity>
-        <activity
-            android:name=".MainActivity"
-            android:screenOrientation="portrait">
+            android:theme="@style/AuthenticationTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
+
         </activity>
     </application>
 

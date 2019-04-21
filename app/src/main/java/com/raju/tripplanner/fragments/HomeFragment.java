@@ -1,19 +1,24 @@
 package com.raju.tripplanner.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.raju.tripplanner.MainActivity;
 import com.raju.tripplanner.R;
+import com.raju.tripplanner.activities.CreateTripActivity;
+import com.raju.tripplanner.authentication.SignInActivity;
+import com.raju.tripplanner.utils.UserSession;
 
 import androidx.fragment.app.Fragment;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link HomeFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link HomeFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -33,9 +38,10 @@ public class HomeFragment extends Fragment {
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
+     * <p>
+     * //     * @param param1 Parameter 1.
+     * //     * @param param2 Parameter 2.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment HomeFragment.
      */
     // TODO: Rename and change types and number of parameters
@@ -60,6 +66,35 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        initComponents(rootView);
+        return rootView;
     }
+
+    private void initComponents(View view) {
+        FloatingActionButton createTrip = view.findViewById(R.id.fab_create_trip);
+        createTrip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCreateTripActivity();
+            }
+        });
+
+        Button btnLogout = view.findViewById(R.id.btn_logout);
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new UserSession(getActivity()).endSession();
+                Intent signInActivity = new Intent(getActivity(), SignInActivity.class);
+                signInActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(signInActivity);
+                getActivity().finish();
+            }
+        });
+    }
+
+    private void showCreateTripActivity() {
+        startActivity(new Intent(getActivity(), CreateTripActivity.class));
+    }
+
 }

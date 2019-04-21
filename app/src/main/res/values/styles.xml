@@ -34,4 +34,16 @@
         <item name="android:textColorHint">@color/blue_grey_900</item>
     </style>
 
+    <!--Textview color-->
+    <style name="TextViewStyle">
+        <item name="android:textColor">@color/blue_grey_900</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Subtitle1
+        </item>
+    </style>
+
+    <!--Datepicker dialog theme-->
+    <style name="DatePickerStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/colorPurple</item>
+    </style>
+
 </resources>

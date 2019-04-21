@@ -19,6 +19,8 @@
     <color name="blue_grey_800">#37474F</color>
     <color name="blue_grey_900">#263238</color>
     <color name="green_A400">#00E676</color>
+    <color name="light_green_600">#7CB342</color>
+    <color name="cyan_A700">#00B8D4</color>
 
     <!--material colors from material.io-->
     <color name="red_50">#FFEBEE</color>
@@ -162,7 +164,6 @@
     <color name="cyan_A100">#84FFFF</color>
     <color name="cyan_A200">#18FFFF</color>
     <color name="cyan_A400">#00E5FF</color>
-    <color name="cyan_A700">#00B8D4</color>
     <color name="cyan_800_overlay">#E600838F</color>
 
     <color name="light_green_50">#F1F8E9</color>
@@ -171,7 +172,6 @@
     <color name="light_green_300">#AED581</color>
     <color name="light_green_400">#9CCC65</color>
     <color name="light_green_500">#8BC34A</color>
-    <color name="light_green_600">#7CB342</color>
     <color name="light_green_700">#689F38</color>
     <color name="light_green_800">#558B2F</color>
     <color name="light_green_900">#33691E</color>
