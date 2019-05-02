@@ -35,7 +35,7 @@ public class SignUpActivity extends AppCompatActivity {
     public void signUp(View view) {
         if (EditTextValidation.isEmpty(signUpEmail) && EditTextValidation.isEmpty(signUpUsername)
                 && EditTextValidation.isEmpty(signUpPassword)) {
-            Toast.makeText(this, "Sign up successful", Toast.LENGTH_SHORT).show();
+            return;
         }
     }
 }
