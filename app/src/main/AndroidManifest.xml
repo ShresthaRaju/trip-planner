@@ -2,13 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.raju.tripplanner">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".activities.CreateTripActivity"
             android:parentActivityName=".MainActivity"
@@ -36,3 +39,7 @@
     </application>
 
 </manifest>
+
+    <!--
+    android:usesCleartextTraffic="true" was used because cleartext communication was not allowed by android in default
+    while requesting api call-->

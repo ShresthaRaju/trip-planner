@@ -178,7 +178,6 @@
         android:layout_marginBottom="8dp"
         android:clickable="true"
         android:focusable="true"
-        android:onClick="signUp"
         android:tint="@color/colorWhite"
         app:backgroundTint="@color/colorInfo"
         app:fabSize="normal"

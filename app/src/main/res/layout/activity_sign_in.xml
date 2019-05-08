@@ -174,7 +174,6 @@
         android:layout_marginBottom="8dp"
         android:clickable="true"
         android:focusable="true"
-        android:onClick="signIn"
         android:tint="@color/colorWhite"
         app:backgroundTint="@color/colorPrimary"
         app:fabSize="normal"

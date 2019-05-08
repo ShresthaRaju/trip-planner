@@ -11,14 +11,17 @@ public class UserSession {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private static final String IS_USER_LOGGED_IN = "IS_USER_LOGGED_IN";
+    private static final String USER_ID = "LOGGED_IN_USER_ID";
 
     public UserSession(Activity activity) {
         sharedPreferences = activity.getSharedPreferences(activity.getString(R.string.user_session), Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
     }
 
-    public void startSession() {
-        editor.putBoolean(IS_USER_LOGGED_IN, true).commit();
+    public void startSession(String userId) {
+        editor.putBoolean(IS_USER_LOGGED_IN, true);
+        editor.putString(USER_ID, userId);
+        editor.commit();
     }
 
     public boolean getSession() {
@@ -26,6 +29,9 @@ public class UserSession {
     }
 
     public void endSession() {
-        editor.putBoolean(IS_USER_LOGGED_IN, false).commit();
+
+        editor.putBoolean(IS_USER_LOGGED_IN, false);
+        editor.remove(USER_ID);
+        editor.commit();
     }
 }
