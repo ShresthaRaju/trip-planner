@@ -2,11 +2,11 @@ package com.raju.tripplanner.authentication;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.raju.tripplanner.DAO.AuthAPI;
 import com.raju.tripplanner.R;
@@ -22,7 +22,7 @@ import retrofit2.Response;
 public class SignUpActivity extends AppCompatActivity {
 
     private TextInputLayout signUpEmail, signUpUsername, signUpPassword;
-    private FloatingActionButton fabSignUp;
+    private Button btnGetStarted;
     private AuthAPI authAPI;
 
     @Override
@@ -37,8 +37,9 @@ public class SignUpActivity extends AppCompatActivity {
         signUpEmail = findViewById(R.id.et_sign_up_email);
         signUpUsername = findViewById(R.id.et_sign_up_username);
         signUpPassword = findViewById(R.id.et_sign_up_password);
-        fabSignUp = findViewById(R.id.fab_sign_up);
-        fabSignUp.setOnClickListener(new View.OnClickListener() {
+        btnGetStarted = findViewById(R.id.btn_get_started);
+
+        btnGetStarted.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 validateSignUp();

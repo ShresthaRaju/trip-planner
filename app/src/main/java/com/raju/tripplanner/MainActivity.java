@@ -2,35 +2,33 @@ package com.raju.tripplanner;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.raju.tripplanner.bottomsheets.ProfileBottomSheet;
 import com.raju.tripplanner.fragments.HomeFragment;
 import com.raju.tripplanner.fragments.InvitationsFragment;
 import com.raju.tripplanner.fragments.ProfileFragment;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
+public class MainActivity extends AppCompatActivity implements ProfileBottomSheet.ProfileBottomSheetListener {
 
-public class MainActivity extends AppCompatActivity {
+    private ProfileFragment profileFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initToolbar();
+        profileFragment = ProfileFragment.newInstance("AUTHENTICATED USER");
 
         initComponents();
 
         loadFragment(HomeFragment.newInstance("My Trips"));
 
-    }
-
-    private void initToolbar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
     }
 
     private void initComponents() {
@@ -52,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
 
                 case R.id.nav_profile:
-                    selectedFragment = ProfileFragment.newInstance("Profile");
+                    selectedFragment = profileFragment;
                     break;
             }
 
@@ -70,5 +68,11 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+    @Override
+    public void onImageSelected(String imagePath) {
+//        Toast.makeText(this, imagePath, Toast.LENGTH_LONG).show();
+        profileFragment.updateDisplayPicture(imagePath);
     }
 }

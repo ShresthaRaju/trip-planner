@@ -5,10 +5,14 @@
     android:layout_height="match_parent"
     tools:context=".fragments.InvitationsFragment">
 
+    <include
+        android:id="@+id/invitations_toolbar"
+        layout="@layout/toolbar" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Invitations Fragment"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:text="Invitations Fragment" />
 
 </FrameLayout>

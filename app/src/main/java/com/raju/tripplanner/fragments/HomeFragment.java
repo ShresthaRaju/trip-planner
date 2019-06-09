@@ -7,14 +7,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.raju.tripplanner.MainActivity;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.activities.CreateTripActivity;
 import com.raju.tripplanner.authentication.SignInActivity;
 import com.raju.tripplanner.utils.UserSession;
-
-import androidx.fragment.app.Fragment;
 
 public class HomeFragment extends Fragment {
 
@@ -33,20 +34,12 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            toolbarTitle = getArguments().getString(ARG_PARAM1);
-            ((MainActivity) getActivity()).getSupportActionBar().setTitle(toolbarTitle);
-        }
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-        initComponents(rootView);
-        return rootView;
+        View homeView = inflater.inflate(R.layout.fragment_home, container, false);
+        initToolbar(homeView);
+        initComponents(homeView);
+        return homeView;
     }
 
     private void initComponents(View view) {
@@ -69,6 +62,15 @@ public class HomeFragment extends Fragment {
                 getActivity().finish();
             }
         });
+    }
+
+    private void initToolbar(View view) {
+        Toolbar homeToolbar = view.findViewById(R.id.home_toolbar);
+        ((MainActivity) getActivity()).setSupportActionBar(homeToolbar);
+        if (getArguments() != null) {
+            toolbarTitle = getArguments().getString(ARG_PARAM1);
+            ((MainActivity) getActivity()).getSupportActionBar().setTitle(toolbarTitle);
+        }
     }
 
     private void showCreateTripActivity() {

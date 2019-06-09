@@ -7,5 +7,6 @@
 
     <style name="AuthenticationTheme" parent="BaseTheme">
         <item name="android:statusBarColor">@color/colorTransparent</item>
+        <!--<item name="android:windowTranslucentStatus">true</item>-->
     </style>
 </resources>

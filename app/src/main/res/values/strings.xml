@@ -16,6 +16,9 @@
     <!--Sign Up Screen-->
     <string name="sign_up_bg_image">Sign Up Background Image</string>
     <string name="button_close">Button Close</string>
+    <string name="first_name_hint">First name</string>
+    <string name="last_name_hint">Last name</string>
+    <string name="get_started">Get Started</string>
     <string name="username_hint">Username</string>
 
     <!--Bottom navigation-->
@@ -32,4 +35,32 @@
     <string name="btn_cancel">Cancel</string>
     <string name="btn_create">Create Now</string>
 
+    <!-- User Profile-->
+    <string name="cover_photo">Cover Photo</string>
+    <string name="account">Account</string>
+    <string name="email">Email</string>
+    <string name="email_value">raj@examle.com</string>
+    <string name="username_value">stha.raj07</string>
+    <string name="bio">Bio</string>
+    <string name="lorem">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</string>
+    <string name="lorems">
+        It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+        It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+        It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+        It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+        It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+        It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+        It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+        It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+        It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+        It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+        It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+        It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+        It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+        It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.
+    </string>
+
+    <!-- profile bottom sheet-->
+    <string name="take_a_picture">Take a picture</string>
+    <string name="choose_from_gallery">Choose from gallery</string>
 </resources>
