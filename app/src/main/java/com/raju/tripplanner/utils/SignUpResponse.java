@@ -2,7 +2,7 @@ package com.raju.tripplanner.utils;
 
 import com.raju.tripplanner.models.User;
 
-public class AuthApiResponse {
+public class SignUpResponse {
 
     private User user;
 

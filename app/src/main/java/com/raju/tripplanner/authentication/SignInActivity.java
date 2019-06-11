@@ -1,7 +1,10 @@
 package com.raju.tripplanner.authentication;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.view.View;
 import android.widget.Toast;
 
@@ -15,6 +18,7 @@ import com.raju.tripplanner.R;
 import com.raju.tripplanner.models.User;
 import com.raju.tripplanner.utils.EditTextValidation;
 import com.raju.tripplanner.utils.RetrofitClient;
+import com.raju.tripplanner.utils.SignInResponse;
 import com.raju.tripplanner.utils.UserSession;
 
 import retrofit2.Call;
@@ -26,6 +30,7 @@ public class SignInActivity extends AppCompatActivity {
     private TextInputLayout signInEmail, signInPassword;
     private AuthAPI authAPI;
     private UserSession userSession;
+    private Vibrator vibrator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +64,8 @@ public class SignInActivity extends AppCompatActivity {
         });
 
         authAPI = RetrofitClient.getInstance().create(AuthAPI.class);
+
+        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
     }
 
     private void validateSignIn() {
@@ -75,31 +82,37 @@ public class SignInActivity extends AppCompatActivity {
 
     public void signIn(User user) {
 
-        Call<String> signInCall = authAPI.signIn(user);
+        Call<SignInResponse> signInCall = authAPI.signIn(user);
 
-        signInCall.enqueue(new Callback<String>() {
+        signInCall.enqueue(new Callback<SignInResponse>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(Call<SignInResponse> call, Response<SignInResponse> response) {
                 if (!response.isSuccessful()) {
                     if (response.code() == 404) {
                         signInEmail.setError("User does not exist !");
+                        vibrateDevice();
                     } else {
                         signInEmail.setError("Invalid credentials!!!");
+                        vibrateDevice();
                     }
                     return;
                 }
 
-                String signInResponse = response.body();
-                // signInResponse returns userId that is received from the server
-                new UserSession(SignInActivity.this).startSession(signInResponse);
+                // Log the response in JSON format
+                // Log.i("sign", new Gson().toJson(response.body()));
+
+                SignInResponse signInResponse = response.body();
+                new UserSession(SignInActivity.this).startSession(signInResponse.getMessage());
                 Intent mainActivity = new Intent(new Intent(SignInActivity.this, MainActivity.class));
                 mainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(mainActivity);
                 finish();
+
+
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<SignInResponse> call, Throwable t) {
                 Toast.makeText(SignInActivity.this, "ERROR:\n" + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
@@ -107,5 +120,13 @@ public class SignInActivity extends AppCompatActivity {
 
     public void showSignUpScreen(View view) {
         startActivity(new Intent(this, SignUpActivity.class));
+    }
+
+    private void vibrateDevice() {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createOneShot(400, VibrationEffect.DEFAULT_AMPLITUDE));
+        } else {
+            vibrator.vibrate(400);
+        }
     }
 }

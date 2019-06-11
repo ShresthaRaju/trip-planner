@@ -11,9 +11,9 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.raju.tripplanner.DAO.AuthAPI;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.models.User;
-import com.raju.tripplanner.utils.AuthApiResponse;
 import com.raju.tripplanner.utils.EditTextValidation;
 import com.raju.tripplanner.utils.RetrofitClient;
+import com.raju.tripplanner.utils.SignUpResponse;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -68,12 +68,12 @@ public class SignUpActivity extends AppCompatActivity {
     //    register new user
     private void signUp(User user) {
 
-        Call<AuthApiResponse> signUpCall = authAPI.registerUser(user);
+        Call<SignUpResponse> signUpCall = authAPI.registerUser(user);
 
         // enqueue method runs the api call in background thread
-        signUpCall.enqueue(new Callback<AuthApiResponse>() {
+        signUpCall.enqueue(new Callback<SignUpResponse>() {
             @Override
-            public void onResponse(Call<AuthApiResponse> call, Response<AuthApiResponse> response) {
+            public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
                 if (!response.isSuccessful()) {
                     Toast.makeText(SignUpActivity.this, response.code() + " " + response.message(), Toast.LENGTH_SHORT).show();
                     return;
@@ -82,12 +82,12 @@ public class SignUpActivity extends AppCompatActivity {
                 Toast.makeText(SignUpActivity.this, "Sign Up Successful !", Toast.LENGTH_SHORT).show();
                 finish();
 
-//                AuthApiResponse signUpApiResponse = response.body();
+//                SignUpResponse signUpApiResponse = response.body();
 //                Log.i("CREATED_USER", signUpApiResponse.getUser().getEmail());
             }
 
             @Override
-            public void onFailure(Call<AuthApiResponse> call, Throwable t) {
+            public void onFailure(Call<SignUpResponse> call, Throwable t) {
 //                Throwable is the super class of Exception class
                 Toast.makeText(SignUpActivity.this, "ERROR:\n" + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
