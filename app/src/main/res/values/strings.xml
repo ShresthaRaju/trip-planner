@@ -63,4 +63,5 @@
     <!-- profile bottom sheet-->
     <string name="take_a_picture">Take a picture</string>
     <string name="choose_from_gallery">Choose from gallery</string>
+    <string name="loading">Loading...</string>
 </resources>

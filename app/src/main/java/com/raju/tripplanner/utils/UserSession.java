@@ -12,15 +12,17 @@ public class UserSession {
     private SharedPreferences.Editor editor;
     private static final String IS_USER_LOGGED_IN = "IS_USER_LOGGED_IN";
     private static final String USER_ID = "LOGGED_IN_USER_ID";
+    private static final String AUTH_TOKEN = "AUTH_TOKEN";
 
     public UserSession(Activity activity) {
         sharedPreferences = activity.getSharedPreferences(activity.getString(R.string.user_session), Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
     }
 
-    public void startSession(String userId) {
+    public void startSession(String userId, String authToken) {
         editor.putBoolean(IS_USER_LOGGED_IN, true);
         editor.putString(USER_ID, userId);
+        editor.putString(AUTH_TOKEN, authToken);
         editor.commit();
     }
 
@@ -32,6 +34,7 @@ public class UserSession {
 
         editor.putBoolean(IS_USER_LOGGED_IN, false);
         editor.remove(USER_ID);
+        editor.remove(AUTH_TOKEN);
         editor.commit();
     }
 }
