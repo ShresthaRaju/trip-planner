@@ -13,7 +13,7 @@ import com.raju.tripplanner.R;
 import com.raju.tripplanner.models.User;
 import com.raju.tripplanner.utils.EditTextValidation;
 import com.raju.tripplanner.utils.RetrofitClient;
-import com.raju.tripplanner.utils.SignUpResponse;
+import com.raju.tripplanner.utils.ApiResponse.SignUpResponse;
 
 import retrofit2.Call;
 import retrofit2.Callback;
