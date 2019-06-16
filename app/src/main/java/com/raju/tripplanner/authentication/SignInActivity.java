@@ -2,12 +2,10 @@ package com.raju.tripplanner.authentication;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -25,10 +23,10 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.raju.tripplanner.DAO.AuthAPI;
 import com.raju.tripplanner.MainActivity;
 import com.raju.tripplanner.R;
-import com.raju.tripplanner.dialogs.DialogProgress;
 import com.raju.tripplanner.models.User;
 import com.raju.tripplanner.utils.ApiResponse.SignInResponse;
 import com.raju.tripplanner.utils.EditTextValidation;
+import com.raju.tripplanner.utils.Helper;
 import com.raju.tripplanner.utils.RetrofitClient;
 import com.raju.tripplanner.utils.UserSession;
 
@@ -41,11 +39,11 @@ public class SignInActivity extends AppCompatActivity {
     private TextInputLayout signInEmail, signInPassword;
     private AuthAPI authAPI;
     private UserSession userSession;
-    private Vibrator vibrator;
     private GoogleSignInClient signInClient;
     private SignInButton googleSignIn;
     private static int RC_GOOGLE_SIGN_IN = 01;
-    private DialogProgress dialogProgress;
+    private ProgressBar signInProgress;
+    private FloatingActionButton fabSignIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +69,7 @@ public class SignInActivity extends AppCompatActivity {
         signInEmail = findViewById(R.id.et_sign_in_email);
         signInPassword = findViewById(R.id.et_sign_in_password);
 
-        FloatingActionButton fabSignIn = findViewById(R.id.fab_sign_in);
+        fabSignIn = findViewById(R.id.fab_sign_in);
         fabSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,9 +77,9 @@ public class SignInActivity extends AppCompatActivity {
             }
         });
 
-        authAPI = RetrofitClient.getInstance().create(AuthAPI.class);
+        signInProgress = findViewById(R.id.sign_in_progress);
 
-        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+        authAPI = RetrofitClient.getInstance().create(AuthAPI.class);
 
         configureGoogleSignIn();
 
@@ -95,8 +93,8 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     private void validateSignIn() {
-        if (EditTextValidation.isEmpty(signInEmail) && EditTextValidation.isEmpty(signInPassword)) {
-            vibrateDevice();
+        if (EditTextValidation.isEmpty(signInEmail) | EditTextValidation.isEmpty(signInPassword)) {
+            Helper.vibrateDevice(this);
             return;
         } else {
             String email = signInEmail.getEditText().getText().toString().trim();
@@ -109,9 +107,8 @@ public class SignInActivity extends AppCompatActivity {
 
     public void signIn(User user) {
 
-        dialogProgress = new DialogProgress("Authenticating...");
-        dialogProgress.setCancelable(false);
-        dialogProgress.show(getSupportFragmentManager(), "SIGN IN PROGRESS");
+        fabSignIn.setVisibility(View.GONE);
+        signInProgress.setVisibility(View.VISIBLE);
 
         Call<SignInResponse> signInCall = authAPI.signIn(user);
 
@@ -119,20 +116,21 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<SignInResponse> call, Response<SignInResponse> response) {
                 if (!response.isSuccessful()) {
-                    dialogProgress.dismiss();
+                    signInProgress.setVisibility(View.GONE);
+                    fabSignIn.setVisibility(View.VISIBLE);
                     if (response.code() == 404) {
                         signInEmail.setError("User does not exist !");
-                        vibrateDevice();
+                        Helper.vibrateDevice(SignInActivity.this);
                     } else {
                         signInEmail.setError("Invalid credentials!!!");
-                        vibrateDevice();
+                        Helper.vibrateDevice(SignInActivity.this);
                     }
                     return;
                 }
 
                 // Log the response in JSON format
                 // Log.i("sign", new Gson().toJson(response.body()));
-                dialogProgress.dismiss();
+                signInProgress.setVisibility(View.GONE);
 
                 SignInResponse signInResponse = response.body();
                 new UserSession(SignInActivity.this).startSession(signInResponse.getMessage(), signInResponse.getAuthToken());
@@ -140,14 +138,13 @@ public class SignInActivity extends AppCompatActivity {
                 mainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(mainActivity);
                 finish();
-
-
             }
 
             @Override
             public void onFailure(Call<SignInResponse> call, Throwable t) {
-                dialogProgress.dismiss();
-                Toast.makeText(SignInActivity.this, "ERROR:\n" + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                signInProgress.setVisibility(View.GONE);
+                fabSignIn.setVisibility(View.VISIBLE);
+                Toast.makeText(SignInActivity.this, "FAILED: " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -156,13 +153,6 @@ public class SignInActivity extends AppCompatActivity {
         startActivity(new Intent(this, SignUpActivity.class));
     }
 
-    private void vibrateDevice() {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
-            vibrator.vibrate(VibrationEffect.createOneShot(400, VibrationEffect.DEFAULT_AMPLITUDE));
-        } else {
-            vibrator.vibrate(400);
-        }
-    }
 
     private void configureGoogleSignIn() {
         GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

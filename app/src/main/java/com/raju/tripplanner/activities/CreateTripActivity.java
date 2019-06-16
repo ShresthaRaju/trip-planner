@@ -11,23 +11,36 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.material.textfield.TextInputLayout;
+import com.raju.tripplanner.DAO.TripAPI;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.dialogs.DialogDatePicker;
 import com.raju.tripplanner.models.Destination;
+import com.raju.tripplanner.models.Trip;
+import com.raju.tripplanner.utils.ApiResponse.TripResponse;
+import com.raju.tripplanner.utils.EditTextValidation;
+import com.raju.tripplanner.utils.Helper;
+import com.raju.tripplanner.utils.RetrofitClient;
+import com.raju.tripplanner.utils.UserSession;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class CreateTripActivity extends AppCompatActivity implements View.OnClickListener {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class CreateTripActivity extends AppCompatActivity {
 
     private Button btnCreate;
-    private EditText etTripTitle, etStartDate, etEndDate;
+    private TextInputLayout etTripTitle, etStartDate, etEndDate;
     private int year, month, dayOfMonth;
     private Calendar calendar;
     private long timeInMillis;
     private String tripName;
     private Destination destination;
+    private TripAPI tripAPI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +52,7 @@ public class CreateTripActivity extends AppCompatActivity implements View.OnClic
         initComponents();
 
         tripName = "Trip to " + getIntent().getStringExtra("Place_Name");
-        etTripTitle.setText(tripName);
+        etTripTitle.getEditText().setText(tripName);
         destination = (Destination) getIntent().getSerializableExtra("Destination");
     }
 
@@ -53,67 +66,75 @@ public class CreateTripActivity extends AppCompatActivity implements View.OnClic
 
     private void initComponents() {
 
-        etTripTitle = findViewById(R.id.et_trip_title);
-
-        etStartDate = findViewById(R.id.et_start_date);
-        etStartDate.setOnClickListener(this);
-
-        etEndDate = findViewById(R.id.et_end_date);
-        etEndDate.setEnabled(false);
-        etEndDate.setOnClickListener(this);
-
-        btnCreate = findViewById(R.id.btn_create_trip);
-        btnCreate.setOnClickListener(this);
-
         calendar = Calendar.getInstance();
 
         year = calendar.get(Calendar.YEAR);
         month = calendar.get(Calendar.MONTH);
         dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+        tripAPI = RetrofitClient.getInstance().create(TripAPI.class);
+
+        etTripTitle = findViewById(R.id.et_trip_title);
+
+        etStartDate = findViewById(R.id.et_start_date);
+        etStartDate.getEditText().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showStartDatePicker();
+            }
+        });
+
+        etEndDate = findViewById(R.id.et_end_date);
+        etEndDate.setEnabled(false);
+        etEndDate.getEditText().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showEndDatePicker();
+            }
+        });
+
+        btnCreate = findViewById(R.id.btn_create_trip);
+        btnCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                validateCreateTrip();
+            }
+        });
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.et_start_date:
-                DialogDatePicker startDate = new DialogDatePicker();
+    private void showStartDatePicker() {
+        DialogDatePicker startDate = new DialogDatePicker();
 
-                Bundle args = new Bundle();
-                args.putInt("year", year);
-                args.putInt("month", month);
-                args.putInt("dayOfMonth", dayOfMonth);
-                args.putLong("timeInMillis", calendar.getTimeInMillis());
+        Bundle args = new Bundle();
+        args.putInt("year", year);
+        args.putInt("month", month);
+        args.putInt("dayOfMonth", dayOfMonth);
+        args.putLong("timeInMillis", calendar.getTimeInMillis());
 
-                startDate.setArguments(args);
-                startDate.setCallback(startDateListener);
-                startDate.show(getSupportFragmentManager(), "START DATE PICKER");
-                break;
+        startDate.setArguments(args);
+        startDate.setCallback(startDateListener);
+        startDate.show(getSupportFragmentManager(), "START DATE PICKER");
+    }
 
-            case R.id.et_end_date:
-                DialogDatePicker endDate = new DialogDatePicker();
+    private void showEndDatePicker() {
+        DialogDatePicker endDate = new DialogDatePicker();
 
-                Bundle args1 = new Bundle();
-                args1.putInt("year", year);
-                args1.putInt("month", month);
-                args1.putInt("dayOfMonth", dayOfMonth);
-                args1.putLong("timeInMillis", timeInMillis);
+        Bundle args1 = new Bundle();
+        args1.putInt("year", year);
+        args1.putInt("month", month);
+        args1.putInt("dayOfMonth", dayOfMonth);
+        args1.putLong("timeInMillis", timeInMillis);
 
-                endDate.setArguments(args1);
-                endDate.setCallback(endDateListener);
-                endDate.show(getSupportFragmentManager(), "END DATE PICKER");
-                break;
-
-            case R.id.btn_create_trip:
-                Toast.makeText(this, "successfulllllll", Toast.LENGTH_SHORT).show();
-                finish();
-        }
+        endDate.setArguments(args1);
+        endDate.setCallback(endDateListener);
+        endDate.show(getSupportFragmentManager(), "END DATE PICKER");
     }
 
     DatePickerDialog.OnDateSetListener startDateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            setCalendar(year, month, dayOfMonth, etStartDate);
-            setCalendar(year, month, dayOfMonth + 7, etEndDate);
+            setCalendar(year, month, dayOfMonth, etStartDate.getEditText());
+            setCalendar(year, month, dayOfMonth + 7, etEndDate.getEditText());
             timeInMillis = Calendar.getInstance().getTimeInMillis() + (dayOfMonth - CreateTripActivity.this.dayOfMonth) * 86400000;
             etEndDate.setEnabled(true);
         }
@@ -122,7 +143,7 @@ public class CreateTripActivity extends AppCompatActivity implements View.OnClic
     DatePickerDialog.OnDateSetListener endDateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            setCalendar(year, month, dayOfMonth, etEndDate);
+            setCalendar(year, month, dayOfMonth, etEndDate.getEditText());
         }
     };
 
@@ -139,5 +160,42 @@ public class CreateTripActivity extends AppCompatActivity implements View.OnClic
         SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd");
         String formattedDate = dateFormat.format(date);
         editText.setText(formattedDate);
+    }
+
+    private void validateCreateTrip() {
+
+        if (EditTextValidation.isEmpty(etTripTitle) | EditTextValidation.isEmpty(etStartDate) | EditTextValidation.isEmpty(etEndDate)) {
+            Helper.vibrateDevice(this);
+            return;
+        }
+
+        String startDate = etStartDate.getEditText().getText().toString().trim();
+        String endDate = etEndDate.getEditText().getText().toString().trim();
+
+        Trip trip = new Trip(tripName, startDate, endDate, destination, new UserSession(this).getUserId());
+        createTrip(trip);
+
+    }
+
+    private void createTrip(Trip trip) {
+
+        Call<TripResponse> createTripCall = tripAPI.createTrip("Bearer " + new UserSession(this).getAuthToken(), trip);
+        createTripCall.enqueue(new Callback<TripResponse>() {
+            @Override
+            public void onResponse(Call<TripResponse> call, Response<TripResponse> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(CreateTripActivity.this, "ERROR: " + response.code() + " " + response.message(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                Toast.makeText(CreateTripActivity.this, "successful", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<TripResponse> call, Throwable t) {
+                Toast.makeText(CreateTripActivity.this, "FAILED: " + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 }

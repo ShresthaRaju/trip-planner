@@ -22,6 +22,9 @@
     <color name="green_A400">#00E676</color>
     <color name="light_green_600">#7CB342</color>
     <color name="cyan_A700">#00B8D4</color>
+    <color name="light_blue_500">#03A9F4</color>
+    <color name="grey_700">#616161</color>
+    <color name="grey_900">#212121</color>
 
     <!--material colors from material.io-->
     <color name="red_50">#FFEBEE</color>
@@ -53,13 +56,12 @@
     <color name="deep_purple_A200">#7C4DFF</color>
     <color name="deep_purple_A400">#651FFF</color>
     <color name="deep_purple_A700">#6200EA</color>
-
     <color name="light_blue_50">#E1F5FE</color>
     <color name="light_blue_100">#B3E5FC</color>
     <color name="light_blue_200">#81D4FA</color>
     <color name="light_blue_300">#4FC3F7</color>
     <color name="light_blue_400">#29B6F6</color>
-    <color name="light_blue_500">#03A9F4</color>
+
     <color name="light_blue_600">#039BE5</color>
     <color name="light_blue_700">#0288D1</color>
     <color name="light_blue_800">#0277BD</color>
@@ -289,9 +291,9 @@
     <color name="grey_400">#BDBDBD</color>
     <color name="grey_500">#9E9E9E</color>
     <color name="grey_600">#757575</color>
-    <color name="grey_700">#616161</color>
+
     <color name="grey_800">#424242</color>
-    <color name="grey_900">#212121</color>
+
     <color name="grey_1000">#1a1a1a</color>
     <color name="colorWhite">#FFFFFF</color>
 

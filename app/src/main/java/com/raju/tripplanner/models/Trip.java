@@ -2,24 +2,14 @@ package com.raju.tripplanner.models;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
-
 public class Trip {
 
-    private String name;
-
-    @SerializedName("start_date")
-    private Date startDate;
-
-    @SerializedName("end_date")
-    private Date endDate;
+    private String name, startDate, endDate, creator;
 
     @SerializedName("place")
     private Destination destination;
 
-    private String creator;
-
-    public Trip(String name, Date startDate, Date endDate, Destination destination, String creator) {
+    public Trip(String name, String startDate, String endDate, Destination destination, String creator) {
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -31,11 +21,11 @@ public class Trip {
         return name;
     }
 
-    public Date getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public Date getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 

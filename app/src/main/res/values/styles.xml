@@ -41,9 +41,23 @@
         </item>
     </style>
 
+    <!--Progress Bar theme-->
+    <style name="ProgressBar.White" parent="AppTheme">
+        <item name="colorPrimary">@color/colorWhite</item>
+        <item name="colorAccent">@color/colorWhite</item>
+    </style>
+
     <!--Datepicker dialog theme-->
     <style name="DatePickerStyle" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/colorPurple</item>
+    </style>
+
+    <!--ripple style-->
+    <style name="Ripple">
+        <item name="mrl_rippleOverlay">true</item>
+        <item name="mrl_rippleAlpha">0.1</item>
+        <item name="mrl_rippleHover">true</item>
+        <item name="mrl_rippleColor">@color/light_blue_500</item>
     </style>
 
 </resources>

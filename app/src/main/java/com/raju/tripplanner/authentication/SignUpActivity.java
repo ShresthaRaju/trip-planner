@@ -11,9 +11,9 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.raju.tripplanner.DAO.AuthAPI;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.models.User;
+import com.raju.tripplanner.utils.ApiResponse.SignUpResponse;
 import com.raju.tripplanner.utils.EditTextValidation;
 import com.raju.tripplanner.utils.RetrofitClient;
-import com.raju.tripplanner.utils.ApiResponse.SignUpResponse;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,8 +52,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     //    validate sign up fields
     private void validateSignUp() {
-        if (EditTextValidation.isEmpty(signUpEmail) && EditTextValidation.isEmpty(signUpUsername)
-                && EditTextValidation.isEmpty(signUpPassword)) {
+        if (EditTextValidation.isEmpty(signUpEmail) | EditTextValidation.isEmpty(signUpUsername)
+                | EditTextValidation.isEmpty(signUpPassword)) {
             return;
         } else {
             String email = signUpEmail.getEditText().getText().toString().trim();
@@ -75,7 +75,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
                 if (!response.isSuccessful()) {
-                    Toast.makeText(SignUpActivity.this, response.code() + " " + response.message(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SignUpActivity.this, "ERROR: " + response.code() + " " + response.message(), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -89,7 +89,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<SignUpResponse> call, Throwable t) {
 //                Throwable is the super class of Exception class
-                Toast.makeText(SignUpActivity.this, "ERROR:\n" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignUpActivity.this, "FAILED: " + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

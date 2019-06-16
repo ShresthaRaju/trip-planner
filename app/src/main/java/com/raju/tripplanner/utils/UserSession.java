@@ -30,6 +30,14 @@ public class UserSession {
         return sharedPreferences.getBoolean(IS_USER_LOGGED_IN, false);
     }
 
+    public String getUserId() {
+        return sharedPreferences.getString(USER_ID, "");
+    }
+
+    public String getAuthToken() {
+        return sharedPreferences.getString(AUTH_TOKEN, "");
+    }
+
     public void endSession() {
 
         editor.putBoolean(IS_USER_LOGGED_IN, false);
