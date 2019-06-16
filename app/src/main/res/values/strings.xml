@@ -28,7 +28,7 @@
 
     <!--create trip dialog-->
     <string name="create_trip">CREATE YOUR TRIP</string>
-    <string name="trip_title">Trip Title</string>
+    <string name="trip_title">Trip Name</string>
     <string name="trip_name">Trip to somewhere</string>
     <string name="start_date">Start Date</string>
     <string name="end_date">End Date</string>

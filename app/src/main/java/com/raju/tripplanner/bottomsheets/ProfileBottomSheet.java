@@ -93,7 +93,7 @@ public class ProfileBottomSheet extends BottomSheetDialogFragment {
         Intent chooseImageIntent = new Intent(Intent.ACTION_PICK);
         // Sets the type as image/*. This ensures only components of type image are selected
         chooseImageIntent.setType("image/*");
-        //We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
+        //We pass an Result array with the accepted mime types. This will ensure only components with these MIME types as targeted.
         String[] mimeTypes = {"image/jpg", "image/jpeg", "image/png"};
         chooseImageIntent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
         // Launching the Intent

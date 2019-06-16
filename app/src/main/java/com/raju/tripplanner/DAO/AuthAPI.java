@@ -1,8 +1,8 @@
 package com.raju.tripplanner.DAO;
 
 import com.raju.tripplanner.models.User;
-import com.raju.tripplanner.utils.SignInResponse;
-import com.raju.tripplanner.utils.SignUpResponse;
+import com.raju.tripplanner.utils.ApiResponse.SignInResponse;
+import com.raju.tripplanner.utils.ApiResponse.SignUpResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

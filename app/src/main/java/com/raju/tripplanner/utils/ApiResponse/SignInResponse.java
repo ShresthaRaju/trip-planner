@@ -1,4 +1,4 @@
-package com.raju.tripplanner.utils;
+package com.raju.tripplanner.utils.ApiResponse;
 
 import com.google.gson.annotations.SerializedName;
 

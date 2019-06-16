@@ -8,22 +8,26 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.raju.tripplanner.R;
-import com.raju.tripplanner.dialogs.DialogDatePicker;
-
-import java.text.DateFormat;
-import java.util.Calendar;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import com.raju.tripplanner.R;
+import com.raju.tripplanner.dialogs.DialogDatePicker;
+import com.raju.tripplanner.models.Destination;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class CreateTripActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button btnCreate;
-    private EditText etStartDate, etEndDate;
+    private EditText etTripTitle, etStartDate, etEndDate;
     private int year, month, dayOfMonth;
     private Calendar calendar;
     private long timeInMillis;
+    private String tripName;
+    private Destination destination;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,10 @@ public class CreateTripActivity extends AppCompatActivity implements View.OnClic
         initToolbar();
 
         initComponents();
+
+        tripName = "Trip to " + getIntent().getStringExtra("Place_Name");
+        etTripTitle.setText(tripName);
+        destination = (Destination) getIntent().getSerializableExtra("Destination");
     }
 
     private void initToolbar() {
@@ -44,6 +52,9 @@ public class CreateTripActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void initComponents() {
+
+        etTripTitle = findViewById(R.id.et_trip_title);
+
         etStartDate = findViewById(R.id.et_start_date);
         etStartDate.setOnClickListener(this);
 
@@ -124,7 +135,9 @@ public class CreateTripActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void setDate(Calendar calendar, EditText editText) {
-        String date = DateFormat.getDateInstance(DateFormat.MEDIUM).format(calendar.getTime());
-        editText.setText(date);
+        Date date = calendar.getTime();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd");
+        String formattedDate = dateFormat.format(date);
+        editText.setText(formattedDate);
     }
 }

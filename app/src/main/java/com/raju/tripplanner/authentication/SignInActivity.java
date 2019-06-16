@@ -1,6 +1,7 @@
 package com.raju.tripplanner.authentication;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
@@ -26,9 +27,9 @@ import com.raju.tripplanner.MainActivity;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.dialogs.DialogProgress;
 import com.raju.tripplanner.models.User;
+import com.raju.tripplanner.utils.ApiResponse.SignInResponse;
 import com.raju.tripplanner.utils.EditTextValidation;
 import com.raju.tripplanner.utils.RetrofitClient;
-import com.raju.tripplanner.utils.SignInResponse;
 import com.raju.tripplanner.utils.UserSession;
 
 import retrofit2.Call;
@@ -82,10 +83,7 @@ public class SignInActivity extends AppCompatActivity {
 
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
-        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        signInClient = GoogleSignIn.getClient(this, signInOptions);
+        configureGoogleSignIn();
 
         googleSignIn = findViewById(R.id.btn_google_sign_in);
         googleSignIn.setOnClickListener(new View.OnClickListener() {
@@ -166,15 +164,19 @@ public class SignInActivity extends AppCompatActivity {
         }
     }
 
-//    private void configureGoogleSignIn() {
-//
-//    }
+    private void configureGoogleSignIn() {
+        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        signInClient = GoogleSignIn.getClient(this, signInOptions);
+    }
 
     private void googleSignIn() {
         Intent googleSignIn = signInClient.getSignInIntent();
         startActivityForResult(googleSignIn, RC_GOOGLE_SIGN_IN);
     }
 
+    //
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -190,12 +192,12 @@ public class SignInActivity extends AppCompatActivity {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
             String details = account.getDisplayName() + " ";
-//            details += account.getFamilyName() + " ";
-//            details += account.getGivenName() + " ";
-//            details += account.getEmail() + " ";
-//            details += account.getId() + " ";
-//            Uri photo = account.getPhotoUrl();
-//            details += photo;
+            details += account.getFamilyName() + " ";
+            details += account.getGivenName() + " ";
+            details += account.getEmail() + " ";
+            details += account.getId() + " ";
+            Uri photo = account.getPhotoUrl();
+            details += photo;
             Log.i("Dettt", details);
         } catch (ApiException e) {
             Log.w("Google_Sign_In_Error", "signInResult:failed code=" + e.getStatusCode());
