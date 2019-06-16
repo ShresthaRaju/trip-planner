@@ -13,4 +13,16 @@ public class Destination implements Serializable {
         this.lng = lng;
         this.photoUrl = photoUrl;
     }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public double getLng() {
+        return lng;
+    }
+
+    public String getPhotoUrl() {
+        return photoUrl;
+    }
 }

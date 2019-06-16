@@ -29,9 +29,4 @@
         app:fabSize="normal"
         app:srcCompat="@drawable/ic_add" />
 
-    <ImageView
-        android:id="@+id/imgView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

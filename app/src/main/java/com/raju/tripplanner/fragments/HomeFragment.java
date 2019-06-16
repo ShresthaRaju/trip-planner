@@ -2,12 +2,10 @@ package com.raju.tripplanner.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -54,7 +52,6 @@ public class HomeFragment extends Fragment {
     public static final String MAP_API = BuildConfig.MapApi;
     private static final int AUTOCOMPLETE_REQUEST_CODE = 001;
     private PlacesClient placesClient;
-    private ImageView imageView;
     private PlacePhoto placePhoto;
 
     public HomeFragment() {
@@ -104,8 +101,7 @@ public class HomeFragment extends Fragment {
         // Create a new Places client instance.
         placesClient = Places.createClient(getActivity());
 
-        imageView = view.findViewById(R.id.imgView);
-
+        // retrofit client
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
         OkHttpClient client = new OkHttpClient.Builder()
@@ -165,9 +161,12 @@ public class HomeFragment extends Fragment {
                         }
                         PhotoResponse photoResponse = response.body();
                         String photoReference = photoResponse.getResult().getPhotos().get(0).getPhoto_reference();
-                        String photoUrl = "https://maps.googleapis.com/maps/api/destination/photo?maxwidth=800&photoreference=" + photoReference + "&key=" + MAP_API;
-                        Log.i("PHOTO_URL", photoUrl);
+                        String photoUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=" + photoReference + "&key=" + MAP_API;
+
+                        // create new destination
                         Destination destination = new Destination(lat, lng, photoUrl);
+
+                        // pass the destination to create trip intent and start
                         Intent createTrip = new Intent(getActivity(), CreateTripActivity.class);
                         createTrip.putExtra("Place_Name", placeName);
                         createTrip.putExtra("Destination", destination);
@@ -176,7 +175,7 @@ public class HomeFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<PhotoResponse> call, Throwable t) {
-                        Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
 

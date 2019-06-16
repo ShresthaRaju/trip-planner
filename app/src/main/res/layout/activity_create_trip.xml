@@ -69,7 +69,6 @@
                 android:layout_marginBottom="8dp"
                 android:inputType="text"
                 android:maxLines="1"
-                android:text="@string/trip_name"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

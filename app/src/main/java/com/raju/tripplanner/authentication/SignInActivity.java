@@ -1,19 +1,25 @@
 package com.raju.tripplanner.authentication;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.raju.tripplanner.DAO.AuthAPI;
@@ -21,9 +27,9 @@ import com.raju.tripplanner.MainActivity;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.dialogs.DialogProgress;
 import com.raju.tripplanner.models.User;
+import com.raju.tripplanner.utils.ApiResponse.SignInResponse;
 import com.raju.tripplanner.utils.EditTextValidation;
 import com.raju.tripplanner.utils.RetrofitClient;
-import com.raju.tripplanner.utils.ApiResponse.SignInResponse;
 import com.raju.tripplanner.utils.UserSession;
 
 import retrofit2.Call;
@@ -77,16 +83,13 @@ public class SignInActivity extends AppCompatActivity {
 
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
-        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        signInClient = GoogleSignIn.getClient(this, signInOptions);
+        configureGoogleSignIn();
 
         googleSignIn = findViewById(R.id.btn_google_sign_in);
         googleSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                googleSignIn();
+                googleSignIn();
             }
         });
     }
@@ -161,55 +164,59 @@ public class SignInActivity extends AppCompatActivity {
         }
     }
 
-//    private void configureGoogleSignIn() {
-//
-//    }
+    private void configureGoogleSignIn() {
+        GoogleSignInOptions signInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build();
+        signInClient = GoogleSignIn.getClient(this, signInOptions);
+    }
 
-//    private void googleSignIn() {
-//        Intent googleSignIn = signInClient.getSignInIntent();
-//        startActivityForResult(googleSignIn, RC_GOOGLE_SIGN_IN);
-//    }
-//
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (requestCode == RC_GOOGLE_SIGN_IN) {
-//            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-//            handleSignInResult(task);
-//        }
-//    }
+    private void googleSignIn() {
+        Intent googleSignIn = signInClient.getSignInIntent();
+        startActivityForResult(googleSignIn, RC_GOOGLE_SIGN_IN);
+    }
 
-//    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-//
-//        try {
-//            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-//            String details = account.getDisplayName() + " ";
-//            details += account.getFamilyName() + " ";
-//            details += account.getGivenName() + " ";
-//            details += account.getEmail() + " ";
-//            details += account.getId() + " ";
-//            Uri photo = account.getPhotoUrl();
-//            details += photo;
-//            Log.i("Dettt", details);
-//        } catch (ApiException e) {
-//            Log.w("Google_Sign_In_Error", "signInResult:failed code=" + e.getStatusCode());
-//            Toast.makeText(this, e.getStatusCode() + " Failed", Toast.LENGTH_LONG).show();
-//        }
-//
-//    }
+    //
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        // Check for existing Google Sign In account, if the user is already signed in
-//        // the GoogleSignInAccount will be non-null.
-//        GoogleSignInAccount signedInAccount = GoogleSignIn.getLastSignedInAccount(this);
-//        if (signedInAccount != null) {
-//            Intent mainActivity = new Intent(new Intent(SignInActivity.this, MainActivity.class));
-//            mainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//            startActivity(mainActivity);
-//            finish();
-//        }
-//    }
+        if (requestCode == RC_GOOGLE_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }
+    }
+
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+            String details = account.getDisplayName() + " ";
+            details += account.getFamilyName() + " ";
+            details += account.getGivenName() + " ";
+            details += account.getEmail() + " ";
+            details += account.getId() + " ";
+            Uri photo = account.getPhotoUrl();
+            details += photo;
+            Log.i("Dettt", details);
+        } catch (ApiException e) {
+            Log.w("Google_Sign_In_Error", "signInResult:failed code=" + e.getStatusCode());
+            Toast.makeText(this, e.getStatusCode() + " Failed", Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Check for existing Google Sign In account, if the user is already signed in
+        // the GoogleSignInAccount will be non-null.
+        GoogleSignInAccount signedInAccount = GoogleSignIn.getLastSignedInAccount(this);
+        if (signedInAccount != null) {
+            Intent mainActivity = new Intent(new Intent(SignInActivity.this, MainActivity.class));
+            mainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(mainActivity);
+            finish();
+        }
+    }
 }
