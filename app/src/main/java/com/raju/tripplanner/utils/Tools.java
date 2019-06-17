@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 
 import static android.content.Context.VIBRATOR_SERVICE;
 
-public class Helper {
+public class Tools {
 
     public static void vibrateDevice(Context context) {
         Vibrator vibrator = (Vibrator) context.getSystemService(VIBRATOR_SERVICE);
@@ -23,7 +23,7 @@ public class Helper {
 
     public static String formatDate(String date) {
         SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        SimpleDateFormat outputFormat = new SimpleDateFormat("MMM dd, ''yy");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("MMM dd");
 
         try {
             String formattedDate = outputFormat.format(inputFormat.parse(date));
@@ -33,5 +33,4 @@ public class Helper {
         }
         return "";
     }
-
 }

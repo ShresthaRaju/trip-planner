@@ -20,9 +20,12 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activities.ViewTripActivity"
+            android:parentActivityName=".MainActivity" />
+        <activity
             android:name=".activities.CreateTripActivity"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".authentication.SignUpActivity"
             android:screenOrientation="portrait"
@@ -37,10 +40,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -49,15 +51,8 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
 
-
 </manifest>
-
-    <!--
-    android:usesCleartextTraffic="true" was used because cleartext communication was not allowed by android in default
-    while requesting api call
-    ${applicationId} gives the package name of the application
-    -->

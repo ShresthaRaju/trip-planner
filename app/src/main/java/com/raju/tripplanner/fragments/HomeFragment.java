@@ -8,7 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,8 +28,8 @@ import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.raju.tripplanner.BuildConfig;
-import com.raju.tripplanner.DAO.PlacePhoto;
-import com.raju.tripplanner.DAO.TripAPI;
+import com.raju.tripplanner.ApiCalls.PlacePhoto;
+import com.raju.tripplanner.ApiCalls.TripAPI;
 import com.raju.tripplanner.MainActivity;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.activities.CreateTripActivity;
@@ -66,8 +66,8 @@ public class HomeFragment extends Fragment {
     private PlacePhoto placePhoto;
     private TripAPI tripAPI;
     private FloatingActionButton createTrip;
-    private Button btnLogout;
     private RecyclerView myTripsContainer;
+    private TextView tvNoTrip;
 
     public HomeFragment() {
     }
@@ -92,8 +92,10 @@ public class HomeFragment extends Fragment {
                 launchPlaceAutocomplete();
             }
         });
-//        btnLogout = homeView.findViewById(R.id.btn_logout);
+
         myTripsContainer = homeView.findViewById(R.id.my_trips_container);
+        tvNoTrip = homeView.findViewById(R.id.tv_no_trip);
+
         return homeView;
     }
 
@@ -107,6 +109,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void initComponents() {
+
+        setHasOptionsMenu(true);
 
         // Initialize Places.
         Places.initialize(getContext(), MAP_API);
@@ -219,7 +223,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+
         initComponents();
     }
 
@@ -241,8 +245,13 @@ public class HomeFragment extends Fragment {
 
                 List<Trip> userTrips = response.body().getMyTrips();
 
-                myTripsContainer.setAdapter(new MyTripsAdapter(getActivity(), userTrips));
-                myTripsContainer.setLayoutManager(new LinearLayoutManager(getActivity()));
+                if (userTrips.size() > 0) {
+                    tvNoTrip.setVisibility(View.GONE);
+                    myTripsContainer.setAdapter(new MyTripsAdapter(getActivity(), userTrips));
+                    myTripsContainer.setLayoutManager(new LinearLayoutManager(getActivity()));
+                } else {
+                    tvNoTrip.setVisibility(View.VISIBLE);
+                }
             }
 
             @Override

@@ -1,6 +1,7 @@
 package com.raju.tripplanner.activities;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -12,15 +13,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.textfield.TextInputLayout;
-import com.raju.tripplanner.DAO.TripAPI;
+import com.raju.tripplanner.ApiCalls.TripAPI;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.dialogs.DialogDatePicker;
 import com.raju.tripplanner.models.Destination;
 import com.raju.tripplanner.models.Trip;
 import com.raju.tripplanner.utils.ApiResponse.TripResponse;
 import com.raju.tripplanner.utils.EditTextValidation;
-import com.raju.tripplanner.utils.Helper;
 import com.raju.tripplanner.utils.RetrofitClient;
+import com.raju.tripplanner.utils.Tools;
 import com.raju.tripplanner.utils.UserSession;
 
 import java.text.SimpleDateFormat;
@@ -165,10 +166,11 @@ public class CreateTripActivity extends AppCompatActivity {
     private void validateCreateTrip() {
 
         if (EditTextValidation.isEmpty(etTripTitle) | EditTextValidation.isEmpty(etStartDate) | EditTextValidation.isEmpty(etEndDate)) {
-            Helper.vibrateDevice(this);
+            Tools.vibrateDevice(this);
             return;
         }
 
+        tripName = etTripTitle.getEditText().getText().toString().trim();
         String startDate = etStartDate.getEditText().getText().toString().trim();
         String endDate = etEndDate.getEditText().getText().toString().trim();
 
@@ -188,7 +190,12 @@ public class CreateTripActivity extends AppCompatActivity {
                     return;
                 }
 
-                Toast.makeText(CreateTripActivity.this, "successful", Toast.LENGTH_SHORT).show();
+                TripResponse tripResponse = response.body();
+                Intent viewTrip = new Intent(CreateTripActivity.this, ViewTripActivity.class);
+                viewTrip.putExtra("TRIP", tripResponse.getTrip());
+                startActivity(viewTrip);
+                finish();
+
             }
 
             @Override

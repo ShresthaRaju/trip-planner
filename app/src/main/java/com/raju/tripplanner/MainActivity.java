@@ -2,7 +2,8 @@ package com.raju.tripplanner;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +18,7 @@ import com.raju.tripplanner.fragments.ProfileFragment;
 public class MainActivity extends AppCompatActivity implements ProfileBottomSheet.ProfileBottomSheetListener {
 
     private ProfileFragment profileFragment;
+    private ImageButton btnHome;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,17 @@ public class MainActivity extends AppCompatActivity implements ProfileBottomShee
 
     private void initComponents() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        btnHome = findViewById(R.id.btn_home);
+        btnHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadFragment(HomeFragment.newInstance("My Trips"));
+            }
+        });
+
+        bottomNavigationView.getMenu().getItem(0).setCheckable(false);
+        bottomNavigationView.getMenu().getItem(1).setCheckable(false);
+        bottomNavigationView.getMenu().getItem(2).setCheckable(false);
         bottomNavigationView.setOnNavigationItemSelectedListener(bottomNavListener);
     }
 

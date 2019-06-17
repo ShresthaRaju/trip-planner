@@ -1,6 +1,7 @@
 package com.raju.tripplanner.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -17,8 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.balysv.materialripple.MaterialRippleLayout;
 import com.raju.tripplanner.R;
+import com.raju.tripplanner.activities.ViewTripActivity;
 import com.raju.tripplanner.models.Trip;
-import com.raju.tripplanner.utils.Helper;
+import com.raju.tripplanner.utils.Tools;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -27,6 +29,7 @@ public class MyTripsAdapter extends RecyclerView.Adapter<MyTripsAdapter.MyTripsV
 
     private Context context;
     private List<Trip> myTripsList;
+    private Trip trip;
 
     public MyTripsAdapter(Context context, List<Trip> myTripsList) {
         this.context = context;
@@ -42,7 +45,7 @@ public class MyTripsAdapter extends RecyclerView.Adapter<MyTripsAdapter.MyTripsV
 
     @Override
     public void onBindViewHolder(@NonNull MyTripsViewHolder holder, int position) {
-        Trip trip = myTripsList.get(position);
+        trip = myTripsList.get(position);
         holder.bindTrip(trip);
     }
 
@@ -75,20 +78,20 @@ public class MyTripsAdapter extends RecyclerView.Adapter<MyTripsAdapter.MyTripsV
                     showTripPopup(v);
                 }
             });
-
-            cardTrip.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(context, "Veeeew", Toast.LENGTH_SHORT).show();
-                }
-            });
         }
 
         private void bindTrip(Trip trip) {
             Picasso.get().load(trip.getDestination().getPhotoUrl()).into(myTripImage);
             myTripTitle.setText(trip.getName());
-            tripStartDate.setText(Helper.formatDate(trip.getStartDate()) + " -");
-            tripEndDate.setText(Helper.formatDate(trip.getEndDate()));
+            tripStartDate.setText(Tools.formatDate(trip.getStartDate()) + " -");
+            tripEndDate.setText(Tools.formatDate(trip.getEndDate()));
+
+            cardTrip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    viewTrip(trip);
+                }
+            });
         }
     }
 
@@ -108,7 +111,7 @@ public class MyTripsAdapter extends RecyclerView.Adapter<MyTripsAdapter.MyTripsV
     public boolean onMenuItemClick(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_view_trip:
-                Toast.makeText(context, "Viewed", Toast.LENGTH_SHORT).show();
+//                viewTrip();
                 return true;
 
             case R.id.action_delete_trip:
@@ -118,5 +121,11 @@ public class MyTripsAdapter extends RecyclerView.Adapter<MyTripsAdapter.MyTripsV
             default:
                 return false;
         }
+    }
+
+    private void viewTrip(Trip trip) {
+        Intent viewTrip = new Intent(context, ViewTripActivity.class);
+        viewTrip.putExtra("TRIP", trip);
+        context.startActivity(viewTrip);
     }
 }

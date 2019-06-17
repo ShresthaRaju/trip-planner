@@ -71,4 +71,11 @@
     <string name="view_Trip">View</string>
     <string name="delete_Trip">Delete</string>
 
+    <!--view trip-->
+    <string name="tab_places">Places</string>
+    <string name="tab_food"><![CDATA[Food & lodges]]></string>
+    <string name="tab_weather">Weather</string>
+    <string name="edit_trip">Edit</string>
+    <string name="no_trip">You have not created a trip yet</string>
+
 </resources>

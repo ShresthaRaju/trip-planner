@@ -8,7 +8,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputLayout;
-import com.raju.tripplanner.DAO.AuthAPI;
+import com.raju.tripplanner.ApiCalls.AuthAPI;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.models.User;
 import com.raju.tripplanner.utils.ApiResponse.SignUpResponse;

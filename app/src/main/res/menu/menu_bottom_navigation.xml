@@ -2,14 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/nav_home"
-        android:icon="@drawable/ic_home"
-        android:title="@string/nav_home" />
-
-    <item
         android:id="@+id/nav_invitations"
         android:icon="@drawable/ic_invitation"
         android:title="@string/nav_invitations" />
+
+    <item
+        android:id="@+id/nav_home"
+        android:title="@string/nav_home" />
 
     <item
         android:id="@+id/nav_profile"

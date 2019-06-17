@@ -2,8 +2,12 @@ package com.raju.tripplanner.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Trip {
+import java.io.Serializable;
 
+public class Trip implements Serializable {
+
+    @SerializedName("_id")
+    private String id;
     private String name, startDate, endDate, creator;
 
     @SerializedName("place")
@@ -15,6 +19,10 @@ public class Trip {
         this.endDate = endDate;
         this.destination = destination;
         this.creator = creator;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getName() {
