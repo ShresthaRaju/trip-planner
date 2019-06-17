@@ -3,14 +3,20 @@ package com.raju.tripplanner.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
@@ -23,12 +29,17 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.raju.tripplanner.BuildConfig;
 import com.raju.tripplanner.DAO.PlacePhoto;
+import com.raju.tripplanner.DAO.TripAPI;
 import com.raju.tripplanner.MainActivity;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.activities.CreateTripActivity;
+import com.raju.tripplanner.adapters.MyTripsAdapter;
 import com.raju.tripplanner.authentication.SignInActivity;
 import com.raju.tripplanner.models.Destination;
+import com.raju.tripplanner.models.Trip;
 import com.raju.tripplanner.utils.ApiResponse.PhotoResponse;
+import com.raju.tripplanner.utils.ApiResponse.TripResponse;
+import com.raju.tripplanner.utils.RetrofitClient;
 import com.raju.tripplanner.utils.UserSession;
 
 import java.util.Arrays;
@@ -53,6 +64,10 @@ public class HomeFragment extends Fragment {
     private static final int AUTOCOMPLETE_REQUEST_CODE = 001;
     private PlacesClient placesClient;
     private PlacePhoto placePhoto;
+    private TripAPI tripAPI;
+    private FloatingActionButton createTrip;
+    private Button btnLogout;
+    private RecyclerView myTripsContainer;
 
     public HomeFragment() {
     }
@@ -70,30 +85,28 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View homeView = inflater.inflate(R.layout.fragment_home, container, false);
         initToolbar(homeView);
-        initComponents(homeView);
-        return homeView;
-    }
-
-    private void initComponents(View view) {
-        FloatingActionButton createTrip = view.findViewById(R.id.fab_create_trip);
+        createTrip = homeView.findViewById(R.id.fab_create_trip);
         createTrip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 launchPlaceAutocomplete();
             }
         });
+//        btnLogout = homeView.findViewById(R.id.btn_logout);
+        myTripsContainer = homeView.findViewById(R.id.my_trips_container);
+        return homeView;
+    }
 
-        Button btnLogout = view.findViewById(R.id.btn_logout);
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new UserSession(getActivity()).endSession();
-                Intent signInActivity = new Intent(getActivity(), SignInActivity.class);
-                signInActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(signInActivity);
-                getActivity().finish();
-            }
-        });
+    private void initToolbar(View view) {
+        Toolbar homeToolbar = view.findViewById(R.id.home_toolbar);
+        ((MainActivity) getActivity()).setSupportActionBar(homeToolbar);
+        if (getArguments() != null) {
+            toolbarTitle = getArguments().getString(ARG_PARAM1);
+            ((MainActivity) getActivity()).getSupportActionBar().setTitle(toolbarTitle);
+        }
+    }
+
+    private void initComponents() {
 
         // Initialize Places.
         Places.initialize(getContext(), MAP_API);
@@ -114,14 +127,29 @@ public class HomeFragment extends Fragment {
                 .build();
 
         placePhoto = retrofit.create(PlacePhoto.class);
+
+        tripAPI = RetrofitClient.getInstance().create(TripAPI.class);
     }
 
-    private void initToolbar(View view) {
-        Toolbar homeToolbar = view.findViewById(R.id.home_toolbar);
-        ((MainActivity) getActivity()).setSupportActionBar(homeToolbar);
-        if (getArguments() != null) {
-            toolbarTitle = getArguments().getString(ARG_PARAM1);
-            ((MainActivity) getActivity()).getSupportActionBar().setTitle(toolbarTitle);
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_profile, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_sign_out:
+                new UserSession(getActivity()).endSession();
+                Intent signInActivity = new Intent(getActivity(), SignInActivity.class);
+                signInActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(signInActivity);
+                getActivity().finish();
+                return true;
+
+            default:
+                return false;
         }
     }
 
@@ -187,4 +215,41 @@ public class HomeFragment extends Fragment {
             }
         }
     }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        initComponents();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        getUserTrips();
+    }
+
+    private void getUserTrips() {
+        Call<TripResponse> userTripsCall = tripAPI.getUserTrips("Bearer " + new UserSession(getActivity()).getAuthToken());
+        userTripsCall.enqueue(new Callback<TripResponse>() {
+            @Override
+            public void onResponse(Call<TripResponse> call, Response<TripResponse> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(getActivity(), "ERROR: " + response.code() + " " + response.message(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                List<Trip> userTrips = response.body().getMyTrips();
+
+                myTripsContainer.setAdapter(new MyTripsAdapter(getActivity(), userTrips));
+                myTripsContainer.setLayoutManager(new LinearLayoutManager(getActivity()));
+            }
+
+            @Override
+            public void onFailure(Call<TripResponse> call, Throwable t) {
+                Toast.makeText(getActivity(), "FAILED: " + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }
