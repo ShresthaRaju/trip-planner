@@ -27,9 +27,9 @@ import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.raju.tripplanner.BuildConfig;
 import com.raju.tripplanner.ApiCalls.PlacePhoto;
-import com.raju.tripplanner.ApiCalls.TripAPI;
+import com.raju.tripplanner.BuildConfig;
+import com.raju.tripplanner.DaoImpl.TripDaoImpl;
 import com.raju.tripplanner.MainActivity;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.activities.CreateTripActivity;
@@ -38,10 +38,9 @@ import com.raju.tripplanner.authentication.SignInActivity;
 import com.raju.tripplanner.models.Destination;
 import com.raju.tripplanner.models.Trip;
 import com.raju.tripplanner.utils.ApiResponse.PhotoResponse;
-import com.raju.tripplanner.utils.ApiResponse.TripResponse;
-import com.raju.tripplanner.utils.RetrofitClient;
 import com.raju.tripplanner.utils.UserSession;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -64,10 +63,11 @@ public class HomeFragment extends Fragment {
     private static final int AUTOCOMPLETE_REQUEST_CODE = 001;
     private PlacesClient placesClient;
     private PlacePhoto placePhoto;
-    private TripAPI tripAPI;
     private FloatingActionButton createTrip;
     private RecyclerView myTripsContainer;
     private TextView tvNoTrip;
+    private MyTripsAdapter myTripsAdapter;
+    private TripDaoImpl tripDaoImpl;
 
     public HomeFragment() {
     }
@@ -84,7 +84,9 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View homeView = inflater.inflate(R.layout.fragment_home, container, false);
+
         initToolbar(homeView);
+
         createTrip = homeView.findViewById(R.id.fab_create_trip);
         createTrip.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,8 +95,14 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        myTripsContainer = homeView.findViewById(R.id.my_trips_container);
         tvNoTrip = homeView.findViewById(R.id.tv_no_trip);
+
+        myTripsContainer = homeView.findViewById(R.id.my_trips_container);
+        myTripsContainer.setHasFixedSize(true);
+        myTripsContainer.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        myTripsAdapter = new MyTripsAdapter(getActivity(), new ArrayList<>());
+        myTripsContainer.setAdapter(myTripsAdapter);
 
         return homeView;
     }
@@ -111,6 +119,8 @@ public class HomeFragment extends Fragment {
     private void initComponents() {
 
         setHasOptionsMenu(true);
+
+        tripDaoImpl = new TripDaoImpl(getActivity());
 
         // Initialize Places.
         Places.initialize(getContext(), MAP_API);
@@ -131,8 +141,6 @@ public class HomeFragment extends Fragment {
                 .build();
 
         placePhoto = retrofit.create(PlacePhoto.class);
-
-        tripAPI = RetrofitClient.getInstance().create(TripAPI.class);
     }
 
     @Override
@@ -227,38 +235,24 @@ public class HomeFragment extends Fragment {
         initComponents();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        getUserTrips();
-    }
-
-    private void getUserTrips() {
-        Call<TripResponse> userTripsCall = tripAPI.getUserTrips("Bearer " + new UserSession(getActivity()).getAuthToken());
-        userTripsCall.enqueue(new Callback<TripResponse>() {
+    private void fetchTrips() {
+        tripDaoImpl.getMyTrips();
+        tripDaoImpl.setGetTripsListener(new TripDaoImpl.GetTripsListener() {
             @Override
-            public void onResponse(Call<TripResponse> call, Response<TripResponse> response) {
-                if (!response.isSuccessful()) {
-                    Toast.makeText(getActivity(), "ERROR: " + response.code() + " " + response.message(), Toast.LENGTH_LONG).show();
-                    return;
-                }
-
-                List<Trip> userTrips = response.body().getMyTrips();
-
-                if (userTrips.size() > 0) {
-                    tvNoTrip.setVisibility(View.GONE);
-                    myTripsContainer.setAdapter(new MyTripsAdapter(getActivity(), userTrips));
-                    myTripsContainer.setLayoutManager(new LinearLayoutManager(getActivity()));
-                } else {
+            public void onTripsReceived(List<Trip> myTrips) {
+                if (myTrips.isEmpty()) {
                     tvNoTrip.setVisibility(View.VISIBLE);
+                } else {
+                    tvNoTrip.setVisibility(View.GONE);
+                    myTripsAdapter.updateData(myTrips);
                 }
-            }
-
-            @Override
-            public void onFailure(Call<TripResponse> call, Throwable t) {
-                Toast.makeText(getActivity(), "FAILED: " + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        fetchTrips();
+    }
 }

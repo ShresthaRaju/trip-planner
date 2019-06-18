@@ -32,7 +32,7 @@
     <string name="start_date">Start Date</string>
     <string name="end_date">End Date</string>
     <string name="btn_cancel">Cancel</string>
-    <string name="btn_create">Create Now</string>
+    <string name="btn_create">Finish</string>
 
     <!-- User Profile-->
     <string name="cover_photo">Cover Photo</string>

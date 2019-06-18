@@ -1,7 +1,6 @@
 package com.raju.tripplanner.activities;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,24 +12,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.material.textfield.TextInputLayout;
-import com.raju.tripplanner.ApiCalls.TripAPI;
+import com.raju.tripplanner.DaoImpl.TripDaoImpl;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.dialogs.DialogDatePicker;
 import com.raju.tripplanner.models.Destination;
 import com.raju.tripplanner.models.Trip;
-import com.raju.tripplanner.utils.ApiResponse.TripResponse;
 import com.raju.tripplanner.utils.EditTextValidation;
-import com.raju.tripplanner.utils.RetrofitClient;
 import com.raju.tripplanner.utils.Tools;
 import com.raju.tripplanner.utils.UserSession;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class CreateTripActivity extends AppCompatActivity {
 
@@ -41,7 +34,7 @@ public class CreateTripActivity extends AppCompatActivity {
     private long timeInMillis;
     private String tripName;
     private Destination destination;
-    private TripAPI tripAPI;
+    private TripDaoImpl tripDaoImpl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,20 +45,37 @@ public class CreateTripActivity extends AppCompatActivity {
 
         initComponents();
 
-        tripName = "Trip to " + getIntent().getStringExtra("Place_Name");
-        etTripTitle.getEditText().setText(tripName);
-        destination = (Destination) getIntent().getSerializableExtra("Destination");
     }
 
     private void initToolbar() {
         Toolbar toolbar = findViewById(R.id.trip_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle("Create your trip");
+        getSupportActionBar().setTitle("Create Your Trip");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close_white);
     }
 
     private void initComponents() {
+
+        tripDaoImpl = new TripDaoImpl(this);
+
+        etTripTitle = findViewById(R.id.et_trip_title);
+        etStartDate = findViewById(R.id.et_start_date);
+        etEndDate = findViewById(R.id.et_end_date);
+        etEndDate.setEnabled(false);
+        btnCreate = findViewById(R.id.btn_create_trip);
+
+        tripName = "Trip to " + getIntent().getStringExtra("Place_Name");
+        Trip trip = (Trip) getIntent().getSerializableExtra("Trip");
+        if (trip != null) {
+            Toast.makeText(this, "not null", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, trip.getName(), Toast.LENGTH_SHORT).show();
+
+        } else {
+            Toast.makeText(this, "null trip", Toast.LENGTH_SHORT).show();
+        }
+        etTripTitle.getEditText().setText(tripName);
+        destination = (Destination) getIntent().getSerializableExtra("Destination");
 
         calendar = Calendar.getInstance();
 
@@ -73,11 +83,6 @@ public class CreateTripActivity extends AppCompatActivity {
         month = calendar.get(Calendar.MONTH);
         dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
-        tripAPI = RetrofitClient.getInstance().create(TripAPI.class);
-
-        etTripTitle = findViewById(R.id.et_trip_title);
-
-        etStartDate = findViewById(R.id.et_start_date);
         etStartDate.getEditText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,8 +90,6 @@ public class CreateTripActivity extends AppCompatActivity {
             }
         });
 
-        etEndDate = findViewById(R.id.et_end_date);
-        etEndDate.setEnabled(false);
         etEndDate.getEditText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,13 +97,14 @@ public class CreateTripActivity extends AppCompatActivity {
             }
         });
 
-        btnCreate = findViewById(R.id.btn_create_trip);
+
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 validateCreateTrip();
             }
         });
+
     }
 
     private void showStartDatePicker() {
@@ -175,34 +179,6 @@ public class CreateTripActivity extends AppCompatActivity {
         String endDate = etEndDate.getEditText().getText().toString().trim();
 
         Trip trip = new Trip(tripName, startDate, endDate, destination, new UserSession(this).getUserId());
-        createTrip(trip);
-
-    }
-
-    private void createTrip(Trip trip) {
-
-        Call<TripResponse> createTripCall = tripAPI.createTrip("Bearer " + new UserSession(this).getAuthToken(), trip);
-        createTripCall.enqueue(new Callback<TripResponse>() {
-            @Override
-            public void onResponse(Call<TripResponse> call, Response<TripResponse> response) {
-                if (!response.isSuccessful()) {
-                    Toast.makeText(CreateTripActivity.this, "ERROR: " + response.code() + " " + response.message(), Toast.LENGTH_LONG).show();
-                    return;
-                }
-
-                TripResponse tripResponse = response.body();
-                Intent viewTrip = new Intent(CreateTripActivity.this, ViewTripActivity.class);
-                viewTrip.putExtra("TRIP", tripResponse.getTrip());
-                startActivity(viewTrip);
-                finish();
-
-            }
-
-            @Override
-            public void onFailure(Call<TripResponse> call, Throwable t) {
-                Toast.makeText(CreateTripActivity.this, "FAILED: " + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-
+        tripDaoImpl.createTrip(trip);
     }
 }
