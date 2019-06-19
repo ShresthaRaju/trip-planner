@@ -27,8 +27,8 @@ import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.raju.tripplanner.ApiCalls.PlacePhoto;
 import com.raju.tripplanner.BuildConfig;
+import com.raju.tripplanner.DAO.PlacePhotoAPI;
 import com.raju.tripplanner.DaoImpl.TripDaoImpl;
 import com.raju.tripplanner.MainActivity;
 import com.raju.tripplanner.R;
@@ -44,8 +44,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -62,7 +60,7 @@ public class HomeFragment extends Fragment {
     public static final String MAP_API = BuildConfig.MapApi;
     private static final int AUTOCOMPLETE_REQUEST_CODE = 001;
     private PlacesClient placesClient;
-    private PlacePhoto placePhoto;
+    private PlacePhotoAPI placePhotoAPI;
     private FloatingActionButton createTrip;
     private RecyclerView myTripsContainer;
     private TextView tvNoTrip;
@@ -101,7 +99,7 @@ public class HomeFragment extends Fragment {
         myTripsContainer.setHasFixedSize(true);
         myTripsContainer.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        myTripsAdapter = new MyTripsAdapter(getActivity(), new ArrayList<>());
+        myTripsAdapter = new MyTripsAdapter(getActivity(), new ArrayList<Trip>());
         myTripsContainer.setAdapter(myTripsAdapter);
 
         return homeView;
@@ -129,18 +127,12 @@ public class HomeFragment extends Fragment {
         placesClient = Places.createClient(getActivity());
 
         // retrofit client
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(logging)
-                .build();
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl("https://maps.googleapis.com/maps/api/place/details/")
                 .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
                 .build();
 
-        placePhoto = retrofit.create(PlacePhoto.class);
+        placePhotoAPI = retrofit.create(PlacePhotoAPI.class);
     }
 
     @Override
@@ -186,12 +178,12 @@ public class HomeFragment extends Fragment {
             if (resultCode == RESULT_OK) {
                 Place selectedPlace = Autocomplete.getPlaceFromIntent(data);
                 String placeId = selectedPlace.getId();
-                String placeName = selectedPlace.getName();
+                final String placeName = selectedPlace.getName();
                 LatLng latLng = selectedPlace.getLatLng();
-                double lat = latLng.latitude;
-                double lng = latLng.longitude;
+                final double lat = latLng.latitude;
+                final double lng = latLng.longitude;
 
-                Call<PhotoResponse> photoCall = placePhoto.fetchPhoto(placeId, "photo", MAP_API);
+                Call<PhotoResponse> photoCall = placePhotoAPI.fetchPhoto(placeId, "photo", MAP_API);
                 photoCall.enqueue(new Callback<PhotoResponse>() {
                     @Override
                     public void onResponse(Call<PhotoResponse> call, Response<PhotoResponse> response) {
@@ -200,7 +192,7 @@ public class HomeFragment extends Fragment {
                             return;
                         }
                         PhotoResponse photoResponse = response.body();
-                        String photoReference = photoResponse.getResult().getPhotos().get(0).getPhoto_reference();
+                        String photoReference = photoResponse.getPlacePhotoResult().getPhotos().get(0).getPhoto_reference();
                         String photoUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=" + photoReference + "&key=" + MAP_API;
 
                         // create new destination
@@ -237,7 +229,7 @@ public class HomeFragment extends Fragment {
 
     private void fetchTrips() {
         tripDaoImpl.getMyTrips();
-        tripDaoImpl.setGetTripsListener(new TripDaoImpl.GetTripsListener() {
+        tripDaoImpl.setTripActionsListener(new TripDaoImpl.TripActionsListener() {
             @Override
             public void onTripsReceived(List<Trip> myTrips) {
                 if (myTrips.isEmpty()) {
@@ -246,6 +238,21 @@ public class HomeFragment extends Fragment {
                     tvNoTrip.setVisibility(View.GONE);
                     myTripsAdapter.updateData(myTrips);
                 }
+            }
+
+            @Override
+            public void onTripCreated(Trip trip) {
+
+            }
+
+            @Override
+            public void onTripUpdated() {
+
+            }
+
+            @Override
+            public void onTripDeleted() {
+
             }
         });
     }

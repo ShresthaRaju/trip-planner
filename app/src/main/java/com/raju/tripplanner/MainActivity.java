@@ -11,11 +11,13 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.raju.tripplanner.bottomsheets.ProfileBottomSheet;
+import com.raju.tripplanner.dialogs.ConfirmationDialog;
 import com.raju.tripplanner.fragments.HomeFragment;
 import com.raju.tripplanner.fragments.InvitationsFragment;
 import com.raju.tripplanner.fragments.ProfileFragment;
+import com.raju.tripplanner.utils.UserSession;
 
-public class MainActivity extends AppCompatActivity implements ProfileBottomSheet.ProfileBottomSheetListener {
+public class MainActivity extends AppCompatActivity implements ProfileBottomSheet.ProfileBottomSheetListener, ConfirmationDialog.ConfirmationDialogListener {
 
     private ProfileFragment profileFragment;
     private ImageButton btnHome;
@@ -25,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements ProfileBottomShee
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        profileFragment = ProfileFragment.newInstance("AUTHENTICATED USER");
+        profileFragment = ProfileFragment.newInstance("Welcome, " + new UserSession(this).getUser().getUsername());
 
         initComponents();
 
@@ -79,13 +81,26 @@ public class MainActivity extends AppCompatActivity implements ProfileBottomShee
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        finish();
+//        super.onBackPressed();
+        String title = "Quit Trip Planner";
+        String message = "Are you sure you want to quit the app?";
+        ConfirmationDialog confirmationDialog = new ConfirmationDialog(title, message);
+        confirmationDialog.show(getSupportFragmentManager(), "QUIT APP");
     }
 
     @Override
     public void onImageSelected(String imagePath) {
 //        Toast.makeText(this, imagePath, Toast.LENGTH_LONG).show();
         profileFragment.updateDisplayPicture(imagePath);
+    }
+
+    @Override
+    public void onSure() {
+        finish();
+    }
+
+    @Override
+    public void onCancel() {
+
     }
 }

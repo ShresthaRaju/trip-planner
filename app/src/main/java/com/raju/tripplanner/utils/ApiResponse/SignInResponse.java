@@ -1,11 +1,15 @@
 package com.raju.tripplanner.utils.ApiResponse;
 
+import com.raju.tripplanner.models.User;
+
 public class SignInResponse {
 
-    private String message, authToken;
+    private User user;
+    private String authToken;
 
-    public String getMessage() {
-        return message;
+
+    public User getUser() {
+        return user;
     }
 
     public String getAuthToken() {

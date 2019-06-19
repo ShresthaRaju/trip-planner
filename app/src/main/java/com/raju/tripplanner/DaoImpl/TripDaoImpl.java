@@ -1,11 +1,9 @@
 package com.raju.tripplanner.DaoImpl;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.widget.Toast;
 
-import com.raju.tripplanner.ApiCalls.TripAPI;
-import com.raju.tripplanner.activities.ViewTripActivity;
+import com.raju.tripplanner.DAO.TripAPI;
 import com.raju.tripplanner.models.Trip;
 import com.raju.tripplanner.utils.ApiResponse.TripResponse;
 import com.raju.tripplanner.utils.RetrofitClient;
@@ -21,7 +19,7 @@ import retrofit2.Response;
 public class TripDaoImpl {
     private TripAPI tripAPI;
     private Activity activity;
-    private GetTripsListener getTripsListener;
+    private TripActionsListener tripActionsListener;
 
     public TripDaoImpl(Activity activity) {
         this.activity = activity;
@@ -37,11 +35,7 @@ public class TripDaoImpl {
                     Toast.makeText(activity, "ERROR: " + response.code() + " " + response.message(), Toast.LENGTH_LONG).show();
                     return;
                 }
-                TripResponse tripResponse = response.body();
-                Intent viewTrip = new Intent(activity, ViewTripActivity.class);
-                viewTrip.putExtra("TRIP", tripResponse.getTrip());
-                activity.startActivity(viewTrip);
-                activity.finish();
+                tripActionsListener.onTripCreated(response.body().getTrip());
             }
 
             @Override
@@ -61,7 +55,7 @@ public class TripDaoImpl {
                     Toast.makeText(activity, "ERROR: " + response.code() + " " + response.message(), Toast.LENGTH_LONG).show();
                     return;
                 }
-                getTripsListener.onTripsReceived(response.body().getMyTrips());
+                tripActionsListener.onTripsReceived(response.body().getMyTrips());
             }
 
             @Override
@@ -70,6 +64,26 @@ public class TripDaoImpl {
             }
         });
         return myTrips;
+    }
+
+    public void updateTrip(String tripId, Trip trip) {
+        Call<Void> updateTripCall = tripAPI.updateTrip("Bearer " + new UserSession(activity).getAuthToken(), tripId, trip);
+        updateTripCall.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(activity, "ERROR: " + response.code() + " " + response.message(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                tripActionsListener.onTripUpdated();
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(activity, "FAILED: " + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void deleteTrip(String tripId) {
@@ -82,8 +96,7 @@ public class TripDaoImpl {
                     return;
                 }
 
-                Toast.makeText(activity, "Trip deleted successfully", Toast.LENGTH_LONG).show();
-                activity.finish();
+                tripActionsListener.onTripDeleted();
             }
 
             @Override
@@ -93,11 +106,17 @@ public class TripDaoImpl {
         });
     }
 
-    public interface GetTripsListener {
+    public interface TripActionsListener {
         void onTripsReceived(List<Trip> myTrips);
+
+        void onTripCreated(Trip trip);
+
+        void onTripUpdated();
+
+        void onTripDeleted();
     }
 
-    public void setGetTripsListener(GetTripsListener getTripsListener) {
-        this.getTripsListener = getTripsListener;
+    public void setTripActionsListener(TripActionsListener tripActionsListener) {
+        this.tripActionsListener = tripActionsListener;
     }
 }

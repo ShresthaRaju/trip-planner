@@ -1,12 +1,14 @@
 package com.raju.tripplanner.utils.ApiResponse;
 
-import com.raju.tripplanner.models.Result;
+import com.google.gson.annotations.SerializedName;
+import com.raju.tripplanner.models.PlacePhotoResult;
 
 public class PhotoResponse {
 
-    private Result result;
+    @SerializedName("result")
+    private PlacePhotoResult placePhotoResult;
 
-    public Result getResult() {
-        return result;
+    public PlacePhotoResult getPlacePhotoResult() {
+        return placePhotoResult;
     }
 }

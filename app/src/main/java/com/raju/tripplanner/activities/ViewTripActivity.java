@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,11 +19,14 @@ import com.raju.tripplanner.models.Trip;
 import com.raju.tripplanner.utils.Tools;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 public class ViewTripActivity extends AppCompatActivity implements ConfirmationDialog.ConfirmationDialogListener {
     private ImageView viewTripImage;
     private Trip trip;
     private TripDaoImpl tripDaoImpl;
     private ConfirmationDialog confirmationDialog;
+    private ProgressBar progressDeleteTrip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +46,9 @@ public class ViewTripActivity extends AppCompatActivity implements ConfirmationD
     }
 
     private void initComponents() {
-        viewTripImage = findViewById(R.id.view_trip_image);
         tripDaoImpl = new TripDaoImpl(this);
+        viewTripImage = findViewById(R.id.view_trip_image);
+        progressDeleteTrip = findViewById(R.id.progress_delete_trip);
     }
 
     @Override
@@ -56,11 +62,10 @@ public class ViewTripActivity extends AppCompatActivity implements ConfirmationD
         trip = (Trip) getIntent().getSerializableExtra("TRIP");
 
         getSupportActionBar().setTitle(trip.getName());
-        getSupportActionBar().setSubtitle(Tools.formatDate(trip.getStartDate()) + " -" + Tools.formatDate(trip.getEndDate()));
+        getSupportActionBar().setSubtitle(Tools.formatDate("MMM dd", trip.getStartDate()) + " -"
+                + Tools.formatDate("MMM dd", trip.getEndDate()));
 
         Picasso.get().load(trip.getDestination().getPhotoUrl()).into(viewTripImage);
-
-        Toast.makeText(this, trip.getName(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -88,7 +93,7 @@ public class ViewTripActivity extends AppCompatActivity implements ConfirmationD
     }
 
     private void showConfirmationDialog() {
-        String title = "Delete Trip ?";
+        String title = "Delete Trip";
         String message = "Are you sure you want to delete this trip? It cannot be undone !";
 
         confirmationDialog = new ConfirmationDialog(title, message);
@@ -96,8 +101,32 @@ public class ViewTripActivity extends AppCompatActivity implements ConfirmationD
     }
 
     @Override
-    public void onOK() {
+    public void onSure() {
+        progressDeleteTrip.setVisibility(View.VISIBLE);
         tripDaoImpl.deleteTrip(trip.getId());
+        tripDaoImpl.setTripActionsListener(new TripDaoImpl.TripActionsListener() {
+            @Override
+            public void onTripsReceived(List<Trip> myTrips) {
+
+            }
+
+            @Override
+            public void onTripCreated(Trip trip) {
+
+            }
+
+            @Override
+            public void onTripUpdated() {
+
+            }
+
+            @Override
+            public void onTripDeleted() {
+                progressDeleteTrip.setVisibility(View.GONE);
+                Toast.makeText(ViewTripActivity.this, "Trip deleted successfully", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.raju.tripplanner.ApiCalls;
+package com.raju.tripplanner.DAO;
 
 import com.raju.tripplanner.models.User;
 import com.raju.tripplanner.utils.ApiResponse.SignInResponse;

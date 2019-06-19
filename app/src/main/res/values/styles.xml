@@ -41,10 +41,16 @@
         </item>
     </style>
 
-    <!--Progress Bar theme-->
+    <!--Progress Bar White-->
     <style name="ProgressBar.White" parent="AppTheme">
         <item name="colorPrimary">@color/colorWhite</item>
         <item name="colorAccent">@color/colorWhite</item>
+    </style>
+
+    <!--Progress Bar Teal-->
+    <style name="ProgressBar.Teal" parent="AppTheme">
+        <item name="colorPrimary">@color/teal_500</item>
+        <item name="colorAccent">@color/teal_500</item>
     </style>
 
     <!--Datepicker dialog theme-->

@@ -26,10 +26,10 @@ public class ConfirmationDialog extends AppCompatDialogFragment {
         AlertDialog.Builder confirmDialog = new AlertDialog.Builder(getActivity());
         confirmDialog.setTitle(title)
                 .setMessage(message)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton("SURE", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        confirmationDialogListener.onOK();
+                        confirmationDialogListener.onSure();
                     }
                 }).setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             @Override
@@ -42,7 +42,7 @@ public class ConfirmationDialog extends AppCompatDialogFragment {
     }
 
     public interface ConfirmationDialogListener {
-        void onOK();
+        void onSure();
 
         void onCancel();
     }

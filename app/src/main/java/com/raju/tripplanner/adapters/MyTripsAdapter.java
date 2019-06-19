@@ -75,11 +75,11 @@ public class MyTripsAdapter extends RecyclerView.Adapter<MyTripsAdapter.MyTripsV
             tripPopup.setOnClickListener(this);
         }
 
-        private void bindTrip(Trip trip) {
+        private void bindTrip(final Trip trip) {
             Picasso.get().load(trip.getDestination().getPhotoUrl()).into(myTripImage);
             myTripTitle.setText(trip.getName());
-            tripStartDate.setText(Tools.formatDate(trip.getStartDate()) + " -");
-            tripEndDate.setText(Tools.formatDate(trip.getEndDate()));
+            tripStartDate.setText(Tools.formatDate("MMM dd", trip.getStartDate()) + " -");
+            tripEndDate.setText(Tools.formatDate("MMM dd", trip.getEndDate()));
 
             cardTrip.setOnClickListener(new View.OnClickListener() {
                 @Override

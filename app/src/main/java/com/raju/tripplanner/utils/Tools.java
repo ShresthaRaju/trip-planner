@@ -4,9 +4,13 @@ import android.content.Context;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import static android.content.Context.VIBRATOR_SERVICE;
 
@@ -14,23 +18,30 @@ public class Tools {
 
     public static void vibrateDevice(Context context) {
         Vibrator vibrator = (Vibrator) context.getSystemService(VIBRATOR_SERVICE);
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             vibrator.vibrate(VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE));
-        } else {
-            vibrator.vibrate(300);
         }
     }
 
-    public static String formatDate(String date) {
-        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        SimpleDateFormat outputFormat = new SimpleDateFormat("MMM dd");
+    public static String formatDate(String pattern, String date) {
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+        SimpleDateFormat outputFormat = new SimpleDateFormat(pattern, Locale.getDefault());
 
         try {
-            String formattedDate = outputFormat.format(inputFormat.parse(date));
-            return formattedDate;
+            return outputFormat.format(inputFormat.parse(date));
         } catch (ParseException e) {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public static void toggleVisibility(ProgressBar progressBar, Button button, boolean visibility) {
+        if (visibility) {
+            progressBar.setVisibility(View.VISIBLE);
+            button.setVisibility(View.GONE);
+        } else {
+            progressBar.setVisibility(View.GONE);
+            button.setVisibility(View.VISIBLE);
+        }
     }
 }

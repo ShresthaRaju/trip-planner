@@ -175,7 +175,7 @@
         android:clickable="true"
         android:focusable="true"
         android:tint="@color/colorWhite"
-        app:backgroundTint="@color/colorPrimary"
+        app:backgroundTint="@color/teal_400"
         app:fabSize="normal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/guideline_right"

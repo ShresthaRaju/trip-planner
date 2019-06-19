@@ -21,6 +21,12 @@ public class Trip implements Serializable {
         this.creator = creator;
     }
 
+    public Trip(String name, String startDate, String endDate) {
+        this.name = name;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+
     public String getId() {
         return id;
     }

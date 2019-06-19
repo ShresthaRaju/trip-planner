@@ -21,15 +21,15 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".activities.ViewTripActivity"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/ViewTripTheme" />
         <activity
             android:name=".activities.CreateTripActivity"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".authentication.SignUpActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AuthenticationTheme" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".authentication.SignInActivity"
             android:screenOrientation="portrait"

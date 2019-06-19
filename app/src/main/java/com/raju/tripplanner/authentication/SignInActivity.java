@@ -20,14 +20,14 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
-import com.raju.tripplanner.ApiCalls.AuthAPI;
+import com.raju.tripplanner.DAO.AuthAPI;
 import com.raju.tripplanner.MainActivity;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.models.User;
 import com.raju.tripplanner.utils.ApiResponse.SignInResponse;
 import com.raju.tripplanner.utils.EditTextValidation;
-import com.raju.tripplanner.utils.Tools;
 import com.raju.tripplanner.utils.RetrofitClient;
+import com.raju.tripplanner.utils.Tools;
 import com.raju.tripplanner.utils.UserSession;
 
 import retrofit2.Call;
@@ -73,7 +73,7 @@ public class SignInActivity extends AppCompatActivity {
         fabSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                validateSignIn();
+                signIn();
             }
         });
 
@@ -92,61 +92,62 @@ public class SignInActivity extends AppCompatActivity {
         });
     }
 
-    private void validateSignIn() {
+    private boolean validateSignIn() {
         if (EditTextValidation.isEmpty(signInEmail) | EditTextValidation.isEmpty(signInPassword)) {
             Tools.vibrateDevice(this);
-            return;
-        } else {
+            return false;
+        }
+        return true;
+    }
+
+    public void signIn() {
+
+        if (validateSignIn()) {
+            fabSignIn.setVisibility(View.GONE);
+            signInProgress.setVisibility(View.VISIBLE);
+
             String email = signInEmail.getEditText().getText().toString().trim();
             String password = signInPassword.getEditText().getText().toString().trim();
 
-            User user = new User(email, password);
-            signIn(user);
-        }
-    }
+            Call<SignInResponse> signInCall = authAPI.signIn(new User(email, password));
 
-    public void signIn(User user) {
-
-        fabSignIn.setVisibility(View.GONE);
-        signInProgress.setVisibility(View.VISIBLE);
-
-        Call<SignInResponse> signInCall = authAPI.signIn(user);
-
-        signInCall.enqueue(new Callback<SignInResponse>() {
-            @Override
-            public void onResponse(Call<SignInResponse> call, Response<SignInResponse> response) {
-                if (!response.isSuccessful()) {
-                    signInProgress.setVisibility(View.GONE);
-                    fabSignIn.setVisibility(View.VISIBLE);
-                    if (response.code() == 404) {
-                        signInEmail.setError("User does not exist !");
-                        Tools.vibrateDevice(SignInActivity.this);
-                    } else {
-                        signInEmail.setError("Invalid credentials!!!");
-                        Tools.vibrateDevice(SignInActivity.this);
+            signInCall.enqueue(new Callback<SignInResponse>() {
+                @Override
+                public void onResponse(Call<SignInResponse> call, Response<SignInResponse> response) {
+                    if (!response.isSuccessful()) {
+                        signInProgress.setVisibility(View.GONE);
+                        fabSignIn.setVisibility(View.VISIBLE);
+                        if (response.code() == 404) {
+                            signInEmail.setError("User does not exist !");
+                            Tools.vibrateDevice(SignInActivity.this);
+                        } else {
+                            signInEmail.setError("Invalid credentials!!!");
+                            Tools.vibrateDevice(SignInActivity.this);
+                        }
+                        return;
                     }
-                    return;
+
+                    // Log the response in JSON format
+//                Log.i("sign", new Gson().toJson(response.body().getUser()));
+                    signInProgress.setVisibility(View.GONE);
+
+                    SignInResponse signInResponse = response.body();
+
+                    new UserSession(SignInActivity.this).startSession(signInResponse.getUser(), signInResponse.getAuthToken());
+                    Intent mainActivity = new Intent(new Intent(SignInActivity.this, MainActivity.class));
+                    mainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(mainActivity);
+                    finish();
                 }
 
-                // Log the response in JSON format
-                // Log.i("sign", new Gson().toJson(response.body()));
-                signInProgress.setVisibility(View.GONE);
-
-                SignInResponse signInResponse = response.body();
-                new UserSession(SignInActivity.this).startSession(signInResponse.getMessage(), signInResponse.getAuthToken());
-                Intent mainActivity = new Intent(new Intent(SignInActivity.this, MainActivity.class));
-                mainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(mainActivity);
-                finish();
-            }
-
-            @Override
-            public void onFailure(Call<SignInResponse> call, Throwable t) {
-                signInProgress.setVisibility(View.GONE);
-                fabSignIn.setVisibility(View.VISIBLE);
-                Toast.makeText(SignInActivity.this, "FAILED: " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+                @Override
+                public void onFailure(Call<SignInResponse> call, Throwable t) {
+                    signInProgress.setVisibility(View.GONE);
+                    fabSignIn.setVisibility(View.VISIBLE);
+                    Toast.makeText(SignInActivity.this, "FAILED: " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
     public void showSignUpScreen(View view) {
