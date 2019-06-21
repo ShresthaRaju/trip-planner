@@ -9,7 +9,9 @@ public class User {
 
     private String firstName, familyName, email, username, password, displayPicture;
 
-    public User(String email, String username, String password) {
+    public User(String firstName, String familyName, String email, String username, String password) {
+        this.firstName = firstName;
+        this.familyName = familyName;
         this.email = email;
         this.username = username;
         this.password = password;

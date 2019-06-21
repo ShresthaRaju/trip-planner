@@ -29,6 +29,7 @@
     <color name="grey_400">#BDBDBD</color>
     <color name="grey_5">#f2f2f2</color>
     <color name="deep_purple_700">#512DA8</color>
+    <color name="blue_400">#42A5F5</color>
     <color name="blue_500">#2196F3</color>
     <color name="blue_600">#1E88E5</color>
     <color name="teal_400">#26A69A</color>
@@ -235,7 +236,6 @@
     <color name="blue_100">#BBDEFB</color>
     <color name="blue_200">#90CAF9</color>
     <color name="blue_300">#64B5F6</color>
-    <color name="blue_400">#42A5F5</color>
 
 
     <color name="blue_700">#1976D2</color>

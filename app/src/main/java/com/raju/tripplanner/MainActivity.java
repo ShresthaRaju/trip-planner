@@ -15,6 +15,7 @@ import com.raju.tripplanner.dialogs.ConfirmationDialog;
 import com.raju.tripplanner.fragments.HomeFragment;
 import com.raju.tripplanner.fragments.InvitationsFragment;
 import com.raju.tripplanner.fragments.ProfileFragment;
+import com.raju.tripplanner.models.User;
 import com.raju.tripplanner.utils.UserSession;
 
 public class MainActivity extends AppCompatActivity implements ProfileBottomSheet.ProfileBottomSheetListener, ConfirmationDialog.ConfirmationDialogListener {
@@ -27,7 +28,8 @@ public class MainActivity extends AppCompatActivity implements ProfileBottomShee
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        profileFragment = ProfileFragment.newInstance("Welcome, " + new UserSession(this).getUser().getUsername());
+        User authUser = new UserSession(this).getUser();
+        profileFragment = ProfileFragment.newInstance(authUser.getFirstName() + " " + authUser.getFamilyName());
 
         initComponents();
 

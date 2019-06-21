@@ -258,6 +258,7 @@ public class CreateTripActivity extends AppCompatActivity {
                     Tools.toggleVisibility(progressCreateTrip, btnUpdate, false);
                     Toast.makeText(CreateTripActivity.this, "Trip updated successfully", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(CreateTripActivity.this, MainActivity.class));
+                    finishAffinity();
                     finish();
                 }
 

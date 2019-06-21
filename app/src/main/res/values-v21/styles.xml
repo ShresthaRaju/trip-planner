@@ -11,5 +11,6 @@
 
     <style name="ViewTripTheme" parent="BaseTheme">
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="colorPrimaryDark">@color/blue_400</item>
     </style>
 </resources>

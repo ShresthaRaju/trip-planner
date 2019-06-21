@@ -22,7 +22,7 @@ import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private TextInputLayout signUpEmail, signUpUsername, signUpPassword;
+    private TextInputLayout etFirstName, etFamilyName, signUpEmail, signUpUsername, signUpPassword;
     private Button btnGetStarted;
     private AuthAPI authAPI;
 
@@ -37,6 +37,8 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void initComponents() {
+        etFirstName = findViewById(R.id.et_first_name);
+        etFamilyName = findViewById(R.id.et_family_name);
         signUpEmail = findViewById(R.id.et_sign_up_email);
         signUpUsername = findViewById(R.id.et_sign_up_username);
         signUpPassword = findViewById(R.id.et_sign_up_password);
@@ -55,8 +57,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     //    validate sign up fields
     private boolean validateSignUp() {
-        if (EditTextValidation.isEmpty(signUpEmail) | EditTextValidation.isEmpty(signUpUsername)
-                | EditTextValidation.isEmpty(signUpPassword)) {
+        if (EditTextValidation.isEmpty(etFirstName) | EditTextValidation.isEmpty(etFamilyName) | EditTextValidation.isEmpty(signUpEmail)
+                | EditTextValidation.isEmpty(signUpUsername) | EditTextValidation.isEmpty(signUpPassword)) {
             Tools.vibrateDevice(this);
             return false;
         }
@@ -67,11 +69,13 @@ public class SignUpActivity extends AppCompatActivity {
     private void signUp() {
 
         if (validateSignUp()) {
+            String firstName = etFirstName.getEditText().getText().toString().trim();
+            String familyName = etFamilyName.getEditText().getText().toString().trim();
             String email = signUpEmail.getEditText().getText().toString().trim();
             String username = signUpUsername.getEditText().getText().toString().trim();
             String password = signUpPassword.getEditText().getText().toString().trim();
 
-            Call<SignUpResponse> signUpCall = authAPI.registerUser(new User(email, username, password));
+            Call<SignUpResponse> signUpCall = authAPI.registerUser(new User(firstName, familyName, email, username, password));
 
             // enqueue method runs the api call in background thread
             signUpCall.enqueue(new Callback<SignUpResponse>() {

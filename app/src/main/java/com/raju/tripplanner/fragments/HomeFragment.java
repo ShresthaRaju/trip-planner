@@ -17,6 +17,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
@@ -53,7 +54,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String ARG_PARAM1 = "param1";
     private String toolbarTitle;
@@ -66,6 +67,8 @@ public class HomeFragment extends Fragment {
     private TextView tvNoTrip;
     private MyTripsAdapter myTripsAdapter;
     private TripDaoImpl tripDaoImpl;
+    private SwipeRefreshLayout swipeRefreshHome;
+    private List<Trip> userTrips;
 
     public HomeFragment() {
     }
@@ -84,6 +87,10 @@ public class HomeFragment extends Fragment {
         View homeView = inflater.inflate(R.layout.fragment_home, container, false);
 
         initToolbar(homeView);
+
+        swipeRefreshHome = homeView.findViewById(R.id.swipe_refresh_home);
+        swipeRefreshHome.setOnRefreshListener(this);
+        swipeRefreshHome.setColorSchemeColors(getResources().getColor(R.color.teal_500));
 
         createTrip = homeView.findViewById(R.id.fab_create_trip);
         createTrip.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +126,8 @@ public class HomeFragment extends Fragment {
         setHasOptionsMenu(true);
 
         tripDaoImpl = new TripDaoImpl(getActivity());
+
+        userTrips = new ArrayList<>();
 
         // Initialize Places.
         Places.initialize(getContext(), MAP_API);
@@ -227,14 +236,17 @@ public class HomeFragment extends Fragment {
         initComponents();
     }
 
-    private void fetchTrips() {
+    private void fetchUserTrips() {
+        swipeRefreshHome.setRefreshing(true);
         tripDaoImpl.getMyTrips();
         tripDaoImpl.setTripActionsListener(new TripDaoImpl.TripActionsListener() {
             @Override
             public void onTripsReceived(List<Trip> myTrips) {
                 if (myTrips.isEmpty()) {
+                    swipeRefreshHome.setRefreshing(false);
                     tvNoTrip.setVisibility(View.VISIBLE);
                 } else {
+                    swipeRefreshHome.setRefreshing(false);
                     tvNoTrip.setVisibility(View.GONE);
                     myTripsAdapter.updateData(myTrips);
                 }
@@ -258,8 +270,14 @@ public class HomeFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        fetchTrips();
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Toast.makeText(getActivity(), "on activity created", Toast.LENGTH_SHORT).show();
+        fetchUserTrips();
+    }
+
+    @Override
+    public void onRefresh() {
+        fetchUserTrips();
     }
 }
