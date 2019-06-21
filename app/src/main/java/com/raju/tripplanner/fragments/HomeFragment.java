@@ -3,14 +3,21 @@ package com.raju.tripplanner.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.model.LatLng;
@@ -22,20 +29,22 @@ import com.google.android.libraries.places.widget.AutocompleteActivity;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.raju.tripplanner.BuildConfig;
-import com.raju.tripplanner.DAO.PlacePhoto;
+import com.raju.tripplanner.DAO.PlacePhotoAPI;
+import com.raju.tripplanner.DaoImpl.TripDaoImpl;
 import com.raju.tripplanner.MainActivity;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.activities.CreateTripActivity;
+import com.raju.tripplanner.adapters.MyTripsAdapter;
 import com.raju.tripplanner.authentication.SignInActivity;
 import com.raju.tripplanner.models.Destination;
+import com.raju.tripplanner.models.Trip;
 import com.raju.tripplanner.utils.ApiResponse.PhotoResponse;
 import com.raju.tripplanner.utils.UserSession;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,14 +54,21 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String ARG_PARAM1 = "param1";
     private String toolbarTitle;
     public static final String MAP_API = BuildConfig.MapApi;
     private static final int AUTOCOMPLETE_REQUEST_CODE = 001;
     private PlacesClient placesClient;
-    private PlacePhoto placePhoto;
+    private PlacePhotoAPI placePhotoAPI;
+    private FloatingActionButton createTrip;
+    private RecyclerView myTripsContainer;
+    private TextView tvNoTrip;
+    private MyTripsAdapter myTripsAdapter;
+    private TripDaoImpl tripDaoImpl;
+    private SwipeRefreshLayout swipeRefreshHome;
+    private List<Trip> userTrips;
 
     public HomeFragment() {
     }
@@ -69,13 +85,14 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View homeView = inflater.inflate(R.layout.fragment_home, container, false);
-        initToolbar(homeView);
-        initComponents(homeView);
-        return homeView;
-    }
 
-    private void initComponents(View view) {
-        FloatingActionButton createTrip = view.findViewById(R.id.fab_create_trip);
+        initToolbar(homeView);
+
+        swipeRefreshHome = homeView.findViewById(R.id.swipe_refresh_home);
+        swipeRefreshHome.setOnRefreshListener(this);
+        swipeRefreshHome.setColorSchemeColors(getResources().getColor(R.color.teal_500));
+
+        createTrip = homeView.findViewById(R.id.fab_create_trip);
         createTrip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,37 +100,16 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        Button btnLogout = view.findViewById(R.id.btn_logout);
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new UserSession(getActivity()).endSession();
-                Intent signInActivity = new Intent(getActivity(), SignInActivity.class);
-                signInActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(signInActivity);
-                getActivity().finish();
-            }
-        });
+        tvNoTrip = homeView.findViewById(R.id.tv_no_trip);
 
-        // Initialize Places.
-        Places.initialize(getContext(), MAP_API);
+        myTripsContainer = homeView.findViewById(R.id.my_trips_container);
+        myTripsContainer.setHasFixedSize(true);
+        myTripsContainer.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        // Create a new Places client instance.
-        placesClient = Places.createClient(getActivity());
+        myTripsAdapter = new MyTripsAdapter(getActivity(), new ArrayList<Trip>());
+        myTripsContainer.setAdapter(myTripsAdapter);
 
-        // retrofit client
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(logging)
-                .build();
-
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://maps.googleapis.com/maps/api/place/details/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
-
-        placePhoto = retrofit.create(PlacePhoto.class);
+        return homeView;
     }
 
     private void initToolbar(View view) {
@@ -122,6 +118,51 @@ public class HomeFragment extends Fragment {
         if (getArguments() != null) {
             toolbarTitle = getArguments().getString(ARG_PARAM1);
             ((MainActivity) getActivity()).getSupportActionBar().setTitle(toolbarTitle);
+        }
+    }
+
+    private void initComponents() {
+
+        setHasOptionsMenu(true);
+
+        tripDaoImpl = new TripDaoImpl(getActivity());
+
+        userTrips = new ArrayList<>();
+
+        // Initialize Places.
+        Places.initialize(getContext(), MAP_API);
+
+        // Create a new Places client instance.
+        placesClient = Places.createClient(getActivity());
+
+        // retrofit client
+
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://maps.googleapis.com/maps/api/place/details/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        placePhotoAPI = retrofit.create(PlacePhotoAPI.class);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_profile, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_sign_out:
+                new UserSession(getActivity()).endSession();
+                Intent signInActivity = new Intent(getActivity(), SignInActivity.class);
+                signInActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(signInActivity);
+                getActivity().finish();
+                return true;
+
+            default:
+                return false;
         }
     }
 
@@ -146,12 +187,12 @@ public class HomeFragment extends Fragment {
             if (resultCode == RESULT_OK) {
                 Place selectedPlace = Autocomplete.getPlaceFromIntent(data);
                 String placeId = selectedPlace.getId();
-                String placeName = selectedPlace.getName();
+                final String placeName = selectedPlace.getName();
                 LatLng latLng = selectedPlace.getLatLng();
-                double lat = latLng.latitude;
-                double lng = latLng.longitude;
+                final double lat = latLng.latitude;
+                final double lng = latLng.longitude;
 
-                Call<PhotoResponse> photoCall = placePhoto.fetchPhoto(placeId, "photo", MAP_API);
+                Call<PhotoResponse> photoCall = placePhotoAPI.fetchPhoto(placeId, "photo", MAP_API);
                 photoCall.enqueue(new Callback<PhotoResponse>() {
                     @Override
                     public void onResponse(Call<PhotoResponse> call, Response<PhotoResponse> response) {
@@ -160,7 +201,7 @@ public class HomeFragment extends Fragment {
                             return;
                         }
                         PhotoResponse photoResponse = response.body();
-                        String photoReference = photoResponse.getResult().getPhotos().get(0).getPhoto_reference();
+                        String photoReference = photoResponse.getPlacePhotoResult().getPhotos().get(0).getPhoto_reference();
                         String photoUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=" + photoReference + "&key=" + MAP_API;
 
                         // create new destination
@@ -186,5 +227,57 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(getActivity(), "Cancelled !", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        initComponents();
+    }
+
+    private void fetchUserTrips() {
+        swipeRefreshHome.setRefreshing(true);
+        tripDaoImpl.getMyTrips();
+        tripDaoImpl.setTripActionsListener(new TripDaoImpl.TripActionsListener() {
+            @Override
+            public void onTripsReceived(List<Trip> myTrips) {
+                if (myTrips.isEmpty()) {
+                    swipeRefreshHome.setRefreshing(false);
+                    tvNoTrip.setVisibility(View.VISIBLE);
+                } else {
+                    swipeRefreshHome.setRefreshing(false);
+                    tvNoTrip.setVisibility(View.GONE);
+                    myTripsAdapter.updateData(myTrips);
+                }
+            }
+
+            @Override
+            public void onTripCreated(Trip trip) {
+
+            }
+
+            @Override
+            public void onTripUpdated() {
+
+            }
+
+            @Override
+            public void onTripDeleted() {
+
+            }
+        });
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        Toast.makeText(getActivity(), "on activity created", Toast.LENGTH_SHORT).show();
+        fetchUserTrips();
+    }
+
+    @Override
+    public void onRefresh() {
+        fetchUserTrips();
     }
 }

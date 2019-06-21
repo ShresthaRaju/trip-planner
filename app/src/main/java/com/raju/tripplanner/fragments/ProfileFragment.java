@@ -9,9 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.ViewCompat;
@@ -23,6 +25,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.raju.tripplanner.MainActivity;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.bottomsheets.ProfileBottomSheet;
+import com.raju.tripplanner.models.User;
+import com.raju.tripplanner.utils.UserSession;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -30,13 +34,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
-    private Toolbar profileToolbar;
     private AppBarLayout appBarLayout;
     private CollapsingToolbarLayout collapsingToolbar;
     private CircleImageView displayPicture;
     private ImageView coverPhoto;
     private String toolbarTitle;
     private FloatingActionButton fabProfileEdit;
+    private User authUser;
+
+    private TextView email, username;
 
     private String[] allPermissions = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private static final int REQUEST_PERMISSIONS_ALL = 986;
@@ -58,13 +64,18 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View profile = inflater.inflate(R.layout.fragment_profile, container, false);
+        initToolbar(profile);
         initComponents(profile);
         return profile;
     }
 
-    private void initComponents(View view) {
-        profileToolbar = view.findViewById(R.id.profile_toolbar);
+    private void initToolbar(View view) {
+        Toolbar profileToolbar = view.findViewById(R.id.profile_toolbar);
         ((MainActivity) getActivity()).setSupportActionBar(profileToolbar);
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle(toolbarTitle);
+    }
+
+    private void initComponents(View view) {
 
         appBarLayout = view.findViewById(R.id.app_bar_layout);
         appBarLayout.addOnOffsetChangedListener(onOffsetChangedListener);
@@ -73,6 +84,11 @@ public class ProfileFragment extends Fragment {
         coverPhoto = view.findViewById(R.id.cover_photo);
         displayPicture = view.findViewById(R.id.display_picture);
 
+        email = view.findViewById(R.id.txt_p_email_value);
+        username = view.findViewById(R.id.txt_p_username_value);
+
+        email.setText(authUser.getEmail());
+        username.setText(authUser.getUsername());
 
         fabProfileEdit = view.findViewById(R.id.fab_profile_edit);
         fabProfileEdit.setOnClickListener(new View.OnClickListener() {
@@ -142,5 +158,13 @@ public class ProfileFragment extends Fragment {
     // update display picture
     public void updateDisplayPicture(String imagePath) {
         Picasso.get().load(Uri.parse("file://" + imagePath)).into(coverPhoto);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        authUser = new UserSession(getActivity()).getUser();
+
     }
 }

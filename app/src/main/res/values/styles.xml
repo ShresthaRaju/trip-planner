@@ -41,9 +41,38 @@
         </item>
     </style>
 
+    <!--Progress Bar White-->
+    <style name="ProgressBar.White" parent="AppTheme">
+        <item name="colorPrimary">@color/colorWhite</item>
+        <item name="colorAccent">@color/colorWhite</item>
+    </style>
+
+    <!--Progress Bar Teal-->
+    <style name="ProgressBar.Teal" parent="AppTheme">
+        <item name="colorPrimary">@color/teal_500</item>
+        <item name="colorAccent">@color/teal_500</item>
+    </style>
+
     <!--Datepicker dialog theme-->
     <style name="DatePickerStyle" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorAccent">@color/colorPurple</item>
     </style>
+
+    <!--ripple style-->
+    <style name="Ripple">
+        <item name="mrl_rippleOverlay">true</item>
+        <item name="mrl_rippleAlpha">0.1</item>
+        <item name="mrl_rippleHover">true</item>
+        <item name="mrl_rippleColor">@color/light_blue_500</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

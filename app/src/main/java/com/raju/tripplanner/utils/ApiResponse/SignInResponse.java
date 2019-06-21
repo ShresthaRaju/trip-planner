@@ -1,19 +1,15 @@
 package com.raju.tripplanner.utils.ApiResponse;
 
-import com.google.gson.annotations.SerializedName;
+import com.raju.tripplanner.models.User;
 
 public class SignInResponse {
-    private boolean success;
-    private String message;
-    @SerializedName("auth_token")
+
+    private User user;
     private String authToken;
 
-    public boolean isSuccess() {
-        return success;
-    }
 
-    public String getMessage() {
-        return message;
+    public User getUser() {
+        return user;
     }
 
     public String getAuthToken() {

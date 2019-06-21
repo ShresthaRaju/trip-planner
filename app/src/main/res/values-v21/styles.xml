@@ -2,11 +2,15 @@
 <resources>
 
     <style name="AppTheme" parent="BaseTheme">
-        <item name="android:statusBarColor">@color/blue_grey_900</item>
+        <item name="android:statusBarColor">@color/blue_600</item>
     </style>
 
     <style name="AuthenticationTheme" parent="BaseTheme">
         <item name="android:statusBarColor">@color/colorTransparent</item>
-        <!--<item name="android:windowTranslucentStatus">true</item>-->
+    </style>
+
+    <style name="ViewTripTheme" parent="BaseTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="colorPrimaryDark">@color/blue_400</item>
     </style>
 </resources>

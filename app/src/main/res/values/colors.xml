@@ -15,6 +15,7 @@
 
     <!--colors used-->
     <color name="colorBlackOverlay">#99000000</color>
+    <color name="lightBlackOverlay">#4D000000</color>
     <color name="colorBlack">#000000</color>
     <color name="colorTransparent">#00FFFFFF</color>
     <color name="blue_grey_800">#37474F</color>
@@ -22,6 +23,16 @@
     <color name="green_A400">#00E676</color>
     <color name="light_green_600">#7CB342</color>
     <color name="cyan_A700">#00B8D4</color>
+    <color name="light_blue_500">#03A9F4</color>
+    <color name="grey_700">#616161</color>
+    <color name="grey_900">#212121</color>
+    <color name="grey_400">#BDBDBD</color>
+    <color name="grey_5">#f2f2f2</color>
+    <color name="deep_purple_700">#512DA8</color>
+    <color name="blue_400">#42A5F5</color>
+    <color name="blue_500">#2196F3</color>
+    <color name="blue_600">#1E88E5</color>
+    <color name="teal_400">#26A69A</color>
 
     <!--material colors from material.io-->
     <color name="red_50">#FFEBEE</color>
@@ -46,20 +57,19 @@
     <color name="deep_purple_400">#7E57C2</color>
     <color name="deep_purple_500">#673AB7</color>
     <color name="deep_purple_600">#5E35B1</color>
-    <color name="deep_purple_700">#512DA8</color>
+
     <color name="deep_purple_800">#4527A0</color>
     <color name="deep_purple_900">#311B92</color>
     <color name="deep_purple_A100">#B388FF</color>
     <color name="deep_purple_A200">#7C4DFF</color>
     <color name="deep_purple_A400">#651FFF</color>
     <color name="deep_purple_A700">#6200EA</color>
-
     <color name="light_blue_50">#E1F5FE</color>
     <color name="light_blue_100">#B3E5FC</color>
     <color name="light_blue_200">#81D4FA</color>
     <color name="light_blue_300">#4FC3F7</color>
     <color name="light_blue_400">#29B6F6</color>
-    <color name="light_blue_500">#03A9F4</color>
+
     <color name="light_blue_600">#039BE5</color>
     <color name="light_blue_700">#0288D1</color>
     <color name="light_blue_800">#0277BD</color>
@@ -226,9 +236,8 @@
     <color name="blue_100">#BBDEFB</color>
     <color name="blue_200">#90CAF9</color>
     <color name="blue_300">#64B5F6</color>
-    <color name="blue_400">#42A5F5</color>
-    <color name="blue_500">#2196F3</color>
-    <color name="blue_600">#1E88E5</color>
+
+
     <color name="blue_700">#1976D2</color>
     <color name="blue_800">#1565C0</color>
     <color name="blue_900">#0D47A1</color>
@@ -241,7 +250,7 @@
     <color name="teal_100">#B2DFDB</color>
     <color name="teal_200">#80CBC4</color>
     <color name="teal_300">#4DB6AC</color>
-    <color name="teal_400">#26A69A</color>
+
     <color name="teal_500">#009688</color>
     <color name="teal_600">#00897B</color>
     <color name="teal_700">#00796B</color>
@@ -286,12 +295,12 @@
     <color name="grey_100">#F5F5F5</color>
     <color name="grey_200">#EEEEEE</color>
     <color name="grey_300">#E0E0E0</color>
-    <color name="grey_400">#BDBDBD</color>
+
     <color name="grey_500">#9E9E9E</color>
     <color name="grey_600">#757575</color>
-    <color name="grey_700">#616161</color>
+
     <color name="grey_800">#424242</color>
-    <color name="grey_900">#212121</color>
+
     <color name="grey_1000">#1a1a1a</color>
     <color name="colorWhite">#FFFFFF</color>
 

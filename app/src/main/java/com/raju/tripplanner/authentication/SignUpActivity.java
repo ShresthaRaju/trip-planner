@@ -11,9 +11,10 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.raju.tripplanner.DAO.AuthAPI;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.models.User;
+import com.raju.tripplanner.utils.ApiResponse.SignUpResponse;
 import com.raju.tripplanner.utils.EditTextValidation;
 import com.raju.tripplanner.utils.RetrofitClient;
-import com.raju.tripplanner.utils.ApiResponse.SignUpResponse;
+import com.raju.tripplanner.utils.Tools;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,7 +22,7 @@ import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private TextInputLayout signUpEmail, signUpUsername, signUpPassword;
+    private TextInputLayout etFirstName, etFamilyName, signUpEmail, signUpUsername, signUpPassword;
     private Button btnGetStarted;
     private AuthAPI authAPI;
 
@@ -30,10 +31,14 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        getWindow().setBackgroundDrawableResource(R.drawable.bg_sign_up);
+
         initComponents();
     }
 
     private void initComponents() {
+        etFirstName = findViewById(R.id.et_first_name);
+        etFamilyName = findViewById(R.id.et_family_name);
         signUpEmail = findViewById(R.id.et_sign_up_email);
         signUpUsername = findViewById(R.id.et_sign_up_username);
         signUpPassword = findViewById(R.id.et_sign_up_password);
@@ -42,7 +47,7 @@ public class SignUpActivity extends AppCompatActivity {
         btnGetStarted.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                validateSignUp();
+                signUp();
             }
         });
 
@@ -51,47 +56,50 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     //    validate sign up fields
-    private void validateSignUp() {
-        if (EditTextValidation.isEmpty(signUpEmail) && EditTextValidation.isEmpty(signUpUsername)
-                && EditTextValidation.isEmpty(signUpPassword)) {
-            return;
-        } else {
+    private boolean validateSignUp() {
+        if (EditTextValidation.isEmpty(etFirstName) | EditTextValidation.isEmpty(etFamilyName) | EditTextValidation.isEmpty(signUpEmail)
+                | EditTextValidation.isEmpty(signUpUsername) | EditTextValidation.isEmpty(signUpPassword)) {
+            Tools.vibrateDevice(this);
+            return false;
+        }
+        return true;
+    }
+
+    //    register new user
+    private void signUp() {
+
+        if (validateSignUp()) {
+            String firstName = etFirstName.getEditText().getText().toString().trim();
+            String familyName = etFamilyName.getEditText().getText().toString().trim();
             String email = signUpEmail.getEditText().getText().toString().trim();
             String username = signUpUsername.getEditText().getText().toString().trim();
             String password = signUpPassword.getEditText().getText().toString().trim();
 
-            User newUser = new User(email, username, password);
-            signUp(newUser);
-        }
-    }
+            Call<SignUpResponse> signUpCall = authAPI.registerUser(new User(firstName, familyName, email, username, password));
 
-    //    register new user
-    private void signUp(User user) {
+            // enqueue method runs the api call in background thread
+            signUpCall.enqueue(new Callback<SignUpResponse>() {
+                @Override
+                public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(SignUpActivity.this, "ERROR: " + response.code() + " " + response.message(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-        Call<SignUpResponse> signUpCall = authAPI.registerUser(user);
-
-        // enqueue method runs the api call in background thread
-        signUpCall.enqueue(new Callback<SignUpResponse>() {
-            @Override
-            public void onResponse(Call<SignUpResponse> call, Response<SignUpResponse> response) {
-                if (!response.isSuccessful()) {
-                    Toast.makeText(SignUpActivity.this, response.code() + " " + response.message(), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                Toast.makeText(SignUpActivity.this, "Sign Up Successful !", Toast.LENGTH_SHORT).show();
-                finish();
+                    Toast.makeText(SignUpActivity.this, "Sign Up Successful !", Toast.LENGTH_SHORT).show();
+                    finish();
 
 //                SignUpResponse signUpApiResponse = response.body();
 //                Log.i("CREATED_USER", signUpApiResponse.getUser().getEmail());
-            }
+                }
 
-            @Override
-            public void onFailure(Call<SignUpResponse> call, Throwable t) {
+                @Override
+                public void onFailure(Call<SignUpResponse> call, Throwable t) {
 //                Throwable is the super class of Exception class
-                Toast.makeText(SignUpActivity.this, "ERROR:\n" + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                    Toast.makeText(SignUpActivity.this, "FAILED: " + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     //close sign up screen
