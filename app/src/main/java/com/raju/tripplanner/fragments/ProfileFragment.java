@@ -1,6 +1,7 @@
 package com.raju.tripplanner.fragments;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,8 +24,10 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.raju.tripplanner.DaoImpl.UserDaoImpl;
 import com.raju.tripplanner.MainActivity;
 import com.raju.tripplanner.R;
+import com.raju.tripplanner.activities.UpdateProfileActivity;
 import com.raju.tripplanner.bottomsheets.ProfileBottomSheet;
 import com.raju.tripplanner.models.User;
 import com.raju.tripplanner.utils.UserSession;
@@ -41,6 +45,7 @@ public class ProfileFragment extends Fragment {
     private String toolbarTitle;
     private FloatingActionButton fabProfileEdit;
     private User authUser;
+    private Button btnUploadDp;
 
     private TextView email, username;
 
@@ -90,8 +95,10 @@ public class ProfileFragment extends Fragment {
         email.setText(authUser.getEmail());
         username.setText(authUser.getUsername());
 
+        btnUploadDp = view.findViewById(R.id.btn_upload);
         fabProfileEdit = view.findViewById(R.id.fab_profile_edit);
-        fabProfileEdit.setOnClickListener(new View.OnClickListener() {
+
+        btnUploadDp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -100,6 +107,13 @@ public class ProfileFragment extends Fragment {
                 } else {
                     requestPermissions(allPermissions, REQUEST_PERMISSIONS_ALL);
                 }
+            }
+        });
+
+        fabProfileEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), UpdateProfileActivity.class));
             }
         });
     }
@@ -158,6 +172,7 @@ public class ProfileFragment extends Fragment {
     // update display picture
     public void updateDisplayPicture(String imagePath) {
         Picasso.get().load(Uri.parse("file://" + imagePath)).into(coverPhoto);
+        new UserDaoImpl(getActivity()).uploadDisplayPicture(imagePath);
     }
 
     @Override

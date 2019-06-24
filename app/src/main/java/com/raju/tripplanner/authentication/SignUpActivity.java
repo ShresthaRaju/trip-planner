@@ -56,7 +56,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     //    validate sign up fields
-    private boolean validateSignUp() {
+    private boolean validSignUpDetails() {
         if (EditTextValidation.isEmpty(etFirstName) | EditTextValidation.isEmpty(etFamilyName) | EditTextValidation.isEmpty(signUpEmail)
                 | EditTextValidation.isEmpty(signUpUsername) | EditTextValidation.isEmpty(signUpPassword)) {
             Tools.vibrateDevice(this);
@@ -68,7 +68,7 @@ public class SignUpActivity extends AppCompatActivity {
     //    register new user
     private void signUp() {
 
-        if (validateSignUp()) {
+        if (validSignUpDetails()) {
             String firstName = etFirstName.getEditText().getText().toString().trim();
             String familyName = etFamilyName.getEditText().getText().toString().trim();
             String email = signUpEmail.getEditText().getText().toString().trim();

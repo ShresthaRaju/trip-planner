@@ -92,7 +92,7 @@ public class SignInActivity extends AppCompatActivity {
         });
     }
 
-    private boolean validateSignIn() {
+    private boolean validSignInDetails() {
         if (EditTextValidation.isEmpty(signInEmail) | EditTextValidation.isEmpty(signInPassword)) {
             Tools.vibrateDevice(this);
             return false;
@@ -102,7 +102,7 @@ public class SignInActivity extends AppCompatActivity {
 
     public void signIn() {
 
-        if (validateSignIn()) {
+        if (validSignInDetails()) {
             fabSignIn.setVisibility(View.GONE);
             signInProgress.setVisibility(View.VISIBLE);
 
