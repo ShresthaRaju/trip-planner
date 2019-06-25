@@ -30,6 +30,8 @@ import com.raju.tripplanner.R;
 import com.raju.tripplanner.activities.UpdateProfileActivity;
 import com.raju.tripplanner.bottomsheets.ProfileBottomSheet;
 import com.raju.tripplanner.models.User;
+import com.raju.tripplanner.utils.Error;
+import com.raju.tripplanner.utils.Tools;
 import com.raju.tripplanner.utils.UserSession;
 import com.squareup.picasso.Picasso;
 
@@ -46,6 +48,8 @@ public class ProfileFragment extends Fragment {
     private FloatingActionButton fabProfileEdit;
     private User authUser;
     private Button btnUploadDp;
+    private UserDaoImpl userDaoImpl;
+    private UserSession userSession;
 
     private TextView email, username;
 
@@ -97,6 +101,8 @@ public class ProfileFragment extends Fragment {
 
         btnUploadDp = view.findViewById(R.id.btn_upload);
         fabProfileEdit = view.findViewById(R.id.fab_profile_edit);
+
+        Picasso.get().load(Tools.DP_BASE_URI + userSession.getUser().getDisplayPicture()).into(displayPicture);
 
         btnUploadDp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,8 +177,32 @@ public class ProfileFragment extends Fragment {
 
     // update display picture
     public void updateDisplayPicture(String imagePath) {
-        Picasso.get().load(Uri.parse("file://" + imagePath)).into(coverPhoto);
-        new UserDaoImpl(getActivity()).uploadDisplayPicture(imagePath);
+
+        userDaoImpl.uploadDisplayPicture(imagePath);
+        userDaoImpl.setUserProfileListener(new UserDaoImpl.UserProfileListener() {
+            @Override
+            public void onDpUploaded(User updatedUser) {
+                Picasso.get().load(Uri.parse("file://" + imagePath)).into(displayPicture);
+                Toast.makeText(getActivity(), "Display picture uploaded successfully", Toast.LENGTH_LONG).show();
+                userSession.startSession(updatedUser, userSession.getAuthToken());
+            }
+
+            @Override
+            public void onDetailsUpdated(User user) {
+
+            }
+
+            @Override
+            public void onPasswordChanged() {
+
+            }
+
+            @Override
+            public void onError(Error error) {
+
+            }
+        });
+
     }
 
     @Override
@@ -180,6 +210,10 @@ public class ProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         authUser = new UserSession(getActivity()).getUser();
+
+        userDaoImpl = new UserDaoImpl(getActivity());
+
+        userSession = new UserSession(getActivity());
 
     }
 }

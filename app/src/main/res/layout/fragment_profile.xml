@@ -47,7 +47,7 @@
         android:id="@+id/display_picture"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/display_picture"
+        android:src="@drawable/user_placeholder"
         app:layout_anchor="@id/app_bar_layout"
         app:layout_anchorGravity="center|bottom" />
 

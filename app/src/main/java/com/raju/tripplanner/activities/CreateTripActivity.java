@@ -50,7 +50,6 @@ public class CreateTripActivity extends AppCompatActivity {
         initToolbar();
 
         initComponents();
-
     }
 
     private void initToolbar() {
@@ -205,31 +204,6 @@ public class CreateTripActivity extends AppCompatActivity {
 
             Trip trip = new Trip(tripName, startDate, endDate, destination, new UserSession(this).getUser().getId());
             tripDaoImpl.createTrip(trip);
-            tripDaoImpl.setTripActionsListener(new TripDaoImpl.TripActionsListener() {
-                @Override
-                public void onTripsReceived(List<Trip> myTrips) {
-
-                }
-
-                @Override
-                public void onTripCreated(Trip trip) {
-                    Tools.toggleVisibility(progressCreateTrip, btnCreate, false);
-                    Intent viewTrip = new Intent(CreateTripActivity.this, ViewTripActivity.class);
-                    viewTrip.putExtra("TRIP", trip);
-                    startActivity(viewTrip);
-                    finish();
-                }
-
-                @Override
-                public void onTripUpdated() {
-
-                }
-
-                @Override
-                public void onTripDeleted() {
-
-                }
-            });
         }
     }
 
@@ -242,31 +216,40 @@ public class CreateTripActivity extends AppCompatActivity {
 
             Trip tripToUpdate = new Trip(tripName, startDate, endDate);
             tripDaoImpl.updateTrip(trip.getId(), tripToUpdate);
-            tripDaoImpl.setTripActionsListener(new TripDaoImpl.TripActionsListener() {
-                @Override
-                public void onTripsReceived(List<Trip> myTrips) {
-
-                }
-
-                @Override
-                public void onTripCreated(Trip trip) {
-
-                }
-
-                @Override
-                public void onTripUpdated() {
-                    Tools.toggleVisibility(progressCreateTrip, btnUpdate, false);
-                    Toast.makeText(CreateTripActivity.this, "Trip updated successfully", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(CreateTripActivity.this, MainActivity.class));
-                    finishAffinity();
-                    finish();
-                }
-
-                @Override
-                public void onTripDeleted() {
-
-                }
-            });
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        tripDaoImpl.setTripActionsListener(new TripDaoImpl.TripActionsListener() {
+            @Override
+            public void onTripsReceived(List<Trip> myTrips) {
+
+            }
+
+            @Override
+            public void onTripCreated(Trip trip) {
+                Tools.toggleVisibility(progressCreateTrip, btnCreate, false);
+                Intent viewTrip = new Intent(CreateTripActivity.this, ViewTripActivity.class);
+                viewTrip.putExtra("TRIP", trip);
+                startActivity(viewTrip);
+                finish();
+            }
+
+            @Override
+            public void onTripUpdated() {
+                Tools.toggleVisibility(progressCreateTrip, btnUpdate, false);
+                Toast.makeText(CreateTripActivity.this, "Trip updated successfully", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(CreateTripActivity.this, MainActivity.class));
+                finishAffinity();
+                finish();
+            }
+
+            @Override
+            public void onTripDeleted() {
+
+            }
+        });
     }
 }

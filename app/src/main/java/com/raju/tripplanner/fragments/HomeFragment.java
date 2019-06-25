@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -68,7 +69,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private MyTripsAdapter myTripsAdapter;
     private TripDaoImpl tripDaoImpl;
     private SwipeRefreshLayout swipeRefreshHome;
-    private List<Trip> userTrips;
 
     public HomeFragment() {
     }
@@ -90,7 +90,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         swipeRefreshHome = homeView.findViewById(R.id.swipe_refresh_home);
         swipeRefreshHome.setOnRefreshListener(this);
-        swipeRefreshHome.setColorSchemeColors(getResources().getColor(R.color.teal_500));
+        swipeRefreshHome.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.teal_500));
 
         createTrip = homeView.findViewById(R.id.fab_create_trip);
         createTrip.setOnClickListener(new View.OnClickListener() {
@@ -126,8 +126,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         setHasOptionsMenu(true);
 
         tripDaoImpl = new TripDaoImpl(getActivity());
-
-        userTrips = new ArrayList<>();
 
         // Initialize Places.
         Places.initialize(getContext(), MAP_API);

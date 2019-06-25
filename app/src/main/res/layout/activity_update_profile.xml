@@ -22,7 +22,7 @@
             android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
             android:layout_margin="16dp"
-            android:src="@drawable/display_picture" />
+            android:src="@drawable/user_placeholder" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -92,11 +92,20 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp"
                     android:background="@color/colorInfo"
-                    android:onClick="updateProfile"
                     android:elevation="10dp"
+                    android:onClick="updateProfile"
                     android:text="@string/btn_done"
                     android:textColor="@color/colorWhite"
                     android:textSize="17sp" />
+
+                <ProgressBar
+                    android:id="@+id/update_details_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="8dp"
+                    android:theme="@style/ProgressBar.Teal"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
@@ -180,10 +189,19 @@
                     android:layout_margin="16dp"
                     android:background="@color/colorPurple"
                     android:elevation="10dp"
-                    android:text="@string/btn_change_password"
                     android:onClick="changePassword"
+                    android:text="@string/btn_change_password"
                     android:textColor="@color/colorWhite"
                     android:textSize="17sp" />
+
+                <ProgressBar
+                    android:id="@+id/change_password_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="8dp"
+                    android:theme="@style/ProgressBar.Teal"
+                    android:visibility="gone" />
 
             </LinearLayout>
 

@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements ProfileBottomShee
 
     @Override
     public void onImageSelected(String imagePath) {
-//        Toast.makeText(this, imagePath, Toast.LENGTH_LONG).show();
         profileFragment.updateDisplayPicture(imagePath);
     }
 

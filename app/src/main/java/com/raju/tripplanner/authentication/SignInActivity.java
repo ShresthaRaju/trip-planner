@@ -20,15 +20,20 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.raju.tripplanner.DAO.AuthAPI;
 import com.raju.tripplanner.MainActivity;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.models.User;
+import com.raju.tripplanner.utils.APIError;
 import com.raju.tripplanner.utils.ApiResponse.SignInResponse;
 import com.raju.tripplanner.utils.EditTextValidation;
 import com.raju.tripplanner.utils.RetrofitClient;
 import com.raju.tripplanner.utils.Tools;
 import com.raju.tripplanner.utils.UserSession;
+
+import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -115,20 +120,29 @@ public class SignInActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<SignInResponse> call, Response<SignInResponse> response) {
                     if (!response.isSuccessful()) {
+                        Gson gson = new GsonBuilder().create();
+                        APIError apiError = new APIError();
+
                         signInProgress.setVisibility(View.GONE);
                         fabSignIn.setVisibility(View.VISIBLE);
-                        if (response.code() == 404) {
-                            signInEmail.setError("User does not exist !");
-                            Tools.vibrateDevice(SignInActivity.this);
-                        } else {
-                            signInEmail.setError("Invalid credentials!!!");
-                            Tools.vibrateDevice(SignInActivity.this);
+
+                        try {
+                            apiError = gson.fromJson(response.errorBody().string(), APIError.class);
+                            if (apiError.getError().getField().equals("email")) {
+                                signInEmail.setError(apiError.getError().getMessage());
+                                Tools.vibrateDevice(SignInActivity.this);
+                            } else if (apiError.getError().getField().equals("password")) {
+                                signInPassword.setError(apiError.getError().getMessage());
+                                Tools.vibrateDevice(SignInActivity.this);
+                            }
+                        } catch (IOException e) {
+                            Log.e("IOException", e.getMessage());
                         }
                         return;
                     }
 
                     // Log the response in JSON format
-//                Log.i("sign", new Gson().toJson(response.body().getUser()));
+                    // Log.i("sign", new Gson().toJson(response.body().getUser()));
                     signInProgress.setVisibility(View.GONE);
 
                     SignInResponse signInResponse = response.body();

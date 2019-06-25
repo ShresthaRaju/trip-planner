@@ -20,14 +20,16 @@ public class TripDaoImpl {
     private TripAPI tripAPI;
     private Activity activity;
     private TripActionsListener tripActionsListener;
+    private UserSession userSession;
 
     public TripDaoImpl(Activity activity) {
         this.activity = activity;
         tripAPI = RetrofitClient.getInstance().create(TripAPI.class);
+        userSession = new UserSession(activity);
     }
 
     public void createTrip(Trip trip) {
-        Call<TripResponse> createTripCall = tripAPI.createTrip("Bearer " + new UserSession(activity).getAuthToken(), trip);
+        Call<TripResponse> createTripCall = tripAPI.createTrip("Bearer " + userSession.getAuthToken(), trip);
         createTripCall.enqueue(new Callback<TripResponse>() {
             @Override
             public void onResponse(Call<TripResponse> call, Response<TripResponse> response) {
@@ -47,7 +49,7 @@ public class TripDaoImpl {
 
     public List<Trip> getMyTrips() {
         List<Trip> myTrips = new ArrayList<>();
-        Call<TripResponse> userTripsCall = tripAPI.getUserTrips("Bearer " + new UserSession(activity).getAuthToken());
+        Call<TripResponse> userTripsCall = tripAPI.getUserTrips("Bearer " + userSession.getAuthToken());
         userTripsCall.enqueue(new Callback<TripResponse>() {
             @Override
             public void onResponse(Call<TripResponse> call, Response<TripResponse> response) {
@@ -67,7 +69,7 @@ public class TripDaoImpl {
     }
 
     public void updateTrip(String tripId, Trip trip) {
-        Call<Void> updateTripCall = tripAPI.updateTrip("Bearer " + new UserSession(activity).getAuthToken(), tripId, trip);
+        Call<Void> updateTripCall = tripAPI.updateTrip("Bearer " + userSession.getAuthToken(), tripId, trip);
         updateTripCall.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
@@ -87,7 +89,7 @@ public class TripDaoImpl {
     }
 
     public void deleteTrip(String tripId) {
-        Call<Void> deleteTripCall = tripAPI.deleteTrip("Bearer " + new UserSession(activity).getAuthToken(), tripId);
+        Call<Void> deleteTripCall = tripAPI.deleteTrip("Bearer " + userSession.getAuthToken(), tripId);
         deleteTripCall.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
