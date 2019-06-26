@@ -28,6 +28,7 @@ import com.raju.tripplanner.R;
 import com.raju.tripplanner.models.User;
 import com.raju.tripplanner.utils.APIError;
 import com.raju.tripplanner.utils.ApiResponse.SignInResponse;
+import com.raju.tripplanner.utils.DatabaseHelper;
 import com.raju.tripplanner.utils.EditTextValidation;
 import com.raju.tripplanner.utils.RetrofitClient;
 import com.raju.tripplanner.utils.Tools;
@@ -49,6 +50,7 @@ public class SignInActivity extends AppCompatActivity {
     private static int RC_GOOGLE_SIGN_IN = 01;
     private ProgressBar signInProgress;
     private FloatingActionButton fabSignIn;
+    private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,8 @@ public class SignInActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_in);
 
         userSession = new UserSession(this);
+
+        databaseHelper = new DatabaseHelper(this);
 
         if (userSession.getSession()) {
             Intent mainActivity = new Intent(this, MainActivity.class);
@@ -148,6 +152,9 @@ public class SignInActivity extends AppCompatActivity {
                     SignInResponse signInResponse = response.body();
 
                     new UserSession(SignInActivity.this).startSession(signInResponse.getUser(), signInResponse.getAuthToken());
+
+                    databaseHelper.insertAuthUser(signInResponse.getUser());
+
                     Intent mainActivity = new Intent(new Intent(SignInActivity.this, MainActivity.class));
                     mainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(mainActivity);

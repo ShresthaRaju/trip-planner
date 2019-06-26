@@ -13,8 +13,8 @@ public class RetrofitClient {
       that is why localhost is replaced with 10.0.2.2*/
 
     //    private static String BASE_URL = "http:10.0.2.2:7000/api/";
-//    private static String BASE_URL = "http:172.26.0.72:7000/api/";
-    private static String BASE_URL = "http:192.168.0.101:7000/api/";
+    private static String BASE_URL = "http:172.26.0.72:7000/api/";
+//    private static String BASE_URL = "http:192.168.0.101:7000/api/";
 //    private static String BASE_URL = "http:192.168.188.219:7000/api/";
     private static Retrofit retrofit;
 
