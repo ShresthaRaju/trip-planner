@@ -22,7 +22,7 @@
             android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
             android:layout_margin="16dp"
-            android:src="@drawable/user_placeholder" />
+            android:src="@drawable/dp_placeholder" />
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -48,10 +48,7 @@
                     android:id="@+id/et_update_first_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginRight="16dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_margin="8dp"
                     android:theme="@style/EditText.BlueGrey900.Hint">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -83,6 +80,50 @@
                         android:drawablePadding="16dp"
                         android:hint="@string/family_name_hint"
                         android:inputType="textPersonName"
+                        android:theme="@style/EditText.BlueGrey900" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/et_update_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:theme="@style/EditText.BlueGrey900.Hint">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_email_black"
+                        android:drawableLeft="@drawable/ic_email_black"
+                        android:drawablePadding="16dp"
+                        android:hint="@string/email_hint"
+                        android:inputType="textEmailAddress"
+                        android:theme="@style/EditText.BlueGrey900" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/et_update_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:theme="@style/EditText.BlueGrey900.Hint"
+                    app:counterEnabled="true"
+                    app:counterMaxLength="15">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableStart="@drawable/ic_profile"
+                        android:drawableLeft="@drawable/ic_profile"
+                        android:drawablePadding="16dp"
+                        android:hint="@string/username_hint"
+                        android:inputType="text"
                         android:theme="@style/EditText.BlueGrey900" />
                 </com.google.android.material.textfield.TextInputLayout>
 

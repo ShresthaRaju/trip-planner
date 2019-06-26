@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.raju.tripplanner.BuildConfig;
 import com.raju.tripplanner.DAO.PlacePhotoAPI;
 import com.raju.tripplanner.DaoImpl.TripDaoImpl;
+import com.raju.tripplanner.DaoImpl.UserDaoImpl;
 import com.raju.tripplanner.MainActivity;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.activities.CreateTripActivity;
@@ -39,7 +41,9 @@ import com.raju.tripplanner.adapters.MyTripsAdapter;
 import com.raju.tripplanner.authentication.SignInActivity;
 import com.raju.tripplanner.models.Destination;
 import com.raju.tripplanner.models.Trip;
+import com.raju.tripplanner.models.User;
 import com.raju.tripplanner.utils.ApiResponse.PhotoResponse;
+import com.raju.tripplanner.utils.Error;
 import com.raju.tripplanner.utils.UserSession;
 
 import java.util.ArrayList;
@@ -65,10 +69,12 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private PlacePhotoAPI placePhotoAPI;
     private FloatingActionButton createTrip;
     private RecyclerView myTripsContainer;
+    private ProgressBar signOutProgress;
     private TextView tvNoTrip;
     private MyTripsAdapter myTripsAdapter;
     private TripDaoImpl tripDaoImpl;
     private SwipeRefreshLayout swipeRefreshHome;
+    private UserDaoImpl userDaoImpl;
 
     public HomeFragment() {
     }
@@ -91,6 +97,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         swipeRefreshHome = homeView.findViewById(R.id.swipe_refresh_home);
         swipeRefreshHome.setOnRefreshListener(this);
         swipeRefreshHome.setColorSchemeColors(ContextCompat.getColor(getActivity(), R.color.teal_500));
+        signOutProgress = homeView.findViewById(R.id.sign_out_progress);
 
         createTrip = homeView.findViewById(R.id.fab_create_trip);
         createTrip.setOnClickListener(new View.OnClickListener() {
@@ -127,6 +134,8 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         tripDaoImpl = new TripDaoImpl(getActivity());
 
+        userDaoImpl = new UserDaoImpl(getActivity());
+
         // Initialize Places.
         Places.initialize(getContext(), MAP_API);
 
@@ -144,7 +153,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_profile, menu);
+        inflater.inflate(R.menu.menu_main, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
@@ -152,11 +161,9 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_sign_out:
-                new UserSession(getActivity()).endSession();
-                Intent signInActivity = new Intent(getActivity(), SignInActivity.class);
-                signInActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(signInActivity);
-                getActivity().finish();
+                signOutProgress.setVisibility(View.VISIBLE);
+                userDaoImpl.signOut();
+
                 return true;
 
             default:
@@ -232,6 +239,38 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         super.onCreate(savedInstanceState);
 
         initComponents();
+
+        userDaoImpl.setUserProfileListener(new UserDaoImpl.UserProfileListener() {
+            @Override
+            public void onDpUploaded(User updatedUser) {
+
+            }
+
+            @Override
+            public void onDetailsUpdated(User updatedUser) {
+
+            }
+
+            @Override
+            public void onPasswordChanged() {
+
+            }
+
+            @Override
+            public void onSignedOut() {
+                new UserSession(getActivity()).endSession();
+
+                Intent signInActivity = new Intent(getActivity(), SignInActivity.class);
+                signInActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(signInActivity);
+                getActivity().finish();
+            }
+
+            @Override
+            public void onError(Error error) {
+
+            }
+        });
     }
 
     private void fetchUserTrips() {

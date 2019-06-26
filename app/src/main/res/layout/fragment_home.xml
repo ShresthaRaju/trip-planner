@@ -53,4 +53,12 @@
         android:textStyle="bold"
         android:visibility="gone" />
 
+    <ProgressBar
+        android:id="@+id/sign_out_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:theme="@style/ProgressBar.Teal"
+        android:visibility="gone" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

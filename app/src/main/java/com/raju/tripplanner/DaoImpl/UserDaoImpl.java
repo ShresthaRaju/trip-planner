@@ -46,9 +46,9 @@ public class UserDaoImpl {
         File imageFile = new File(imagePath);
         RequestBody imageBody = RequestBody.create(MediaType.parse("image/*"), imageFile);
         MultipartBody.Part displayPicture = MultipartBody.Part.createFormData("display_picture", imageFile.getName(), imageBody);
-        RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), userSession.getUser().getId());
+//        RequestBody userId = RequestBody.create(MediaType.parse("text/plain"), userSession.getUser().getId());
 
-        Call<UserResponse> uploadDpCall = userAPI.uploadDisplayPicture("Bearer " + userSession.getAuthToken(), displayPicture, userId);
+        Call<UserResponse> uploadDpCall = userAPI.uploadDisplayPicture("Bearer " + userSession.getAuthToken(), displayPicture);
         uploadDpCall.enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
@@ -67,10 +67,10 @@ public class UserDaoImpl {
         });
     }
 
-    public void updateDetails(String firstName, String familyName) {
+    public void updateDetails(String firstName, String familyName, String email, String username) {
 
         Call<UserResponse> updateDetailsCall = userAPI.updateDetails("Bearer " + userSession.getAuthToken(), firstName,
-                familyName, userSession.getUser().getId());
+                familyName, email, username);
         updateDetailsCall.enqueue(new Callback<UserResponse>() {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
@@ -97,7 +97,7 @@ public class UserDaoImpl {
 
     public void changePassword(String oldPassword, String newPassword) {
         Call<Void> changePasswordCall = userAPI.changePassword("Bearer " + userSession.getAuthToken(), oldPassword,
-                newPassword, userSession.getUser().getId());
+                newPassword);
 
         changePasswordCall.enqueue(new Callback<Void>() {
             @Override
@@ -122,12 +122,34 @@ public class UserDaoImpl {
         });
     }
 
+    public void signOut() {
+        Call<Void> signOutCall = userAPI.signOut("Bearer " + userSession.getAuthToken());
+        signOutCall.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(activity, "ERROR: " + response.message(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                userProfileListener.onSignedOut();
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(activity, "FAILED: " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     public interface UserProfileListener {
         void onDpUploaded(User updatedUser);
 
         void onDetailsUpdated(User updatedUser);
 
         void onPasswordChanged();
+
+        void onSignedOut();
 
         void onError(Error error);
     }

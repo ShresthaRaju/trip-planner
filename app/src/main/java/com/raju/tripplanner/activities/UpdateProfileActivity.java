@@ -25,7 +25,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UpdateProfileActivity extends AppCompatActivity {
     private CircleImageView profileUpdateDp;
-    private TextInputLayout etFirstName, etFamilyName, etOldPassword, etNewPassword;
+    private TextInputLayout etFirstName, etFamilyName, etEmail, etUsername, etOldPassword, etNewPassword;
     private ProgressBar updateDetailsProgress, changePasswordProgress;
     private Button btnUpdateDetails, btnChangePassword;
     private User authUser;
@@ -56,6 +56,8 @@ public class UpdateProfileActivity extends AppCompatActivity {
         profileUpdateDp = findViewById(R.id.profile_update_dp);
         etFirstName = findViewById(R.id.et_update_first_name);
         etFamilyName = findViewById(R.id.et_update_family_name);
+        etEmail = findViewById(R.id.et_update_email);
+        etUsername = findViewById(R.id.et_update_username);
         etOldPassword = findViewById(R.id.et_old_password);
         etNewPassword = findViewById(R.id.et_new_password);
         btnUpdateDetails = findViewById(R.id.btn_update_profile);
@@ -66,12 +68,16 @@ public class UpdateProfileActivity extends AppCompatActivity {
         errorMap = new HashMap<>();
         errorMap.put("firstName", etFirstName);
         errorMap.put("familyName", etFamilyName);
+        errorMap.put("email", etEmail);
+        errorMap.put("username", etUsername);
         errorMap.put("oldPassword", etOldPassword);
         errorMap.put("newPassword", etNewPassword);
 
-        Picasso.get().load(Tools.DP_BASE_URI + authUser.getDisplayPicture()).into(profileUpdateDp);
+        Picasso.get().load(Tools.BASE_URI + authUser.getDisplayPicture()).into(profileUpdateDp);
         etFirstName.getEditText().setText(authUser.getFirstName());
         etFamilyName.getEditText().setText(authUser.getFamilyName());
+        etEmail.getEditText().setText(authUser.getEmail());
+        etUsername.getEditText().setText(authUser.getUsername());
     }
 
     public void updateProfile(View view) {
@@ -79,8 +85,10 @@ public class UpdateProfileActivity extends AppCompatActivity {
             Tools.toggleVisibility(updateDetailsProgress, btnUpdateDetails, true);
             String firstName = etFirstName.getEditText().getText().toString().trim();
             String familyName = etFamilyName.getEditText().getText().toString().trim();
+            String email = etEmail.getEditText().getText().toString().trim();
+            String username = etUsername.getEditText().getText().toString().trim();
 
-            userDaoImpl.updateDetails(firstName, familyName);
+            userDaoImpl.updateDetails(firstName, familyName, email, username);
         }
     }
 
@@ -95,7 +103,8 @@ public class UpdateProfileActivity extends AppCompatActivity {
     }
 
     private boolean validProfileDetails() {
-        if (EditTextValidation.isEmpty(etFirstName) | EditTextValidation.isEmpty(etFamilyName)) {
+        if (EditTextValidation.isEmpty(etFirstName) | EditTextValidation.isEmpty(etFamilyName)
+                | EditTextValidation.isEmpty(etEmail) | EditTextValidation.isEmpty(etUsername)) {
             Tools.vibrateDevice(this);
             return false;
         }
@@ -131,6 +140,11 @@ public class UpdateProfileActivity extends AppCompatActivity {
                 Tools.toggleVisibility(changePasswordProgress, btnChangePassword, false);
                 Toast.makeText(UpdateProfileActivity.this, "Password changed successfully...", Toast.LENGTH_SHORT).show();
                 finish();
+            }
+
+            @Override
+            public void onSignedOut() {
+
             }
 
             @Override

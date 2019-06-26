@@ -102,7 +102,7 @@ public class ProfileFragment extends Fragment {
         btnUploadDp = view.findViewById(R.id.btn_upload);
         fabProfileEdit = view.findViewById(R.id.fab_profile_edit);
 
-        Picasso.get().load(Tools.DP_BASE_URI + userSession.getUser().getDisplayPicture()).into(displayPicture);
+        Picasso.get().load(Tools.BASE_URI + userSession.getUser().getDisplayPicture()).into(displayPicture);
 
         btnUploadDp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -194,6 +194,11 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onPasswordChanged() {
+
+            }
+
+            @Override
+            public void onSignedOut() {
 
             }
 
