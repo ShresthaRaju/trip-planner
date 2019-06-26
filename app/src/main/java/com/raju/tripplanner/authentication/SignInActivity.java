@@ -20,15 +20,21 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.raju.tripplanner.DAO.AuthAPI;
 import com.raju.tripplanner.MainActivity;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.models.User;
+import com.raju.tripplanner.utils.APIError;
 import com.raju.tripplanner.utils.ApiResponse.SignInResponse;
+import com.raju.tripplanner.utils.DatabaseHelper;
 import com.raju.tripplanner.utils.EditTextValidation;
 import com.raju.tripplanner.utils.RetrofitClient;
 import com.raju.tripplanner.utils.Tools;
 import com.raju.tripplanner.utils.UserSession;
+
+import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,6 +50,7 @@ public class SignInActivity extends AppCompatActivity {
     private static int RC_GOOGLE_SIGN_IN = 01;
     private ProgressBar signInProgress;
     private FloatingActionButton fabSignIn;
+    private DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +58,8 @@ public class SignInActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_in);
 
         userSession = new UserSession(this);
+
+        databaseHelper = new DatabaseHelper(this);
 
         if (userSession.getSession()) {
             Intent mainActivity = new Intent(this, MainActivity.class);
@@ -92,7 +101,7 @@ public class SignInActivity extends AppCompatActivity {
         });
     }
 
-    private boolean validateSignIn() {
+    private boolean validSignInDetails() {
         if (EditTextValidation.isEmpty(signInEmail) | EditTextValidation.isEmpty(signInPassword)) {
             Tools.vibrateDevice(this);
             return false;
@@ -102,7 +111,7 @@ public class SignInActivity extends AppCompatActivity {
 
     public void signIn() {
 
-        if (validateSignIn()) {
+        if (validSignInDetails()) {
             fabSignIn.setVisibility(View.GONE);
             signInProgress.setVisibility(View.VISIBLE);
 
@@ -115,25 +124,37 @@ public class SignInActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<SignInResponse> call, Response<SignInResponse> response) {
                     if (!response.isSuccessful()) {
+                        Gson gson = new GsonBuilder().create();
+                        APIError apiError = new APIError();
+
                         signInProgress.setVisibility(View.GONE);
                         fabSignIn.setVisibility(View.VISIBLE);
-                        if (response.code() == 404) {
-                            signInEmail.setError("User does not exist !");
-                            Tools.vibrateDevice(SignInActivity.this);
-                        } else {
-                            signInEmail.setError("Invalid credentials!!!");
-                            Tools.vibrateDevice(SignInActivity.this);
+
+                        try {
+                            apiError = gson.fromJson(response.errorBody().string(), APIError.class);
+                            if (apiError.getError().getField().equals("email")) {
+                                signInEmail.setError(apiError.getError().getMessage());
+                                Tools.vibrateDevice(SignInActivity.this);
+                            } else if (apiError.getError().getField().equals("password")) {
+                                signInPassword.setError(apiError.getError().getMessage());
+                                Tools.vibrateDevice(SignInActivity.this);
+                            }
+                        } catch (IOException e) {
+                            Log.e("IOException", e.getMessage());
                         }
                         return;
                     }
 
                     // Log the response in JSON format
-//                Log.i("sign", new Gson().toJson(response.body().getUser()));
+                    // Log.i("sign", new Gson().toJson(response.body().getUser()));
                     signInProgress.setVisibility(View.GONE);
 
                     SignInResponse signInResponse = response.body();
 
                     new UserSession(SignInActivity.this).startSession(signInResponse.getUser(), signInResponse.getAuthToken());
+
+                    databaseHelper.insertAuthUser(signInResponse.getUser());
+
                     Intent mainActivity = new Intent(new Intent(SignInActivity.this, MainActivity.class));
                     mainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(mainActivity);

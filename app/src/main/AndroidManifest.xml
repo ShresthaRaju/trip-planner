@@ -20,6 +20,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activities.UpdateProfileActivity"
+            android:parentActivityName=".MainActivity"></activity>
+        <activity
             android:name=".activities.ViewTripActivity"
             android:parentActivityName=".MainActivity"
             android:theme="@style/ViewTripTheme" />

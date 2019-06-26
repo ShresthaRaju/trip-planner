@@ -37,6 +37,7 @@
 
     <!-- User Profile-->
     <string name="cover_photo">Cover Photo</string>
+    <string name="upload_dp">Upload</string>
     <string name="account">Account</string>
     <string name="email">Email</string>
     <string name="email_value">user\'s email</string>
@@ -78,5 +79,13 @@
     <string name="tab_weather">Weather</string>
     <string name="edit_trip">Edit</string>
     <string name="no_trip">You have not created a trip yet</string>
+
+    <!--update profile-->
+    <string name="personal_details">Personal Details</string>
+    <string name="change_password">Change Password</string>
+    <string name="old_password_hint">Old Password</string>
+    <string name="new_password_hint">New Password</string>
+    <string name="btn_done">done</string>
+    <string name="btn_change_password">Change</string>
 
 </resources>

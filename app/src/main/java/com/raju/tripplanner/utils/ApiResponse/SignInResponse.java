@@ -7,7 +7,6 @@ public class SignInResponse {
     private User user;
     private String authToken;
 
-
     public User getUser() {
         return user;
     }

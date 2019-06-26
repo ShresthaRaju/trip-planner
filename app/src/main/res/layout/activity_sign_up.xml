@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:scrollbarThumbVertical="@null"
     tools:context=".authentication.SignUpActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -13,8 +14,8 @@
         android:layout_height="wrap_content">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
@@ -22,7 +23,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
             android:elevation="3dp"
-            android:src="@mipmap/ic_launcher_round"
+            android:src="@mipmap/ic_launcher"
             app:layout_constraintBottom_toTopOf="@id/cardView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -232,6 +233,24 @@
                     android:layout_marginBottom="8dp"
                     android:background="@drawable/btn_outline"
                     android:text="@string/get_started"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/et_sign_up_password"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <ProgressBar
+                    android:id="@+id/sign_up_progress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:theme="@style/ProgressBar.Teal"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
