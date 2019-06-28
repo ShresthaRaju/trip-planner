@@ -21,11 +21,11 @@ public class InvitationsFragment extends Fragment {
     }
 
     public static InvitationsFragment newInstance(String toolbarTitle) {
-        InvitationsFragment fragment = new InvitationsFragment();
+        InvitationsFragment invitationsFragment = new InvitationsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, toolbarTitle);
-        fragment.setArguments(args);
-        return fragment;
+        invitationsFragment.setArguments(args);
+        return invitationsFragment;
     }
 
     @Override

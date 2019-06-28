@@ -62,11 +62,11 @@ public class ProfileFragment extends Fragment {
     }
 
     public static ProfileFragment newInstance(String toolbarTitle) {
-        ProfileFragment fragment = new ProfileFragment();
+        ProfileFragment profileFragment = new ProfileFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, toolbarTitle);
-        fragment.setArguments(args);
-        return fragment;
+        profileFragment.setArguments(args);
+        return profileFragment;
     }
 
     @Override
@@ -102,7 +102,7 @@ public class ProfileFragment extends Fragment {
         btnUploadDp = view.findViewById(R.id.btn_upload);
         fabProfileEdit = view.findViewById(R.id.fab_profile_edit);
 
-        Picasso.get().load(Tools.BASE_URI + userSession.getUser().getDisplayPicture()).into(displayPicture);
+        Picasso.get().load(Tools.IMAGE_URI + userSession.getUser().getDisplayPicture()).into(displayPicture);
 
         btnUploadDp.setOnClickListener(new View.OnClickListener() {
             @Override

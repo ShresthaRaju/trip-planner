@@ -11,9 +11,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.tabs.TabLayout;
 import com.raju.tripplanner.DaoImpl.TripDaoImpl;
 import com.raju.tripplanner.R;
+import com.raju.tripplanner.adapters.TripOptionsAdapter;
 import com.raju.tripplanner.dialogs.ConfirmationDialog;
 import com.raju.tripplanner.models.Trip;
 import com.raju.tripplanner.utils.Tools;
@@ -21,12 +24,14 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class ViewTripActivity extends AppCompatActivity implements ConfirmationDialog.ConfirmationDialogListener {
+public class ViewTripActivity extends AppCompatActivity implements ConfirmationDialog.ConfirmationDialogListener, TabLayout.OnTabSelectedListener {
     private ImageView viewTripImage;
     private Trip trip;
     private TripDaoImpl tripDaoImpl;
     private ConfirmationDialog confirmationDialog;
     private ProgressBar progressDeleteTrip;
+    private ViewPager viewPager;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,20 +51,27 @@ public class ViewTripActivity extends AppCompatActivity implements ConfirmationD
     }
 
     private void initComponents() {
+        trip = (Trip) getIntent().getSerializableExtra("TRIP");
+
+        tabLayout = findViewById(R.id.trip_tabs);
+        viewPager = findViewById(R.id.viewPager);
         tripDaoImpl = new TripDaoImpl(this);
         viewTripImage = findViewById(R.id.view_trip_image);
         progressDeleteTrip = findViewById(R.id.progress_delete_trip);
+
+        viewPager.setAdapter(new TripOptionsAdapter(getSupportFragmentManager(), trip.getDestination().getLat(), trip.getDestination().getLng()));
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        tabLayout.addOnTabSelectedListener(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
         populateTrip();
     }
 
     private void populateTrip() {
-        trip = (Trip) getIntent().getSerializableExtra("TRIP");
 
         getSupportActionBar().setTitle(trip.getName());
         getSupportActionBar().setSubtitle(Tools.formatDate("MMM dd", trip.getStartDate()) + " -"
@@ -132,5 +144,31 @@ public class ViewTripActivity extends AppCompatActivity implements ConfirmationD
     @Override
     public void onCancel() {
         confirmationDialog.dismiss();
+    }
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        switch (tab.getPosition()) {
+            case 0:
+                viewPager.setCurrentItem(0);
+                break;
+
+            case 1:
+                viewPager.setCurrentItem(1);
+                break;
+
+            case 2:
+                viewPager.setCurrentItem(2);
+        }
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+
     }
 }
