@@ -43,7 +43,7 @@ public class WeatherFragment extends Fragment {
         if (getArguments() != null) {
             double lat = getArguments().getDouble(ARG_PARAMS1);
             double lng = getArguments().getDouble(ARG_PARAMS2);
-            Toast.makeText(getActivity(), "From weather" + lat + "," + lng, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "From weather" + lat + "," + lng, Toast.LENGTH_SHORT).show();
         }
     }
 

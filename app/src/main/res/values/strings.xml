@@ -88,7 +88,10 @@
     <string name="btn_done">done</string>
     <string name="btn_change_password">Change</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--place -->
+    <string name="place_image">Place\'s Image</string>
+    <string name="place_name">Place name</string>
+    <string name="show_lodges">Show Lodges</string>
+    <string name="no_results">No Results</string>
 
 </resources>

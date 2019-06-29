@@ -9,11 +9,11 @@ import com.raju.tripplanner.fragments.FoodsAndLodgesFragment;
 import com.raju.tripplanner.fragments.PlacesFragment;
 import com.raju.tripplanner.fragments.WeatherFragment;
 
-public class TripOptionsAdapter extends FragmentPagerAdapter {
+public class TripOptionsPagerAdapter extends FragmentPagerAdapter {
 
     private double latitude, longitude;
 
-    public TripOptionsAdapter(@NonNull FragmentManager fm, double latitude, double longitude) {
+    public TripOptionsPagerAdapter(@NonNull FragmentManager fm, double latitude, double longitude) {
         super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         this.latitude = latitude;
         this.longitude = longitude;

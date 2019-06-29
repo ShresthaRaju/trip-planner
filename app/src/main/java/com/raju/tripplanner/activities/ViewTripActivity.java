@@ -16,7 +16,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 import com.raju.tripplanner.DaoImpl.TripDaoImpl;
 import com.raju.tripplanner.R;
-import com.raju.tripplanner.adapters.TripOptionsAdapter;
+import com.raju.tripplanner.adapters.TripOptionsPagerAdapter;
 import com.raju.tripplanner.dialogs.ConfirmationDialog;
 import com.raju.tripplanner.models.Trip;
 import com.raju.tripplanner.utils.Tools;
@@ -59,7 +59,7 @@ public class ViewTripActivity extends AppCompatActivity implements ConfirmationD
         viewTripImage = findViewById(R.id.view_trip_image);
         progressDeleteTrip = findViewById(R.id.progress_delete_trip);
 
-        viewPager.setAdapter(new TripOptionsAdapter(getSupportFragmentManager(), trip.getDestination().getLat(), trip.getDestination().getLng()));
+        viewPager.setAdapter(new TripOptionsPagerAdapter(getSupportFragmentManager(), trip.getDestination().getLat(), trip.getDestination().getLng()));
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         tabLayout.addOnTabSelectedListener(this);

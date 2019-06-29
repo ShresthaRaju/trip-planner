@@ -2,13 +2,13 @@ package com.raju.tripplanner.models.MapResult;
 
 import java.util.List;
 
-public class Restaurant {
+public class Place {
 
     private String name;
 
     private List<Photo> photos;
 
-    private double rating;
+    private float rating;
 
     public String getName() {
         return name;
@@ -18,7 +18,7 @@ public class Restaurant {
         return photos;
     }
 
-    public double getRating() {
+    public float getRating() {
         return rating;
     }
 }

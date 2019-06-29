@@ -1,14 +1,14 @@
 package com.raju.tripplanner.utils.ApiResponse;
 
-import com.raju.tripplanner.models.MapResult.Restaurant;
+import com.raju.tripplanner.models.MapResult.Place;
 
 import java.util.List;
 
 public class NearbySearchResponse {
 
-    private List<Restaurant> results;
+    private List<Place> results;
 
-    public List<Restaurant> getResults() {
+    public List<Place> getResults() {
         return results;
     }
 }
