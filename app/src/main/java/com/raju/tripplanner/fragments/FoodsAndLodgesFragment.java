@@ -16,10 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.raju.tripplanner.DAO.GooglePlacesAPI;
 import com.raju.tripplanner.R;
-import com.raju.tripplanner.adapters.LodgesAdapter;
+import com.raju.tripplanner.adapters.PlacesAdapter;
 import com.raju.tripplanner.models.MapResult.Place;
 import com.raju.tripplanner.utils.ApiResponse.NearbySearchResponse;
 import com.raju.tripplanner.utils.RetrofitClient;
+import com.raju.tripplanner.utils.Tools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class FoodsAndLodgesFragment extends Fragment {
     private Button btnShowLodges;
     private TextView tvNoResults;
     private ProgressBar lodgesProgress;
-    private LodgesAdapter lodgesAdapter;
+    private PlacesAdapter placesAdapter;
 
     public FoodsAndLodgesFragment() {
 
@@ -83,7 +84,7 @@ public class FoodsAndLodgesFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        googlePlacesAPI = RetrofitClient.getInstance("https://maps.googleapis.com/maps/api/place/nearbysearch/").create(GooglePlacesAPI.class);
+        googlePlacesAPI = RetrofitClient.getInstance(Tools.NEARBY_PLACE_API).create(GooglePlacesAPI.class);
         nearbyLodges = new ArrayList<>();
 
         if (getArguments() != null) {
@@ -93,7 +94,7 @@ public class FoodsAndLodgesFragment extends Fragment {
     }
 
     private void fetchLodges(double lat, double lng) {
-        Call<NearbySearchResponse> fetchRestaurantsCall = googlePlacesAPI.fetchPlace(lat + "," + lng, 500, "lodging", HomeFragment.MAP_API);
+        Call<NearbySearchResponse> fetchRestaurantsCall = googlePlacesAPI.fetchNearbyPlaces(lat + "," + lng, 500, "lodging", HomeFragment.MAP_API);
         fetchRestaurantsCall.enqueue(new Callback<NearbySearchResponse>() {
             @Override
             public void onResponse(Call<NearbySearchResponse> call, Response<NearbySearchResponse> response) {
@@ -112,8 +113,8 @@ public class FoodsAndLodgesFragment extends Fragment {
                 if (nearbyLodges.isEmpty()) {
                     tvNoResults.setVisibility(View.VISIBLE);
                 } else {
-                    lodgesAdapter = new LodgesAdapter(getActivity(), nearbyLodges);
-                    lodgesContainer.setAdapter(lodgesAdapter);
+                    placesAdapter = new PlacesAdapter(getActivity(), nearbyLodges);
+                    lodgesContainer.setAdapter(placesAdapter);
                 }
             }
 

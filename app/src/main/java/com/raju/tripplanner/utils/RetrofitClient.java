@@ -10,7 +10,6 @@ public class RetrofitClient {
     /*android emulator does not support localhost
       that is why localhost is replaced with 10.0.2.2*/
 
-    //    private static String BASE_URL = "http:192.168.0.102:7000/api/";
     private static Retrofit retrofit;
 
     public static Retrofit getInstance(String BASE_URL) {

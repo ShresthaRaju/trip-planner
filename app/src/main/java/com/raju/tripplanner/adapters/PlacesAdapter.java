@@ -18,12 +18,12 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class LodgesAdapter extends RecyclerView.Adapter<LodgesAdapter.LodgeViewHolder> {
+public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.LodgeViewHolder> {
 
     private Context context;
     private List<Place> lodgeList;
 
-    public LodgesAdapter(Context context, List<Place> lodgeList) {
+    public PlacesAdapter(Context context, List<Place> lodgeList) {
         this.context = context;
         this.lodgeList = lodgeList;
     }
