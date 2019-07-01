@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
+    android:layout_margin="8dp"
     app:cardCornerRadius="10dp"
     app:cardElevation="10dp"
     app:contentPadding="8dp">
@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="16dp"
@@ -167,6 +167,8 @@
                 android:contentDescription="@string/icon_wind"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/img_visibility"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/weather_condition"
                 app:layout_constraintVertical_bias="0.0"
@@ -211,7 +213,7 @@
                 android:layout_marginBottom="16dp"
                 android:contentDescription="@string/icon_visibility"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/img_humidity"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@id/img_wind"
                 app:layout_constraintTop_toBottomOf="@id/weather_condition"
@@ -259,8 +261,8 @@
                 android:contentDescription="@string/icon_humidity"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/img_uv"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_wind_value"
+                app:layout_constraintStart_toEndOf="@id/img_visibility"
+                app:layout_constraintTop_toBottomOf="@id/weather_condition"
                 app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/ic_humidity" />
 
@@ -306,7 +308,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@id/img_humidity"
-                app:layout_constraintTop_toBottomOf="@id/tv_visibility_value"
+                app:layout_constraintTop_toBottomOf="@id/weather_condition"
                 app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/ic_sun" />
 

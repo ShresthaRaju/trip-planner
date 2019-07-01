@@ -13,10 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.raju.tripplanner.DAO.GooglePlacesAPI;
 import com.raju.tripplanner.R;
@@ -82,7 +81,7 @@ public class PlacesFragment extends Fragment {
 
         placesContainer = placeView.findViewById(R.id.places_container);
         placesContainer.setHasFixedSize(true);
-        placesContainer.setLayoutManager(new LinearLayoutManager(getActivity()));
+        placesContainer.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 
         return placeView;
     }

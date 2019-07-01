@@ -11,8 +11,8 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.raju.tripplanner.DAO.GooglePlacesAPI;
 import com.raju.tripplanner.R;
@@ -66,7 +66,7 @@ public class FoodsAndLodgesFragment extends Fragment {
 
         lodgesContainer = lodgesView.findViewById(R.id.lodges_container);
         lodgesContainer.setHasFixedSize(true);
-        lodgesContainer.setLayoutManager(new LinearLayoutManager(getActivity()));
+        lodgesContainer.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 
         btnShowLodges = lodgesView.findViewById(R.id.btn_show_lodges);
         btnShowLodges.setOnClickListener(new View.OnClickListener() {

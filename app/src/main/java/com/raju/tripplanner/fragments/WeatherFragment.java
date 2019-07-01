@@ -9,8 +9,8 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.raju.tripplanner.BuildConfig;
 import com.raju.tripplanner.DAO.WeatherAPI;
@@ -54,7 +54,7 @@ public class WeatherFragment extends Fragment {
         View weatherView = inflater.inflate(R.layout.fragment_weather, container, false);
         weatherContainer = weatherView.findViewById(R.id.weather_container);
         weatherContainer.setHasFixedSize(true);
-        weatherContainer.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        weatherContainer.setLayoutManager(new LinearLayoutManager(getActivity()));
         return weatherView;
     }
 
