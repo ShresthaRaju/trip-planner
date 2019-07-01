@@ -53,33 +53,35 @@
             </androidx.appcompat.widget.Toolbar>
 
             <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tabs"
+                android:id="@+id/trip_tabs"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_gravity="bottom"
                 app:layout_collapseMode="pin"
-                app:tabIndicatorColor="@color/colorWarning"
-                app:tabSelectedTextColor="@color/colorWarning"
+                app:tabIndicatorColor="@color/colorWhite"
+                app:tabIndicatorHeight="4dp"
+                app:tabRippleColor="@color/teal_50"
+                app:tabSelectedTextColor="@color/colorWhite"
                 app:tabTextAppearance="@style/TextAppearance.Design.Tab"
-                app:tabTextColor="@color/colorWhite">
+                app:tabTextColor="@color/grey_300">
 
                 <com.google.android.material.tabs.TabItem
-                    android:id="@+id/tabItem"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tab_places" />
-
-                <com.google.android.material.tabs.TabItem
-                    android:id="@+id/tabItem2"
+                    android:id="@+id/tab_foods"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/tab_food" />
 
                 <com.google.android.material.tabs.TabItem
-                    android:id="@+id/tabItem3"
+                    android:id="@+id/tab_weather"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/tab_weather" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/tab_places"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tab_places" />
 
             </com.google.android.material.tabs.TabLayout>
 
@@ -88,9 +90,9 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager.widget.ViewPager
-        android:id="@+id/container"
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

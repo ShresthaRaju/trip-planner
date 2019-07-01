@@ -70,7 +70,7 @@ public class SignUpActivity extends AppCompatActivity {
         });
 
 //        retrofit client custom class
-        authAPI = RetrofitClient.getInstance().create(AuthAPI.class);
+        authAPI = RetrofitClient.getInstance(Tools.BASE_URL).create(AuthAPI.class);
     }
 
     //    validate sign up fields

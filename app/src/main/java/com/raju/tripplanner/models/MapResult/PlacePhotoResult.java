@@ -1,4 +1,4 @@
-package com.raju.tripplanner.models;
+package com.raju.tripplanner.models.MapResult;
 
 import java.util.List;
 

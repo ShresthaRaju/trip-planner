@@ -12,6 +12,7 @@
     <color name="colorWarning">#fd9701</color>
     <color name="colorDanger">#f34336</color>
     <color name="colorRose">#e81e63</color>
+    <color name="colorLightRose">#4DE81E63</color>
 
     <!--colors used-->
     <color name="colorBlackOverlay">#99000000</color>
@@ -33,6 +34,7 @@
     <color name="blue_500">#2196F3</color>
     <color name="blue_600">#1E88E5</color>
     <color name="teal_400">#26A69A</color>
+    <color name="grey_300">#E0E0E0</color>
 
     <!--material colors from material.io-->
     <color name="red_50">#FFEBEE</color>
@@ -294,9 +296,8 @@
     <color name="grey_50">#FAFAFA</color>
     <color name="grey_100">#F5F5F5</color>
     <color name="grey_200">#EEEEEE</color>
-    <color name="grey_300">#E0E0E0</color>
-
     <color name="grey_500">#9E9E9E</color>
+
     <color name="grey_600">#757575</color>
 
     <color name="grey_800">#424242</color>

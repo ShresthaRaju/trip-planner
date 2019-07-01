@@ -88,7 +88,7 @@ public class SignInActivity extends AppCompatActivity {
 
         signInProgress = findViewById(R.id.sign_in_progress);
 
-        authAPI = RetrofitClient.getInstance().create(AuthAPI.class);
+        authAPI = RetrofitClient.getInstance(Tools.BASE_URL).create(AuthAPI.class);
 
         configureGoogleSignIn();
 

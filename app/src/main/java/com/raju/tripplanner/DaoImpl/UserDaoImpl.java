@@ -12,6 +12,7 @@ import com.raju.tripplanner.utils.APIError;
 import com.raju.tripplanner.utils.ApiResponse.UserResponse;
 import com.raju.tripplanner.utils.Error;
 import com.raju.tripplanner.utils.RetrofitClient;
+import com.raju.tripplanner.utils.Tools;
 import com.raju.tripplanner.utils.UserSession;
 
 import java.io.File;
@@ -35,7 +36,7 @@ public class UserDaoImpl {
 
     public UserDaoImpl(Activity activity) {
         this.activity = activity;
-        userAPI = RetrofitClient.getInstance().create(UserAPI.class);
+        userAPI = RetrofitClient.getInstance(Tools.BASE_URL).create(UserAPI.class);
         userSession = new UserSession(activity);
         gson = new GsonBuilder().create();
         apiError = new APIError();

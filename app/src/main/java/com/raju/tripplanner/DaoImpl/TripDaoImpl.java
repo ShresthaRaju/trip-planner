@@ -7,6 +7,7 @@ import com.raju.tripplanner.DAO.TripAPI;
 import com.raju.tripplanner.models.Trip;
 import com.raju.tripplanner.utils.ApiResponse.TripResponse;
 import com.raju.tripplanner.utils.RetrofitClient;
+import com.raju.tripplanner.utils.Tools;
 import com.raju.tripplanner.utils.UserSession;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ public class TripDaoImpl {
 
     public TripDaoImpl(Activity activity) {
         this.activity = activity;
-        tripAPI = RetrofitClient.getInstance().create(TripAPI.class);
+        tripAPI = RetrofitClient.getInstance(Tools.BASE_URL).create(TripAPI.class);
         userSession = new UserSession(activity);
     }
 

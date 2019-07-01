@@ -44,6 +44,7 @@ import com.raju.tripplanner.models.Trip;
 import com.raju.tripplanner.models.User;
 import com.raju.tripplanner.utils.ApiResponse.PhotoResponse;
 import com.raju.tripplanner.utils.Error;
+import com.raju.tripplanner.utils.RetrofitClient;
 import com.raju.tripplanner.utils.UserSession;
 
 import java.util.ArrayList;
@@ -53,8 +54,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -80,11 +79,11 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     public static HomeFragment newInstance(String toolbarTitle) {
-        HomeFragment fragment = new HomeFragment();
+        HomeFragment homeFragment = new HomeFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, toolbarTitle);
-        fragment.setArguments(args);
-        return fragment;
+        homeFragment.setArguments(args);
+        return homeFragment;
     }
 
     @Override
@@ -143,12 +142,8 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         placesClient = Places.createClient(getActivity());
 
         // retrofit client
-
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://maps.googleapis.com/maps/api/place/details/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        placePhotoAPI = retrofit.create(PlacePhotoAPI.class);
+        placePhotoAPI = RetrofitClient.getInstance("https://maps.googleapis.com/maps/api/place/details/")
+                .create(PlacePhotoAPI.class);
     }
 
     @Override

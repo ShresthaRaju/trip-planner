@@ -1,7 +1,7 @@
 package com.raju.tripplanner.utils.ApiResponse;
 
 import com.google.gson.annotations.SerializedName;
-import com.raju.tripplanner.models.PlacePhotoResult;
+import com.raju.tripplanner.models.MapResult.PlacePhotoResult;
 
 public class PhotoResponse {
 

@@ -16,7 +16,11 @@ import static android.content.Context.VIBRATOR_SERVICE;
 
 public class Tools {
 
-    public static final String BASE_URI = "http://192.168.0.100:7000/uploads/";
+//        public static final String BASE_URL = "http:172.26.0.88:7000/api/";
+//    public static final String IMAGE_URI = "http:172.26.0.88:7000/uploads/";
+    public static final String BASE_URL = "http:192.168.0.101:7000/api/";
+    public static final String IMAGE_URI = "http:192.168.0.101:7000/uploads/";
+    public static final String NEARBY_PLACE_API = "https://maps.googleapis.com/maps/api/place/nearbysearch/";
 
     public static void vibrateDevice(Context context) {
         Vibrator vibrator = (Vibrator) context.getSystemService(VIBRATOR_SERVICE);

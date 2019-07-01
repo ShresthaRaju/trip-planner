@@ -16,6 +16,8 @@ android {
         debug {
             buildConfigField 'String', "MapApi", TRIP_PLANNER_MAP_API
             resValue 'string', "map_api", TRIP_PLANNER_MAP_API
+            buildConfigField 'String', "WeatherApi", TRIP_PLANNER_WEATHER_API
+            resValue 'string', "weather_api", TRIP_PLANNER_WEATHER_API
         }
 
         release {
@@ -23,6 +25,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField 'String', "MapApi", TRIP_PLANNER_MAP_API
             resValue 'string', "map_api", TRIP_PLANNER_MAP_API
+            buildConfigField 'String', "WeatherApi", TRIP_PLANNER_WEATHER_API
+            resValue 'string', "weather_api", TRIP_PLANNER_WEATHER_API
         }
     }
 //
@@ -67,5 +71,7 @@ dependencies {
 
 //    retrofit logging interceptor
     implementation("com.squareup.okhttp3:logging-interceptor:3.14.2")
+
+    implementation("com.ramotion.cardslider:card-slider:0.3.1")
 
 }

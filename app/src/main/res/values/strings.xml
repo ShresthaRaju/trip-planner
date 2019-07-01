@@ -88,4 +88,32 @@
     <string name="btn_done">done</string>
     <string name="btn_change_password">Change</string>
 
+    <!--place api -->
+    <string name="place_image">Place\'s Image</string>
+    <string name="place_name">Place name</string>
+    <string name="show_lodges">Show Lodges</string>
+    <string name="no_results">No Results</string>
+    <string name="place_search_hint">Search for a place type e.g. Park</string>
+
+    <!--weather api-->
+    <string name="weather_date">Sun, Jun 30, Today</string>
+    <string name="weather_condition">Moderate temperature with patchy rainfall</string>
+    <string name="temperature">21\u2103</string>
+    <string name="weather_icon">Weather\'s Icon</string>
+    <string name="icon_max_temp">Icon Maximum Temperature</string>
+    <string name="max_temp">25</string>
+    <string name="icon_min_temp">Icon Minimum Temperature</string>
+    <string name="min_temp">17</string>
+    <string name="icon_wind">Icon Wind</string>
+    <string name="wind">Wind</string>
+    <string name="wind_value">7.7 kph</string>
+    <string name="icon_visibility">Icon Visibility</string>
+    <string name="visibility">Visibility</string>
+    <string name="icon_humidity">Icon Humidity</string>
+    <string name="visibility_value">8km</string>
+    <string name="humidity">Humidity</string>
+    <string name="humidity_value">73%</string>
+    <string name="uv">UV</string>
+    <string name="uv_value">11.3</string>
+
 </resources>

@@ -73,7 +73,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
         errorMap.put("oldPassword", etOldPassword);
         errorMap.put("newPassword", etNewPassword);
 
-        Picasso.get().load(Tools.BASE_URI + authUser.getDisplayPicture()).into(profileUpdateDp);
+        Picasso.get().load(Tools.IMAGE_URI + authUser.getDisplayPicture()).into(profileUpdateDp);
         etFirstName.getEditText().setText(authUser.getFirstName());
         etFamilyName.getEditText().setText(authUser.getFamilyName());
         etEmail.getEditText().setText(authUser.getEmail());
