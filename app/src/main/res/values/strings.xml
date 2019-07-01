@@ -115,5 +115,7 @@
     <string name="humidity_value">73%</string>
     <string name="uv">UV</string>
     <string name="uv_value">11.3</string>
+    <string name="weather_location">Bhaktapur, Nepal</string>
+    <string name="icon_location">Icon Location</string>
 
 </resources>
