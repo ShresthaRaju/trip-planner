@@ -2,7 +2,6 @@ package com.raju.tripplanner.fragments;
 
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,12 +9,15 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.raju.tripplanner.BuildConfig;
 import com.raju.tripplanner.DAO.WeatherAPI;
 import com.raju.tripplanner.R;
-import com.raju.tripplanner.models.Weather.Forecast;
-import com.raju.tripplanner.models.Weather.ForecastDay;
+import com.raju.tripplanner.adapters.WeatherAdapter;
+import com.raju.tripplanner.models.WeatherResult.ForecastDay;
+import com.raju.tripplanner.models.WeatherResult.Weather;
 import com.raju.tripplanner.utils.RetrofitClient;
 
 import java.util.List;
@@ -30,6 +32,8 @@ public class WeatherFragment extends Fragment {
     private static final String ARG_PARAMS2 = "longitude";
     private WeatherAPI weatherAPI;
     private double lat, lng;
+    private WeatherAdapter weatherAdapter;
+    private RecyclerView weatherContainer;
 
     public WeatherFragment() {
 
@@ -47,7 +51,11 @@ public class WeatherFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_weather, container, false);
+        View weatherView = inflater.inflate(R.layout.fragment_weather, container, false);
+        weatherContainer = weatherView.findViewById(R.id.weather_container);
+        weatherContainer.setHasFixedSize(true);
+        weatherContainer.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
+        return weatherView;
     }
 
     @Override
@@ -65,23 +73,23 @@ public class WeatherFragment extends Fragment {
     }
 
     private void fetchWeather(double lat, double lng) {
-        Call<Forecast> weatherCall = weatherAPI.fetchWeather(BuildConfig.WeatherApi, lat + "," + lng, 7);
-        weatherCall.enqueue(new Callback<Forecast>() {
+        Call<Weather> weatherCall = weatherAPI.fetchWeather(BuildConfig.WeatherApi, lat + "," + lng, 7);
+        weatherCall.enqueue(new Callback<Weather>() {
             @Override
-            public void onResponse(Call<Forecast> call, Response<Forecast> response) {
+            public void onResponse(Call<Weather> call, Response<Weather> response) {
                 if (!response.isSuccessful()) {
                     Toast.makeText(getActivity(), "ERROR: " + response.code() + " " + response.message(), Toast.LENGTH_LONG).show();
                     return;
                 }
 
-                List<ForecastDay> forecasts = response.body().getForecastday();
-                for (ForecastDay forecast : forecasts) {
-                    Log.i("weather", forecast.getDate() + "\n" + forecast.getDay().getAvgTemp());
-                }
+                List<ForecastDay> forecasts = response.body().getForecast().getForecastday();
+
+                weatherAdapter = new WeatherAdapter(getActivity(), forecasts);
+                weatherContainer.setAdapter(weatherAdapter);
             }
 
             @Override
-            public void onFailure(Call<Forecast> call, Throwable t) {
+            public void onFailure(Call<Weather> call, Throwable t) {
                 Toast.makeText(getActivity(), "FAILED: " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
             }
         });

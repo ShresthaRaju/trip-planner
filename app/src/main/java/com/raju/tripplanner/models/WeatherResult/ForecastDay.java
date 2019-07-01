@@ -1,4 +1,4 @@
-package com.raju.tripplanner.models.Weather;
+package com.raju.tripplanner.models.WeatherResult;
 
 public class ForecastDay {
 

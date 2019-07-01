@@ -11,7 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.raju.tripplanner.R;
-import com.raju.tripplanner.models.Weather.ForecastDay;
+import com.raju.tripplanner.models.WeatherResult.Day;
+import com.raju.tripplanner.models.WeatherResult.ForecastDay;
+import com.raju.tripplanner.utils.Tools;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -65,16 +67,18 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
         }
 
         public void bindWeatherData(ForecastDay forecastDay) {
-            Picasso.get().load(forecastDay.getDay().getCondition().getIcon()).into(weatherIcon);
-            date.setText(forecastDay.getDate());
-            temperature.setText(forecastDay.getDay().getAvgTemp() + "");
-            maxTemp.setText(forecastDay.getDay().getMaxTemp() + "");
-            minTemp.setText(forecastDay.getDay().getMinTemp() + "");
-            condition.setText(forecastDay.getDay().getCondition().getText());
-            wind.setText(forecastDay.getDay().getWind() + "");
-            visibility.setText(forecastDay.getDay().getVisibility() + "");
-            humidity.setText(forecastDay.getDay().getHumidity() + "");
-            uv.setText(forecastDay.getDay().getUv() + "");
+            Day day = forecastDay.getDay();
+            String imageUri = day.getCondition().getIcon();
+            Picasso.get().load("http://" + imageUri.substring(2)).into(weatherIcon);
+            date.setText(Tools.formatDate("yyyy-MM-dd", "EEE, MMM dd", forecastDay.getDate()));
+            temperature.setText(day.getAvgTemp() + "");
+            maxTemp.setText(day.getMaxTemp() + "");
+            minTemp.setText(day.getMinTemp() + "");
+            condition.setText(day.getCondition().getText());
+            wind.setText(day.getWind() + "");
+            visibility.setText(day.getVisibility() + "");
+            humidity.setText(day.getHumidity() + "");
+            uv.setText(day.getUv() + "");
         }
     }
 }

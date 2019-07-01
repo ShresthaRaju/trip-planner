@@ -74,8 +74,8 @@ public class ViewTripActivity extends AppCompatActivity implements ConfirmationD
     private void populateTrip() {
 
         getSupportActionBar().setTitle(trip.getName());
-        getSupportActionBar().setSubtitle(Tools.formatDate("MMM dd", trip.getStartDate()) + " -"
-                + Tools.formatDate("MMM dd", trip.getEndDate()));
+        getSupportActionBar().setSubtitle(Tools.formatDate("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "MMM dd", trip.getStartDate()) + " -"
+                + Tools.formatDate("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "MMM dd", trip.getEndDate()));
 
         Picasso.get().load(trip.getDestination().getPhotoUrl()).into(viewTripImage);
     }

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="4dp"
     app:cardCornerRadius="10dp"
     app:cardElevation="10dp"
     app:contentPadding="8dp">
@@ -38,8 +39,8 @@
 
             <ImageView
                 android:id="@+id/weather_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
@@ -65,7 +66,7 @@
                 android:layout_marginBottom="8dp"
                 android:gravity="center"
                 android:text="@string/temperature"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
                 android:textColor="@color/colorInfo"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -78,12 +79,13 @@
                 android:id="@+id/img_max_temp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
                 android:contentDescription="@string/icon_max_temp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/max_temp"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="@+id/temperature"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/temperature"
                 app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/ic_keyboard_arrow_up" />
@@ -121,11 +123,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
                 android:text="@string/min_temp"
                 android:textColor="@color/colorWarning"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/temperature"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/img_min_temp"
                 app:layout_constraintTop_toBottomOf="@+id/temperature"
                 app:layout_constraintVertical_bias="0.0" />
@@ -163,8 +167,6 @@
                 android:contentDescription="@string/icon_wind"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/img_visibility"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintHorizontal_chainStyle="spread_inside"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/weather_condition"
                 app:layout_constraintVertical_bias="0.0"
@@ -209,7 +211,7 @@
                 android:layout_marginBottom="16dp"
                 android:contentDescription="@string/icon_visibility"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/img_humidity"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@id/img_wind"
                 app:layout_constraintTop_toBottomOf="@id/weather_condition"
@@ -257,9 +259,8 @@
                 android:contentDescription="@string/icon_humidity"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/img_uv"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@id/img_visibility"
-                app:layout_constraintTop_toBottomOf="@+id/weather_condition"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_wind_value"
                 app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/ic_humidity" />
 
@@ -305,7 +306,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@id/img_humidity"
-                app:layout_constraintTop_toBottomOf="@+id/weather_condition"
+                app:layout_constraintTop_toBottomOf="@id/tv_visibility_value"
                 app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/ic_sun" />
 
@@ -335,39 +336,6 @@
                 app:layout_constraintStart_toStartOf="@+id/img_uv"
                 app:layout_constraintTop_toBottomOf="@+id/tv_uv"
                 app:layout_constraintVertical_bias="0.0" />
-
-            <ImageView
-                android:id="@+id/img_location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:contentDescription="@string/icon_location"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/tv_location"
-                app:layout_constraintHorizontal_chainStyle="packed"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_visibility_value"
-                app:layout_constraintVertical_bias="0.1"
-                app:srcCompat="@drawable/ic_location" />
-
-            <TextView
-                android:id="@+id/tv_location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
-                android:text="@string/weather_location"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/img_location"
-                app:layout_constraintTop_toBottomOf="@+id/tv_visibility_value"
-                app:layout_constraintVertical_bias="0.1" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
