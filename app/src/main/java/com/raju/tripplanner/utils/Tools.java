@@ -16,10 +16,10 @@ import static android.content.Context.VIBRATOR_SERVICE;
 
 public class Tools {
 
-//        public static final String BASE_URL = "http:172.26.0.88:7000/api/";
-//    public static final String IMAGE_URI = "http:172.26.0.88:7000/uploads/";
-    public static final String BASE_URL = "http:192.168.0.101:7000/api/";
-    public static final String IMAGE_URI = "http:192.168.0.101:7000/uploads/";
+    //    public static final String BASE_URL = "http:172.26.0.145:7000/api/";
+//    public static final String IMAGE_URI = "http:172.26.0.145:7000/uploads/";
+    public static final String BASE_URL = "http:192.168.0.105:7000/api/";
+    public static final String IMAGE_URI = "http:192.168.0.105:7000/uploads/";
     public static final String NEARBY_PLACE_API = "https://maps.googleapis.com/maps/api/place/nearbysearch/";
 
     public static void vibrateDevice(Context context) {
@@ -29,9 +29,9 @@ public class Tools {
         }
     }
 
-    public static String formatDate(String pattern, String date) {
-        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
-        SimpleDateFormat outputFormat = new SimpleDateFormat(pattern, Locale.getDefault());
+    public static String formatDate(String inputPattern, String outputPattern, String date) {
+        SimpleDateFormat inputFormat = new SimpleDateFormat(inputPattern, Locale.getDefault());
+        SimpleDateFormat outputFormat = new SimpleDateFormat(outputPattern, Locale.getDefault());
 
         try {
             return outputFormat.format(inputFormat.parse(date));

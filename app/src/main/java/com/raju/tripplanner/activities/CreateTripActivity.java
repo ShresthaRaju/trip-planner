@@ -76,8 +76,8 @@ public class CreateTripActivity extends AppCompatActivity {
 
         if (trip != null) {
             etTripTitle.getEditText().setText(trip.getName());
-            etStartDate.getEditText().setText(Tools.formatDate("YYYY-MM-dd", trip.getStartDate()));
-            etEndDate.getEditText().setText(Tools.formatDate("YYYY-MM-dd", trip.getEndDate()));
+            etStartDate.getEditText().setText(Tools.formatDate("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "YYYY-MM-dd", trip.getStartDate()));
+            etEndDate.getEditText().setText(Tools.formatDate("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "YYYY-MM-dd", trip.getEndDate()));
             btnCreate.setVisibility(View.GONE);
             btnUpdate.setVisibility(View.VISIBLE);
         } else {
