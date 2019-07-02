@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.raju.tripplanner.DaoImpl.TripDaoImpl;
 import com.raju.tripplanner.R;
@@ -32,6 +33,7 @@ public class ViewTripActivity extends AppCompatActivity implements ConfirmationD
     private ProgressBar progressDeleteTrip;
     private ViewPager viewPager;
     private TabLayout tabLayout;
+    private FloatingActionButton fabInviteFriends;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +57,17 @@ public class ViewTripActivity extends AppCompatActivity implements ConfirmationD
 
         tabLayout = findViewById(R.id.trip_tabs);
         viewPager = findViewById(R.id.viewPager);
+        fabInviteFriends = findViewById(R.id.fab_invite_friends);
         tripDaoImpl = new TripDaoImpl(this);
         viewTripImage = findViewById(R.id.view_trip_image);
         progressDeleteTrip = findViewById(R.id.progress_delete_trip);
+
+        fabInviteFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ViewTripActivity.this, InviteFriendsActivity.class));
+            }
+        });
 
         viewPager.setAdapter(new TripOptionsPagerAdapter(getSupportFragmentManager(), trip.getDestination().getLat(), trip.getDestination().getLng()));
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));

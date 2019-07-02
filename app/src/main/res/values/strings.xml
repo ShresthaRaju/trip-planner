@@ -118,4 +118,7 @@
     <string name="weather_location">Bhaktapur, Nepal</string>
     <string name="icon_location">Icon Location</string>
 
+    <!--invite friends-->
+    <string name="search_for_friends_hint">Search for your friends...</string>
+
 </resources>

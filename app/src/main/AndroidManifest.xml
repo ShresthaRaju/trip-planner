@@ -19,14 +19,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".activities.InviteFriendsActivity"></activity>
         <activity
-            android:screenOrientation="portrait"
             android:name=".activities.UpdateProfileActivity"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait" />
         <activity
-            android:screenOrientation="portrait"
             android:name=".activities.ViewTripActivity"
             android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/ViewTripTheme" />
         <activity
             android:name=".activities.CreateTripActivity"

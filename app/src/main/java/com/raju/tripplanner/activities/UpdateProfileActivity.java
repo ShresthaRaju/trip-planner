@@ -20,6 +20,7 @@ import com.raju.tripplanner.utils.UserSession;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -122,7 +123,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        userDaoImpl.setUserProfileListener(new UserDaoImpl.UserProfileListener() {
+        userDaoImpl.setUserActionsListener(new UserDaoImpl.UserActionsListener() {
             @Override
             public void onDpUploaded(User updatedUser) {
 
@@ -158,6 +159,11 @@ public class UpdateProfileActivity extends AppCompatActivity {
                         Tools.vibrateDevice(UpdateProfileActivity.this);
                     }
                 }
+            }
+
+            @Override
+            public void onFetchedAllUsers(List<User> allUsers) {
+
             }
         });
     }
