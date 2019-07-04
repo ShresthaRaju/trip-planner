@@ -309,7 +309,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Toast.makeText(getActivity(), "on activity created", Toast.LENGTH_SHORT).show();
         fetchUserTrips();
     }
 

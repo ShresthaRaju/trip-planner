@@ -9,39 +9,44 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.raju.tripplanner.DAO.UserAPI;
+import com.raju.tripplanner.DaoImpl.InvitationDaoImpl;
 import com.raju.tripplanner.DaoImpl.UserDaoImpl;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.adapters.InvitationAutocompleteAdapter;
 import com.raju.tripplanner.models.InvitationItem;
 import com.raju.tripplanner.models.User;
 import com.raju.tripplanner.utils.Error;
-import com.raju.tripplanner.utils.RetrofitClient;
-import com.raju.tripplanner.utils.Tools;
+import com.raju.tripplanner.utils.UserSession;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class InviteFriendsActivity extends AppCompatActivity {
 
-    private UserAPI userAPI;
     private AutoCompleteTextView friendsAutocomplete;
-    private UserDaoImpl userDaoImpl;
     private List<InvitationItem> allUserList;
+    private UserDaoImpl userDaoImpl;
+    private InvitationDaoImpl invitationDaoImpl;
+    private String tripId;
+    private UserSession userSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invite_friends);
 
-        userAPI = RetrofitClient.getInstance(Tools.BASE_URL).create(UserAPI.class);
-        userDaoImpl = new UserDaoImpl(this);
+        userSession = new UserSession(this);
         allUserList = new ArrayList<>();
+        userDaoImpl = new UserDaoImpl(this);
+        invitationDaoImpl = new InvitationDaoImpl(this);
         userDaoImpl.getAllUsers();
 
         initComponents();
 
         userListener();
+
+        tripId = getIntent().getStringExtra("TRIP_ID");
+        Toast.makeText(this, tripId, Toast.LENGTH_SHORT).show();
 
     }
 
@@ -89,7 +94,9 @@ public class InviteFriendsActivity extends AppCompatActivity {
             public void onFetchedAllUsers(List<User> allUsers) {
 
                 for (User user : allUsers) {
-                    allUserList.add(new InvitationItem(user.getId(), user.getDisplayPicture(), user.getUsername()));
+                    if (!user.getUsername().equals(userSession.getUser().getUsername())) {
+                        allUserList.add(new InvitationItem(user.getId(), user.getDisplayPicture(), user.getUsername()));
+                    }
                 }
 
                 InvitationAutocompleteAdapter autocompleteAdapter = new InvitationAutocompleteAdapter(InviteFriendsActivity.this, allUserList);
@@ -99,8 +106,9 @@ public class InviteFriendsActivity extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         InvitationAutocompleteAdapter adapter = (InvitationAutocompleteAdapter) parent.getAdapter();
-                        String userId = adapter.getItem(position).getUserId();
-                        Toast.makeText(InviteFriendsActivity.this, userId, Toast.LENGTH_SHORT).show();
+                        String inviteeId = adapter.getItem(position).getUserId();
+//                        Toast.makeText(InviteFriendsActivity.this, inviteeId, Toast.LENGTH_SHORT).show();
+                        invitationDaoImpl.sendInvitation(inviteeId, tripId);
                     }
                 });
             }

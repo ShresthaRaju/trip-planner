@@ -65,7 +65,9 @@ public class ViewTripActivity extends AppCompatActivity implements ConfirmationD
         fabInviteFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ViewTripActivity.this, InviteFriendsActivity.class));
+                Intent inviteFriends = new Intent(ViewTripActivity.this, InviteFriendsActivity.class);
+                inviteFriends.putExtra("TRIP_ID", trip.getId());
+                startActivity(inviteFriends);
             }
         });
 

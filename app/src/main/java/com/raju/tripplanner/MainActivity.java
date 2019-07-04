@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements ProfileBottomShee
                     break;
 
                 case R.id.nav_invitations:
-                    selectedFragment = InvitationsFragment.newInstance("Invitations");
+                    selectedFragment = InvitationsFragment.newInstance("My Invitations");
                     break;
 
                 case R.id.nav_profile:
