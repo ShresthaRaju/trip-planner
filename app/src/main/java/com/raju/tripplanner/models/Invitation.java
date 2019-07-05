@@ -1,12 +1,19 @@
 package com.raju.tripplanner.models;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Invitation {
 
+    @SerializedName("_id")
+    private String id;
     private String invitee, invitedOn;
     private boolean seen, notified;
-
     private User inviter;
     private Trip invitedTo;
+
+    public String getId() {
+        return id;
+    }
 
     public String getInvitee() {
         return invitee;

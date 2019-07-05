@@ -1,5 +1,6 @@
 package com.raju.tripplanner;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,12 +11,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.raju.tripplanner.bottomsheets.ProfileBottomSheet;
+import com.raju.tripplanner.bottomsheet.ProfileBottomSheet;
 import com.raju.tripplanner.dialogs.ConfirmationDialog;
 import com.raju.tripplanner.fragments.HomeFragment;
 import com.raju.tripplanner.fragments.InvitationsFragment;
 import com.raju.tripplanner.fragments.ProfileFragment;
 import com.raju.tripplanner.models.User;
+import com.raju.tripplanner.service.TripNotificationService;
 import com.raju.tripplanner.utils.UserSession;
 
 public class MainActivity extends AppCompatActivity implements ProfileBottomSheet.ProfileBottomSheetListener, ConfirmationDialog.ConfirmationDialogListener {
@@ -34,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements ProfileBottomShee
         initComponents();
 
         loadFragment(HomeFragment.newInstance("My Trips"));
+
+        startService(new Intent(this, TripNotificationService.class));
 
     }
 
@@ -103,5 +107,11 @@ public class MainActivity extends AppCompatActivity implements ProfileBottomShee
     @Override
     public void onCancel() {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(new Intent(this, TripNotificationService.class));
     }
 }

@@ -59,11 +59,6 @@ public class InvitationDaoImpl {
                     return;
                 }
 
-//                for (Invitation invitation : response.body().getInvitations().getInvitations()) {
-//
-//                    Log.i("invitation", invitation.getInviter().getFirstName() + " " + invitation.getInviter().getFamilyName() + " invited you to " + invitation.getInvitedTo().getName());
-//
-//                }
                 invitationsListener.onInvitationsFetched(response.body().getInvitations().getInvitations());
 
             }

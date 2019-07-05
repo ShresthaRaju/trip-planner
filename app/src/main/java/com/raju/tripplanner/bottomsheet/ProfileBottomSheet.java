@@ -1,4 +1,4 @@
-package com.raju.tripplanner.bottomsheets;
+package com.raju.tripplanner.bottomsheet;
 
 import android.content.Context;
 import android.content.Intent;

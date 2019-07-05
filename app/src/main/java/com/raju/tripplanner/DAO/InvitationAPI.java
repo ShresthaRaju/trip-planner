@@ -19,8 +19,9 @@ public interface InvitationAPI {
     @GET("users/invitations")
     Call<InvitationsResponse> getInvitations(@Header("Authorization") String token);
 
+    @FormUrlEncoded
     @PUT("users/invitations/setNotified")
-    Call<Void> setNotified(@Header("Authorization") String token);
+    Call<Void> setNotified(@Header("Authorization") String token, @Field("invitationId") String invitationId);
 
     @PUT("users/invitations/accept")
     Call<Void> acceptInvitation(@Header("Authorization") String token);

@@ -28,7 +28,7 @@ import com.raju.tripplanner.DaoImpl.UserDaoImpl;
 import com.raju.tripplanner.MainActivity;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.activities.UpdateProfileActivity;
-import com.raju.tripplanner.bottomsheets.ProfileBottomSheet;
+import com.raju.tripplanner.bottomsheet.ProfileBottomSheet;
 import com.raju.tripplanner.models.User;
 import com.raju.tripplanner.utils.Error;
 import com.raju.tripplanner.utils.Tools;

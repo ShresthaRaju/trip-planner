@@ -76,8 +76,8 @@ public class CreateTripActivity extends AppCompatActivity {
 
         if (trip != null) {
             etTripTitle.getEditText().setText(trip.getName());
-            etStartDate.getEditText().setText(Tools.formatDate("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "YYYY-MM-dd", trip.getStartDate()));
-            etEndDate.getEditText().setText(Tools.formatDate("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "YYYY-MM-dd", trip.getEndDate()));
+            etStartDate.getEditText().setText(Tools.formatDate("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd", trip.getStartDate()));
+            etEndDate.getEditText().setText(Tools.formatDate("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "yyyy-MM-dd", trip.getEndDate()));
             btnCreate.setVisibility(View.GONE);
             btnUpdate.setVisibility(View.VISIBLE);
         } else {
@@ -181,7 +181,7 @@ public class CreateTripActivity extends AppCompatActivity {
 
     private void setDate(Calendar calendar, EditText editText) {
         Date date = calendar.getTime();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String formattedDate = dateFormat.format(date);
         editText.setText(formattedDate);
     }
