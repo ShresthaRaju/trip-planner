@@ -1,6 +1,6 @@
 package com.raju.tripplanner.DaoImpl;
 
-import android.app.Activity;
+import android.content.Context;
 import android.widget.Toast;
 
 import com.raju.tripplanner.DAO.InvitationAPI;
@@ -19,11 +19,11 @@ import retrofit2.Response;
 public class InvitationDaoImpl {
 
     private InvitationAPI invitationAPI;
-    private Activity activity;
+    private Context activity;
     private UserSession userSession;
     private InvitationsListener invitationsListener;
 
-    public InvitationDaoImpl(Activity activity) {
+    public InvitationDaoImpl(Context activity) {
         this.activity = activity;
         invitationAPI = RetrofitClient.getInstance(Tools.BASE_URL).create(InvitationAPI.class);
         userSession = new UserSession(activity);
@@ -35,11 +35,15 @@ public class InvitationDaoImpl {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (!response.isSuccessful()) {
-                    Toast.makeText(activity, "ERROR: " + response.code() + " " + response.message(), Toast.LENGTH_LONG).show();
-                    return;
+                    if (response.code() == 409) {
+                        Toast.makeText(activity, "Already invited", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(activity, "ERROR: " + response.code() + " " + response.message(), Toast.LENGTH_LONG).show();
+                        return;
+                    }
                 }
 
-                Toast.makeText(activity, "Invited", Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, "Invitation Sent", Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -66,6 +70,48 @@ public class InvitationDaoImpl {
             @Override
             public void onFailure(Call<InvitationsResponse> call, Throwable t) {
                 Toast.makeText(activity, "FAILED: " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void acceptInvitation(String invitationId) {
+        Call<Void> acceptInvitationCall = invitationAPI.acceptInvitation("Bearer " + userSession.getAuthToken(), invitationId);
+        acceptInvitationCall.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(activity, "ERROR ACCEPT: " + response.code() + " " + response.message(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                Toast.makeText(activity, "Invitation Accepted", Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(activity, "ACCEPT FAILED: " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    public void declineInvitation(String invitationId) {
+        Call<Void> declineInvitationCall = invitationAPI.declineInvitation("Bearer " + userSession.getAuthToken(), invitationId);
+        declineInvitationCall.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(activity, "ERROR DECLINE: " + response.code() + " " + response.message(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                Toast.makeText(activity, "Invitation Declined", Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(activity, "DECLINE FAILED: " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }

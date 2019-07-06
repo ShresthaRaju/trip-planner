@@ -11,11 +11,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.raju.tripplanner.DaoImpl.InvitationDaoImpl;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.models.Invitation;
 import com.raju.tripplanner.utils.Tools;
@@ -27,10 +27,12 @@ public class MyInvitationsAdapter extends RecyclerView.Adapter<MyInvitationsAdap
 
     private Context context;
     private List<Invitation> myInvitationList;
+    private InvitationDaoImpl invitationDaoImpl;
 
     public MyInvitationsAdapter(Context context, List<Invitation> myInvitationList) {
         this.context = context;
         this.myInvitationList = myInvitationList;
+        invitationDaoImpl = new InvitationDaoImpl(context);
     }
 
     @NonNull
@@ -53,7 +55,7 @@ public class MyInvitationsAdapter extends RecyclerView.Adapter<MyInvitationsAdap
 
     public class InvitationViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView inviterDp;
-        private TextView tvInvitation;
+        private TextView tvInvitation, tvInvitationTime, tvAccepted;
         private Button btnDecline, btnAccept;
 
         public InvitationViewHolder(@NonNull View itemView) {
@@ -61,6 +63,8 @@ public class MyInvitationsAdapter extends RecyclerView.Adapter<MyInvitationsAdap
 
             inviterDp = itemView.findViewById(R.id.inviter_dp);
             tvInvitation = itemView.findViewById(R.id.txt_invitation);
+            tvInvitationTime = itemView.findViewById(R.id.txt_invitation_time);
+            tvAccepted = itemView.findViewById(R.id.tv_accepted);
             btnDecline = itemView.findViewById(R.id.btn_decline);
             btnDecline.setOnClickListener(this);
             btnAccept = itemView.findViewById(R.id.btn_accept);
@@ -71,11 +75,13 @@ public class MyInvitationsAdapter extends RecyclerView.Adapter<MyInvitationsAdap
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.btn_decline:
-                    Toast.makeText(context, "Decline clicked", Toast.LENGTH_SHORT).show();
+                    Invitation declineInvitation = myInvitationList.get(getAdapterPosition());
+                    invitationDaoImpl.declineInvitation(declineInvitation.getId());
                     break;
 
                 case R.id.btn_accept:
-                    Toast.makeText(context, "Accpet clicked", Toast.LENGTH_SHORT).show();
+                    Invitation acceptInvitation = myInvitationList.get(getAdapterPosition());
+                    invitationDaoImpl.acceptInvitation(acceptInvitation.getId());
                     break;
             }
         }
@@ -93,6 +99,17 @@ public class MyInvitationsAdapter extends RecyclerView.Adapter<MyInvitationsAdap
 
             Picasso.get().load(Tools.IMAGE_URI + invitation.getInviter().getDisplayPicture()).into(inviterDp);
             tvInvitation.setText(stringBuilder);
+
+            if (invitation.isSeen()) {
+                tvAccepted.setVisibility(View.VISIBLE);
+                btnDecline.setVisibility(View.GONE);
+                btnAccept.setVisibility(View.GONE);
+            } else {
+                tvAccepted.setVisibility(View.GONE);
+                btnDecline.setVisibility(View.VISIBLE);
+                btnAccept.setVisibility(View.VISIBLE);
+            }
+            tvInvitationTime.setText(Tools.formatDate("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", "MMM d, h:mm a", invitation.getInvitedOn()));
         }
     }
 

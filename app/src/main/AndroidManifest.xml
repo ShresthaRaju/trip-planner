@@ -65,6 +65,8 @@
             android:name=".service.TripNotificationService"
             android:enabled="true"
             android:exported="false" />
+
+        <receiver android:name=".BroadcastReceiver.NotificationActionReceiver" />
     </application>
 
 </manifest>

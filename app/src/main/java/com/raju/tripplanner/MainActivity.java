@@ -1,6 +1,7 @@
 package com.raju.tripplanner;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.raju.tripplanner.BroadcastReceiver.NotificationActionReceiver;
 import com.raju.tripplanner.bottomsheet.ProfileBottomSheet;
 import com.raju.tripplanner.dialogs.ConfirmationDialog;
 import com.raju.tripplanner.fragments.HomeFragment;
@@ -24,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements ProfileBottomShee
 
     private ProfileFragment profileFragment;
     private ImageButton btnHome;
+    private NotificationActionReceiver actionReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements ProfileBottomShee
 
         User authUser = new UserSession(this).getUser();
         profileFragment = ProfileFragment.newInstance(authUser.getFirstName() + " " + authUser.getFamilyName());
+        actionReceiver = new NotificationActionReceiver();
 
         initComponents();
 
@@ -108,6 +112,19 @@ public class MainActivity extends AppCompatActivity implements ProfileBottomShee
     public void onCancel() {
 
     }
+
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        IntentFilter intentFilter = new IntentFilter("com.raju.tripplanner");
+//        registerReceiver(actionReceiver, intentFilter);
+//    }
+
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        unregisterReceiver(actionReceiver);
+//    }
 
     @Override
     protected void onDestroy() {

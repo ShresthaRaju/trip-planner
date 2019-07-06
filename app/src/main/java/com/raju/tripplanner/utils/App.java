@@ -17,7 +17,7 @@ public class App extends Application {
 
     private void createNotificationChannel() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            NotificationChannel invitationChannel = new NotificationChannel(CHANNEL_ID, "New Invitation", NotificationManager.IMPORTANCE_MAX);
+            NotificationChannel invitationChannel = new NotificationChannel(CHANNEL_ID, "New Invitation", NotificationManager.IMPORTANCE_HIGH);
             invitationChannel.setDescription("Notification Channel that shows notification on receiving new invitation for a trip");
 
             NotificationManager notificationManager = getSystemService(NotificationManager.class);

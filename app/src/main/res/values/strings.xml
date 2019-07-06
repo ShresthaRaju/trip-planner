@@ -127,5 +127,6 @@
     <string name="inviter_dp">Inviter\'s Display Picture</string>
     <string name="no_invitation">No Invitation Yet !</string>
     <string name="fetch_weather">Fetch Weather</string>
+    <string name="accepted">Accepted</string>
 
 </resources>

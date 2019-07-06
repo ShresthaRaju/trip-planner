@@ -23,9 +23,11 @@ public interface InvitationAPI {
     @PUT("users/invitations/setNotified")
     Call<Void> setNotified(@Header("Authorization") String token, @Field("invitationId") String invitationId);
 
+    @FormUrlEncoded
     @PUT("users/invitations/accept")
-    Call<Void> acceptInvitation(@Header("Authorization") String token);
+    Call<Void> acceptInvitation(@Header("Authorization") String token, @Field("invitationId") String invitationId);
 
+    @FormUrlEncoded
     @PUT("users/invitations/decline")
-    Call<Void> declineInvitation(@Header("Authorization") String token);
+    Call<Void> declineInvitation(@Header("Authorization") String token, @Field("invitationId") String invitationId);
 }

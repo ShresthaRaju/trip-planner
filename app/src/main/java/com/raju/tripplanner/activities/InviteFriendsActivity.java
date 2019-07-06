@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -46,7 +45,6 @@ public class InviteFriendsActivity extends AppCompatActivity {
         userListener();
 
         tripId = getIntent().getStringExtra("TRIP_ID");
-        Toast.makeText(this, tripId, Toast.LENGTH_SHORT).show();
 
     }
 

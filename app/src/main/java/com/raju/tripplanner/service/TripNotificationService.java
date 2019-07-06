@@ -1,6 +1,7 @@
 package com.raju.tripplanner.service;
 
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
@@ -11,15 +12,15 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.raju.tripplanner.BroadcastReceiver.NotificationActionReceiver;
 import com.raju.tripplanner.DAO.InvitationAPI;
+import com.raju.tripplanner.MainActivity;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.models.Invitation;
 import com.raju.tripplanner.utils.ApiResponse.InvitationsResponse;
 import com.raju.tripplanner.utils.RetrofitClient;
 import com.raju.tripplanner.utils.Tools;
 import com.raju.tripplanner.utils.UserSession;
-
-import java.util.Random;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,6 +34,8 @@ public class TripNotificationService extends Service {
     private Handler handler = new Handler();
     private InvitationAPI invitationAPI;
     private UserSession userSession;
+    public static final String INVITATION_ID = "Invitation_Id";
+    public static final String INVITATION_ACCEPTED = "Invitation_Accepted";
 
     @Nullable
     @Override
@@ -55,16 +58,38 @@ public class TripNotificationService extends Service {
         return START_STICKY;
     }
 
-    private void sendNotification(String message) {
+    private void sendNotification(String invitationId, String message) {
+
+        Intent mainActivity = new Intent(this, MainActivity.class);
+        mainActivity.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, mainActivity, 0);
+
+//        action accept invitation
+        Intent acceptedBroadcastIntent = new Intent(this, NotificationActionReceiver.class);
+        acceptedBroadcastIntent.putExtra(INVITATION_ID, invitationId);
+        acceptedBroadcastIntent.putExtra(INVITATION_ACCEPTED, true);
+        PendingIntent acceptedActionIntent = PendingIntent.getBroadcast(this, 1, acceptedBroadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+//        action decline invitation
+        Intent declinedBroadcastIntent = new Intent(this, NotificationActionReceiver.class);
+        declinedBroadcastIntent.putExtra(INVITATION_ID, invitationId);
+        declinedBroadcastIntent.putExtra(INVITATION_ACCEPTED, false);
+        PendingIntent declinedActionIntent = PendingIntent.getBroadcast(this, 2, declinedBroadcastIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         Notification tripNotification = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setContentTitle("New Invitation")
                 .setContentText(message)
+                .setColor(getResources().getColor(R.color.teal_500))
                 .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setContentIntent(contentIntent)
+                .setAutoCancel(true)
+                .addAction(R.mipmap.ic_launcher_round, "Accept", acceptedActionIntent)
+                .addAction(R.mipmap.ic_launcher_round, "Decline", declinedActionIntent)
                 .build();
 
-        notificationManagerCompat.notify(new Random().nextInt(100), tripNotification);
+        notificationManagerCompat.notify(7, tripNotification);
     }
 
     private Runnable runnable = new Runnable() {
@@ -91,7 +116,7 @@ public class TripNotificationService extends Service {
                         String text = " has invited you to ";
                         String tripName = invitation.getInvitedTo().getName();
 
-                        sendNotification(inviter + text + tripName);
+                        sendNotification(invitation.getId(), inviter + text + tripName);
 
                         setInvitationNotified(invitation.getId());
 

@@ -1,6 +1,5 @@
 package com.raju.tripplanner.utils;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
