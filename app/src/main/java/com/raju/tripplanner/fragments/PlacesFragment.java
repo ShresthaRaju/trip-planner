@@ -143,6 +143,7 @@ public class PlacesFragment extends Fragment {
                 if (placeResults.isEmpty()) {
                     tvNoPlaces.setVisibility(View.VISIBLE);
                 } else {
+                    tvNoPlaces.setVisibility(View.GONE);
                     placesAdapter = new PlacesAdapter(getActivity(), placeResults);
                     placesContainer.setAdapter(placesAdapter);
                 }

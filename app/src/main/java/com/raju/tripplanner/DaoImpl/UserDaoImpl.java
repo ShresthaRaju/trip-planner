@@ -9,6 +9,7 @@ import com.google.gson.GsonBuilder;
 import com.raju.tripplanner.DAO.UserAPI;
 import com.raju.tripplanner.models.User;
 import com.raju.tripplanner.utils.APIError;
+import com.raju.tripplanner.utils.ApiResponse.AllUsersResponse;
 import com.raju.tripplanner.utils.ApiResponse.UserResponse;
 import com.raju.tripplanner.utils.Error;
 import com.raju.tripplanner.utils.RetrofitClient;
@@ -17,6 +18,7 @@ import com.raju.tripplanner.utils.UserSession;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -29,7 +31,7 @@ public class UserDaoImpl {
 
     private Activity activity;
     private UserAPI userAPI;
-    private UserProfileListener userProfileListener;
+    private UserActionsListener userActionsListener;
     private UserSession userSession;
     private Gson gson;
     private APIError apiError;
@@ -58,7 +60,7 @@ public class UserDaoImpl {
                     return;
                 }
 
-                userProfileListener.onDpUploaded(response.body().getUser());
+                userActionsListener.onDpUploaded(response.body().getUser());
             }
 
             @Override
@@ -78,14 +80,14 @@ public class UserDaoImpl {
                 if (!response.isSuccessful()) {
                     try {
                         apiError = gson.fromJson(response.errorBody().string(), APIError.class);
-                        userProfileListener.onError(apiError.getError());
+                        userActionsListener.onError(apiError.getError());
                     } catch (IOException e) {
                         Log.e("IOException", e.getMessage());
                     }
                     return;
                 }
 
-                userProfileListener.onDetailsUpdated(response.body().getUser());
+                userActionsListener.onDetailsUpdated(response.body().getUser());
             }
 
             @Override
@@ -106,19 +108,39 @@ public class UserDaoImpl {
                 if (!response.isSuccessful()) {
                     try {
                         apiError = gson.fromJson(response.errorBody().string(), APIError.class);
-                        userProfileListener.onError(apiError.getError());
+                        userActionsListener.onError(apiError.getError());
                     } catch (IOException e) {
                         Log.e("IOException", e.getMessage());
                     }
                     return;
                 }
 
-                userProfileListener.onPasswordChanged();
+                userActionsListener.onPasswordChanged();
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
 
+            }
+        });
+    }
+
+    public void getAllUsers() {
+        Call<AllUsersResponse> allUsersCall = userAPI.getAllUsers("Bearer " + userSession.getAuthToken());
+        allUsersCall.enqueue(new Callback<AllUsersResponse>() {
+            @Override
+            public void onResponse(Call<AllUsersResponse> call, Response<AllUsersResponse> response) {
+                if (!response.isSuccessful()) {
+                    Toast.makeText(activity, "ERROR: " + response.code() + " " + response.message(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                userActionsListener.onFetchedAllUsers(response.body().getUsers());
+            }
+
+            @Override
+            public void onFailure(Call<AllUsersResponse> call, Throwable t) {
+                Toast.makeText(activity, "FAILED: " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -133,7 +155,7 @@ public class UserDaoImpl {
                     return;
                 }
 
-                userProfileListener.onSignedOut();
+                userActionsListener.onSignedOut();
             }
 
             @Override
@@ -143,7 +165,7 @@ public class UserDaoImpl {
         });
     }
 
-    public interface UserProfileListener {
+    public interface UserActionsListener {
         void onDpUploaded(User updatedUser);
 
         void onDetailsUpdated(User updatedUser);
@@ -153,9 +175,11 @@ public class UserDaoImpl {
         void onSignedOut();
 
         void onError(Error error);
+
+        void onFetchedAllUsers(List<User> allUsers);
     }
 
-    public void setUserProfileListener(UserProfileListener userProfileListener) {
-        this.userProfileListener = userProfileListener;
+    public void setUserActionsListener(UserActionsListener userActionsListener) {
+        this.userActionsListener = userActionsListener;
     }
 }

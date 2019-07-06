@@ -235,7 +235,7 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         initComponents();
 
-        userDaoImpl.setUserProfileListener(new UserDaoImpl.UserProfileListener() {
+        userDaoImpl.setUserActionsListener(new UserDaoImpl.UserActionsListener() {
             @Override
             public void onDpUploaded(User updatedUser) {
 
@@ -263,6 +263,11 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
             @Override
             public void onError(Error error) {
+
+            }
+
+            @Override
+            public void onFetchedAllUsers(List<User> allUsers) {
 
             }
         });
@@ -304,7 +309,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Toast.makeText(getActivity(), "on activity created", Toast.LENGTH_SHORT).show();
         fetchUserTrips();
     }
 

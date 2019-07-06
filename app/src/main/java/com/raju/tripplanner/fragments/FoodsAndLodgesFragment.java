@@ -113,6 +113,7 @@ public class FoodsAndLodgesFragment extends Fragment {
                 if (nearbyLodges.isEmpty()) {
                     tvNoResults.setVisibility(View.VISIBLE);
                 } else {
+                    tvNoResults.setVisibility(View.GONE);
                     placesAdapter = new PlacesAdapter(getActivity(), nearbyLodges);
                     lodgesContainer.setAdapter(placesAdapter);
                 }

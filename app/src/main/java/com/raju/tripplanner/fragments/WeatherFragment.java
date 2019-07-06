@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -34,6 +35,7 @@ public class WeatherFragment extends Fragment {
     private double lat, lng;
     private WeatherAdapter weatherAdapter;
     private RecyclerView weatherContainer;
+    private Button btnFetchWeather;
 
     public WeatherFragment() {
 
@@ -52,6 +54,15 @@ public class WeatherFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View weatherView = inflater.inflate(R.layout.fragment_weather, container, false);
+
+        btnFetchWeather = weatherView.findViewById(R.id.btn_fetch_weather);
+        btnFetchWeather.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fetchWeather(lat, lng);
+            }
+        });
+
         weatherContainer = weatherView.findViewById(R.id.weather_container);
         weatherContainer.setHasFixedSize(true);
         weatherContainer.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -68,8 +79,6 @@ public class WeatherFragment extends Fragment {
             lat = getArguments().getDouble(ARG_PARAMS1);
             lng = getArguments().getDouble(ARG_PARAMS2);
         }
-
-        fetchWeather(lat, lng);
     }
 
     private void fetchWeather(double lat, double lng) {

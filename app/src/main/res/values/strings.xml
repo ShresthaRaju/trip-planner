@@ -78,7 +78,7 @@
     <string name="tab_food"><![CDATA[Food & lodges]]></string>
     <string name="tab_weather">Weather</string>
     <string name="edit_trip">Edit</string>
-    <string name="no_trip">You have not created a trip yet</string>
+    <string name="no_trip">You have not created a trip yet !</string>
 
     <!--update profile-->
     <string name="personal_details">Personal Details</string>
@@ -92,7 +92,7 @@
     <string name="place_image">Place\'s Image</string>
     <string name="place_name">Place name</string>
     <string name="show_lodges">Show Lodges</string>
-    <string name="no_results">No Results</string>
+    <string name="no_results">No Results !</string>
     <string name="place_search_hint">Search for a place type e.g. Park</string>
 
     <!--weather api-->
@@ -117,5 +117,16 @@
     <string name="uv_value">11.3</string>
     <string name="weather_location">Bhaktapur, Nepal</string>
     <string name="icon_location">Icon Location</string>
+
+    <!--invite friends-->
+    <string name="search_for_friends_hint">Search for your friends...</string>
+    <string name="invitation">Raj Shrestha has invited to Trip to somewhere</string>
+    <string name="invitation_time">2 days ago</string>
+    <string name="btn_decline">Decline</string>
+    <string name="btn_accept">Accept</string>
+    <string name="inviter_dp">Inviter\'s Display Picture</string>
+    <string name="no_invitation">No Invitation Yet !</string>
+    <string name="fetch_weather">Fetch Weather</string>
+    <string name="accepted">Accepted</string>
 
 </resources>

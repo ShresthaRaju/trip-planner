@@ -1,11 +1,13 @@
 package com.raju.tripplanner.DAO;
 
+import com.raju.tripplanner.utils.ApiResponse.AllUsersResponse;
 import com.raju.tripplanner.utils.ApiResponse.UserResponse;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -29,4 +31,7 @@ public interface UserAPI {
 
     @POST("sign-out")
     Call<Void> signOut(@Header("Authorization") String token);
+
+    @GET("users")
+    Call<AllUsersResponse> getAllUsers(@Header("Authorization") String token);
 }

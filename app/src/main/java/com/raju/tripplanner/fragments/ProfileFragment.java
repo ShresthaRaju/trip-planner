@@ -28,12 +28,14 @@ import com.raju.tripplanner.DaoImpl.UserDaoImpl;
 import com.raju.tripplanner.MainActivity;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.activities.UpdateProfileActivity;
-import com.raju.tripplanner.bottomsheets.ProfileBottomSheet;
+import com.raju.tripplanner.bottomsheet.ProfileBottomSheet;
 import com.raju.tripplanner.models.User;
 import com.raju.tripplanner.utils.Error;
 import com.raju.tripplanner.utils.Tools;
 import com.raju.tripplanner.utils.UserSession;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -179,7 +181,7 @@ public class ProfileFragment extends Fragment {
     public void updateDisplayPicture(String imagePath) {
 
         userDaoImpl.uploadDisplayPicture(imagePath);
-        userDaoImpl.setUserProfileListener(new UserDaoImpl.UserProfileListener() {
+        userDaoImpl.setUserActionsListener(new UserDaoImpl.UserActionsListener() {
             @Override
             public void onDpUploaded(User updatedUser) {
                 Picasso.get().load(Uri.parse("file://" + imagePath)).into(displayPicture);
@@ -204,6 +206,11 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onError(Error error) {
+
+            }
+
+            @Override
+            public void onFetchedAllUsers(List<User> allUsers) {
 
             }
         });
