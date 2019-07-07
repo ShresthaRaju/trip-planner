@@ -1,5 +1,10 @@
 package com.raju.tripplanner.authentication;
 
+import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -36,6 +41,9 @@ public class SignUpActivity extends AppCompatActivity {
     private AuthAPI authAPI;
     private HashMap<String, TextInputLayout> errorMap;
 
+    private SensorManager sensorManager;
+    private Sensor proximitySensor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +79,13 @@ public class SignUpActivity extends AppCompatActivity {
 
 //        retrofit client custom class
         authAPI = RetrofitClient.getInstance(Tools.BASE_URL).create(AuthAPI.class);
+
+        // proximity sensor
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        if (proximitySensor == null) {
+            Toast.makeText(this, "Proximity sensor is not available", Toast.LENGTH_LONG).show();
+        }
     }
 
     //    validate sign up fields
@@ -132,9 +147,29 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    //close sign up screen
-    public void closeSignUpScreen(View view) {
-        finish();
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sensorManager.registerListener(proximityEventListener, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(proximityEventListener);
+    }
+
+    private SensorEventListener proximityEventListener = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            if (event.values[0] <= 0.5) {
+                signUp();
+            }
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
+    };
 }

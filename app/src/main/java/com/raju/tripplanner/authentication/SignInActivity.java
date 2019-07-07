@@ -1,6 +1,11 @@
 package com.raju.tripplanner.authentication;
 
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +31,7 @@ import com.raju.tripplanner.DAO.AuthAPI;
 import com.raju.tripplanner.MainActivity;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.models.User;
+import com.raju.tripplanner.service.TripNotificationService;
 import com.raju.tripplanner.utils.APIError;
 import com.raju.tripplanner.utils.ApiResponse.SignInResponse;
 import com.raju.tripplanner.utils.DatabaseHelper;
@@ -51,6 +57,8 @@ public class SignInActivity extends AppCompatActivity {
     private ProgressBar signInProgress;
     private FloatingActionButton fabSignIn;
     private DatabaseHelper databaseHelper;
+    private SensorManager sensorManager;
+    private Sensor proximitySensor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +73,7 @@ public class SignInActivity extends AppCompatActivity {
             Intent mainActivity = new Intent(this, MainActivity.class);
             mainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(mainActivity);
+
             finish();
         }
 
@@ -99,6 +108,14 @@ public class SignInActivity extends AppCompatActivity {
                 googleSignIn();
             }
         });
+
+        //proximity sensor
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        if (proximitySensor == null) {
+            Toast.makeText(this, "Proximity sensor is not available", Toast.LENGTH_LONG).show();
+        }
+
     }
 
     private boolean validSignInDetails() {
@@ -231,4 +248,30 @@ public class SignInActivity extends AppCompatActivity {
             finish();
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        sensorManager.registerListener(proximityEventListener, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(proximityEventListener);
+    }
+
+    private SensorEventListener proximityEventListener = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            if (event.values[0] <= 0.5) {
+                signIn();
+            }
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
+    };
 }

@@ -106,7 +106,7 @@ public class TripNotificationService extends Service {
             @Override
             public void onResponse(Call<InvitationsResponse> call, Response<InvitationsResponse> response) {
                 if (!response.isSuccessful()) {
-                    Toast.makeText(getApplicationContext(), "ERROR SERVICE: " + response.code() + " " + response.message(), Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getApplicationContext(), "ERROR SERVICE: " + response.code() + " " + response.message(), Toast.LENGTH_LONG).show();
                     return;
                 }
 

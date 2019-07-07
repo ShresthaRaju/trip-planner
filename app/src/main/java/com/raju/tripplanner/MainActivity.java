@@ -1,17 +1,22 @@
 package com.raju.tripplanner;
 
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.raju.tripplanner.BroadcastReceiver.NotificationActionReceiver;
 import com.raju.tripplanner.bottomsheet.ProfileBottomSheet;
 import com.raju.tripplanner.dialogs.ConfirmationDialog;
 import com.raju.tripplanner.fragments.HomeFragment;
@@ -25,7 +30,11 @@ public class MainActivity extends AppCompatActivity implements ProfileBottomShee
 
     private ProfileFragment profileFragment;
     private ImageButton btnHome;
-    private NotificationActionReceiver actionReceiver;
+
+    private SensorManager sensorManager;
+    private Sensor accelerometerSensor;
+    private float acclValue, lastAcclValue, shake;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements ProfileBottomShee
 
         User authUser = new UserSession(this).getUser();
         profileFragment = ProfileFragment.newInstance(authUser.getFirstName() + " " + authUser.getFamilyName());
-        actionReceiver = new NotificationActionReceiver();
 
         initComponents();
 
@@ -58,6 +66,17 @@ public class MainActivity extends AppCompatActivity implements ProfileBottomShee
         bottomNavigationView.getMenu().getItem(1).setCheckable(false);
         bottomNavigationView.getMenu().getItem(2).setCheckable(false);
         bottomNavigationView.setOnNavigationItemSelectedListener(bottomNavListener);
+
+        //        accelerometer sensor
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        if (accelerometerSensor == null) {
+            Toast.makeText(this, "Accelerometer sensor is not available", Toast.LENGTH_LONG).show();
+        } else {
+            acclValue = SensorManager.GRAVITY_EARTH;
+            lastAcclValue = SensorManager.GRAVITY_EARTH;
+            shake = 0.00f;
+        }
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener bottomNavListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -88,13 +107,16 @@ public class MainActivity extends AppCompatActivity implements ProfileBottomShee
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
     }
 
-    @Override
-    public void onBackPressed() {
-//        super.onBackPressed();
+    private void showQuitConfirmation() {
         String title = "Quit Trip Planner";
         String message = "Are you sure you want to quit the app?";
         ConfirmationDialog confirmationDialog = new ConfirmationDialog(title, message);
         confirmationDialog.show(getSupportFragmentManager(), "QUIT APP");
+    }
+
+    @Override
+    public void onBackPressed() {
+        showQuitConfirmation();
     }
 
     @Override
@@ -113,8 +135,43 @@ public class MainActivity extends AppCompatActivity implements ProfileBottomShee
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        sensorManager.registerListener(accelerometerEventListener, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorManager.unregisterListener(accelerometerEventListener);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         stopService(new Intent(this, TripNotificationService.class));
     }
+
+    private SensorEventListener accelerometerEventListener = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            float x = event.values[0];
+            float y = event.values[1];
+            float z = event.values[2];
+
+            lastAcclValue = acclValue;
+            acclValue = (float) Math.sqrt((double) (x * x + y * y + z * z));
+            float delta = acclValue - lastAcclValue;
+            shake = shake * 0.9f + delta;
+
+            if (shake > 12) {
+                showQuitConfirmation();
+            }
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
+    };
 }
