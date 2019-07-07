@@ -96,7 +96,7 @@ public class TripNotificationService extends Service {
         @Override
         public void run() {
             checkForNewNotification();
-            handler.postDelayed(this, 5000);
+            handler.postDelayed(this, 10000);
         }
     };
 

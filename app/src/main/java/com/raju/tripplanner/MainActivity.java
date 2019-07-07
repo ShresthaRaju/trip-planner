@@ -1,7 +1,6 @@
 package com.raju.tripplanner;
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -112,19 +111,6 @@ public class MainActivity extends AppCompatActivity implements ProfileBottomShee
     public void onCancel() {
 
     }
-
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        IntentFilter intentFilter = new IntentFilter("com.raju.tripplanner");
-//        registerReceiver(actionReceiver, intentFilter);
-//    }
-
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        unregisterReceiver(actionReceiver);
-//    }
 
     @Override
     protected void onDestroy() {

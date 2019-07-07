@@ -21,6 +21,7 @@ import com.raju.tripplanner.adapters.TripOptionsPagerAdapter;
 import com.raju.tripplanner.dialogs.ConfirmationDialog;
 import com.raju.tripplanner.models.Trip;
 import com.raju.tripplanner.utils.Tools;
+import com.raju.tripplanner.utils.UserSession;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class ViewTripActivity extends AppCompatActivity implements ConfirmationD
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private FloatingActionButton fabInviteFriends;
+    private boolean isTripOwner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,7 @@ public class ViewTripActivity extends AppCompatActivity implements ConfirmationD
 
     private void initComponents() {
         trip = (Trip) getIntent().getSerializableExtra("TRIP");
+        isTripOwner = new UserSession(this).getUser().getId().equals(trip.getCreator());
 
         tabLayout = findViewById(R.id.trip_tabs);
         viewPager = findViewById(R.id.viewPager);
@@ -61,6 +64,12 @@ public class ViewTripActivity extends AppCompatActivity implements ConfirmationD
         tripDaoImpl = new TripDaoImpl(this);
         viewTripImage = findViewById(R.id.view_trip_image);
         progressDeleteTrip = findViewById(R.id.progress_delete_trip);
+
+        if (!isTripOwner) {
+            fabInviteFriends.setVisibility(View.GONE);
+        } else {
+            fabInviteFriends.setVisibility(View.VISIBLE);
+        }
 
         fabInviteFriends.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,12 +84,37 @@ public class ViewTripActivity extends AppCompatActivity implements ConfirmationD
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         tabLayout.addOnTabSelectedListener(this);
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         populateTrip();
+
+        tripDaoImpl.setTripActionsListener(new TripDaoImpl.TripActionsListener() {
+            @Override
+            public void onTripsReceived(List<Trip> myTrips) {
+
+            }
+
+            @Override
+            public void onTripCreated(Trip trip) {
+
+            }
+
+            @Override
+            public void onTripUpdated() {
+
+            }
+
+            @Override
+            public void onTripDeleted() {
+                progressDeleteTrip.setVisibility(View.GONE);
+                Toast.makeText(ViewTripActivity.this, "Trip deleted successfully", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
     }
 
     private void populateTrip() {
@@ -95,6 +129,17 @@ public class ViewTripActivity extends AppCompatActivity implements ConfirmationD
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_view_trip_activity, menu);
+        MenuItem edit = menu.findItem(R.id.action_edit);
+        MenuItem delete = menu.findItem(R.id.action_delete);
+
+        if (!isTripOwner) {
+            edit.setVisible(false);
+            delete.setVisible(false);
+        } else {
+            edit.setVisible(true);
+            delete.setVisible(true);
+        }
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -128,29 +173,6 @@ public class ViewTripActivity extends AppCompatActivity implements ConfirmationD
     public void onSure() {
         progressDeleteTrip.setVisibility(View.VISIBLE);
         tripDaoImpl.deleteTrip(trip.getId());
-        tripDaoImpl.setTripActionsListener(new TripDaoImpl.TripActionsListener() {
-            @Override
-            public void onTripsReceived(List<Trip> myTrips) {
-
-            }
-
-            @Override
-            public void onTripCreated(Trip trip) {
-
-            }
-
-            @Override
-            public void onTripUpdated() {
-
-            }
-
-            @Override
-            public void onTripDeleted() {
-                progressDeleteTrip.setVisibility(View.GONE);
-                Toast.makeText(ViewTripActivity.this, "Trip deleted successfully", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        });
     }
 
     @Override

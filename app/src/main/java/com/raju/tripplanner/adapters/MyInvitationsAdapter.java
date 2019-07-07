@@ -1,6 +1,7 @@
 package com.raju.tripplanner.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -17,7 +18,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.raju.tripplanner.DaoImpl.InvitationDaoImpl;
 import com.raju.tripplanner.R;
+import com.raju.tripplanner.activities.ViewTripActivity;
 import com.raju.tripplanner.models.Invitation;
+import com.raju.tripplanner.models.Trip;
 import com.raju.tripplanner.utils.Tools;
 import com.squareup.picasso.Picasso;
 
@@ -69,6 +72,9 @@ public class MyInvitationsAdapter extends RecyclerView.Adapter<MyInvitationsAdap
             btnDecline.setOnClickListener(this);
             btnAccept = itemView.findViewById(R.id.btn_accept);
             btnAccept.setOnClickListener(this);
+
+            itemView.setOnClickListener(this);
+
         }
 
         @Override
@@ -82,6 +88,10 @@ public class MyInvitationsAdapter extends RecyclerView.Adapter<MyInvitationsAdap
                 case R.id.btn_accept:
                     Invitation acceptInvitation = myInvitationList.get(getAdapterPosition());
                     invitationDaoImpl.acceptInvitation(acceptInvitation.getId());
+                    break;
+
+                default:
+                    viewTrip(myInvitationList.get(getAdapterPosition()).getInvitedTo());
                     break;
             }
         }
@@ -116,5 +126,11 @@ public class MyInvitationsAdapter extends RecyclerView.Adapter<MyInvitationsAdap
     public void updateInvitationList(List<Invitation> newInvitationList) {
         this.myInvitationList = newInvitationList;
         notifyDataSetChanged();
+    }
+
+    private void viewTrip(Trip trip) {
+        Intent viewTrip = new Intent(context, ViewTripActivity.class);
+        viewTrip.putExtra("TRIP", trip);
+        context.startActivity(viewTrip);
     }
 }

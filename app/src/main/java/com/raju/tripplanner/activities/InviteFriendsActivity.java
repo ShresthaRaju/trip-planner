@@ -34,17 +34,7 @@ public class InviteFriendsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invite_friends);
 
-        userSession = new UserSession(this);
-        allUserList = new ArrayList<>();
-        userDaoImpl = new UserDaoImpl(this);
-        invitationDaoImpl = new InvitationDaoImpl(this);
-        userDaoImpl.getAllUsers();
-
         initComponents();
-
-        userListener();
-
-        tripId = getIntent().getStringExtra("TRIP_ID");
 
     }
 
@@ -53,12 +43,17 @@ public class InviteFriendsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Invite your friends");
 
-        friendsAutocomplete = findViewById(R.id.friends_autocomplete);
-    }
+        userSession = new UserSession(this);
+        allUserList = new ArrayList<>();
+        userDaoImpl = new UserDaoImpl(this);
+        invitationDaoImpl = new InvitationDaoImpl(this);
+        userDaoImpl.getAllUsers();
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+        userListener();
+
+        tripId = getIntent().getStringExtra("TRIP_ID");
+
+        friendsAutocomplete = findViewById(R.id.friends_autocomplete);
     }
 
     private void userListener() {
