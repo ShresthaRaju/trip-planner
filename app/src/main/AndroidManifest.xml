@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.raju.tripplanner">
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -11,7 +12,6 @@
     <uses-feature android:name="android.hardware.sensor.proximity" />
     <uses-feature android:name="android.hardware.sensor.accelerometer" />
     <uses-feature android:name="android.hardware.camera2" />
-
 
     <application
         android:name=".utils.App"
@@ -24,6 +24,7 @@
         android:usesCleartextTraffic="true">
         <activity
             android:name=".SplashScreenActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,7 +32,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.InviteFriendsActivity" />
+        <activity
+            android:name=".activities.InviteFriendsActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.UpdateProfileActivity"
             android:parentActivityName=".MainActivity"
@@ -51,7 +54,7 @@
         <activity
             android:name=".authentication.SignInActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AuthenticationTheme"></activity>
+            android:theme="@style/AuthenticationTheme" />
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait" />

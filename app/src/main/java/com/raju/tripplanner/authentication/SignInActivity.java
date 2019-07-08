@@ -25,31 +25,23 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.raju.tripplanner.DAO.AuthAPI;
+import com.raju.tripplanner.DaoImpl.AuthDaoImpl;
 import com.raju.tripplanner.MainActivity;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.models.User;
-import com.raju.tripplanner.service.TripNotificationService;
-import com.raju.tripplanner.utils.APIError;
-import com.raju.tripplanner.utils.ApiResponse.SignInResponse;
 import com.raju.tripplanner.utils.DatabaseHelper;
 import com.raju.tripplanner.utils.EditTextValidation;
+import com.raju.tripplanner.utils.Error;
 import com.raju.tripplanner.utils.RetrofitClient;
 import com.raju.tripplanner.utils.Tools;
 import com.raju.tripplanner.utils.UserSession;
-
-import java.io.IOException;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class SignInActivity extends AppCompatActivity {
 
     private TextInputLayout signInEmail, signInPassword;
     private AuthAPI authAPI;
+    private AuthDaoImpl authDaoImpl;
     private UserSession userSession;
     private GoogleSignInClient signInClient;
     private SignInButton googleSignIn;
@@ -67,8 +59,6 @@ public class SignInActivity extends AppCompatActivity {
 
         userSession = new UserSession(this);
 
-        databaseHelper = new DatabaseHelper(this);
-
         if (userSession.getSession()) {
             Intent mainActivity = new Intent(this, MainActivity.class);
             mainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -81,9 +71,15 @@ public class SignInActivity extends AppCompatActivity {
 
         initComponents();
 
+        authListener();
+
     }
 
     private void initComponents() {
+
+        authDaoImpl = new AuthDaoImpl(this);
+        databaseHelper = new DatabaseHelper(this);
+
         signInEmail = findViewById(R.id.et_sign_in_email);
         signInPassword = findViewById(R.id.et_sign_in_password);
 
@@ -135,56 +131,7 @@ public class SignInActivity extends AppCompatActivity {
             String email = signInEmail.getEditText().getText().toString().trim();
             String password = signInPassword.getEditText().getText().toString().trim();
 
-            Call<SignInResponse> signInCall = authAPI.signIn(new User(email, password));
-
-            signInCall.enqueue(new Callback<SignInResponse>() {
-                @Override
-                public void onResponse(Call<SignInResponse> call, Response<SignInResponse> response) {
-                    if (!response.isSuccessful()) {
-                        Gson gson = new GsonBuilder().create();
-                        APIError apiError = new APIError();
-
-                        signInProgress.setVisibility(View.GONE);
-                        fabSignIn.setVisibility(View.VISIBLE);
-
-                        try {
-                            apiError = gson.fromJson(response.errorBody().string(), APIError.class);
-                            if (apiError.getError().getField().equals("email")) {
-                                signInEmail.setError(apiError.getError().getMessage());
-                                Tools.vibrateDevice(SignInActivity.this);
-                            } else if (apiError.getError().getField().equals("password")) {
-                                signInPassword.setError(apiError.getError().getMessage());
-                                Tools.vibrateDevice(SignInActivity.this);
-                            }
-                        } catch (IOException e) {
-                            Log.e("IOException", e.getMessage());
-                        }
-                        return;
-                    }
-
-                    // Log the response in JSON format
-                    // Log.i("sign", new Gson().toJson(response.body().getUser()));
-                    signInProgress.setVisibility(View.GONE);
-
-                    SignInResponse signInResponse = response.body();
-
-                    new UserSession(SignInActivity.this).startSession(signInResponse.getUser(), signInResponse.getAuthToken());
-
-                    databaseHelper.insertAuthUser(signInResponse.getUser());
-
-                    Intent mainActivity = new Intent(new Intent(SignInActivity.this, MainActivity.class));
-                    mainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(mainActivity);
-                    finish();
-                }
-
-                @Override
-                public void onFailure(Call<SignInResponse> call, Throwable t) {
-                    signInProgress.setVisibility(View.GONE);
-                    fabSignIn.setVisibility(View.VISIBLE);
-                    Toast.makeText(SignInActivity.this, "FAILED: " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-                }
-            });
+            authDaoImpl.signIn(new User(email, password));
         }
     }
 
@@ -247,6 +194,45 @@ public class SignInActivity extends AppCompatActivity {
             startActivity(mainActivity);
             finish();
         }
+    }
+
+    private void authListener() {
+        authDaoImpl.setAuthListener(new AuthDaoImpl.AuthListener() {
+            @Override
+            public void onSignedUp(User registeredUser) {
+
+            }
+
+            @Override
+            public void onSignedIn(User authUser, String authToken) {
+                // Log the response in JSON format
+                // Log.i("sign", new Gson().toJson(response.body().getUser()));
+                signInProgress.setVisibility(View.GONE);
+
+                new UserSession(SignInActivity.this).startSession(authUser, authToken);
+
+                databaseHelper.insertAuthUser(authUser);
+
+                Intent mainActivity = new Intent(new Intent(SignInActivity.this, MainActivity.class));
+                mainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(mainActivity);
+                finish();
+            }
+
+            @Override
+            public void onError(Error error) {
+                signInProgress.setVisibility(View.GONE);
+                fabSignIn.setVisibility(View.VISIBLE);
+
+                if (error.getField().equals("email")) {
+                    signInEmail.setError(error.getMessage());
+                    Tools.vibrateDevice(SignInActivity.this);
+                } else if (error.getField().equals("password")) {
+                    signInPassword.setError(error.getMessage());
+                    Tools.vibrateDevice(SignInActivity.this);
+                }
+            }
+        });
     }
 
     @Override

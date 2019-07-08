@@ -6,7 +6,6 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -15,31 +14,22 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.raju.tripplanner.DAO.AuthAPI;
+import com.raju.tripplanner.DaoImpl.AuthDaoImpl;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.models.User;
-import com.raju.tripplanner.utils.APIError;
-import com.raju.tripplanner.utils.ApiResponse.UserResponse;
 import com.raju.tripplanner.utils.EditTextValidation;
-import com.raju.tripplanner.utils.RetrofitClient;
+import com.raju.tripplanner.utils.Error;
 import com.raju.tripplanner.utils.Tools;
 
-import java.io.IOException;
 import java.util.HashMap;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
 
     private TextInputLayout etFirstName, etFamilyName, signUpEmail, signUpUsername, signUpPassword;
     private Button btnGetStarted;
     private ProgressBar signUpProgress;
-    private AuthAPI authAPI;
     private HashMap<String, TextInputLayout> errorMap;
+    private AuthDaoImpl authDaoImpl;
 
     private SensorManager sensorManager;
     private Sensor proximitySensor;
@@ -52,6 +42,8 @@ public class SignUpActivity extends AppCompatActivity {
         getWindow().setBackgroundDrawableResource(R.drawable.bg_sign_up);
 
         initComponents();
+
+        authListener();
     }
 
     private void initComponents() {
@@ -62,6 +54,8 @@ public class SignUpActivity extends AppCompatActivity {
         signUpPassword = findViewById(R.id.et_sign_up_password);
         btnGetStarted = findViewById(R.id.btn_get_started);
         signUpProgress = findViewById(R.id.sign_up_progress);
+
+        authDaoImpl = new AuthDaoImpl(this);
 
         errorMap = new HashMap<>();
         errorMap.put("firstName", etFirstName);
@@ -76,9 +70,6 @@ public class SignUpActivity extends AppCompatActivity {
                 signUp();
             }
         });
-
-//        retrofit client custom class
-        authAPI = RetrofitClient.getInstance(Tools.BASE_URL).create(AuthAPI.class);
 
         // proximity sensor
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -109,42 +100,34 @@ public class SignUpActivity extends AppCompatActivity {
             String username = signUpUsername.getEditText().getText().toString().trim();
             String password = signUpPassword.getEditText().getText().toString().trim();
 
-            Call<UserResponse> signUpCall = authAPI.registerUser(new User(firstName, familyName, email, username, password));
-
-            // enqueue method runs the api call in background thread
-            signUpCall.enqueue(new Callback<UserResponse>() {
-                @Override
-                public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
-                    if (!response.isSuccessful()) {
-                        Gson gson = new GsonBuilder().create();
-                        APIError apiError = new APIError();
-                        Tools.toggleVisibility(signUpProgress, btnGetStarted, false);
-                        try {
-                            apiError = gson.fromJson(response.errorBody().string(), APIError.class);
-                            for (String key : errorMap.keySet()) {
-                                if (apiError.getError().getField().equals(key)) {
-                                    errorMap.get(apiError.getError().getField()).setError(apiError.getError().getMessage());
-                                    Tools.vibrateDevice(SignUpActivity.this);
-                                }
-                            }
-                        } catch (IOException e) {
-                            Log.e("IOException", e.getMessage());
-                        }
-                        return;
-                    }
-
-                    Toast.makeText(SignUpActivity.this, "Sign up successful...", Toast.LENGTH_LONG).show();
-                    finish();
-                }
-
-                @Override
-                public void onFailure(Call<UserResponse> call, Throwable t) {
-//                Throwable is the super class of Exception class
-                    Tools.toggleVisibility(signUpProgress, btnGetStarted, false);
-                    Toast.makeText(SignUpActivity.this, "FAILED: " + t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
+            authDaoImpl.signUp(new User(firstName, familyName, email, username, password));
         }
+    }
+
+    private void authListener() {
+        authDaoImpl.setAuthListener(new AuthDaoImpl.AuthListener() {
+            @Override
+            public void onSignedUp(User registeredUser) {
+                Toast.makeText(SignUpActivity.this, "Sign up successful...", Toast.LENGTH_LONG).show();
+                finish();
+            }
+
+            @Override
+            public void onSignedIn(User authUser, String authToken) {
+
+            }
+
+            @Override
+            public void onError(Error error) {
+                Tools.toggleVisibility(signUpProgress, btnGetStarted, false);
+                for (String key : errorMap.keySet()) {
+                    if (error.getField().equals(key)) {
+                        errorMap.get(error.getField()).setError(error.getMessage());
+                        Tools.vibrateDevice(SignUpActivity.this);
+                    }
+                }
+            }
+        });
     }
 
     @Override
