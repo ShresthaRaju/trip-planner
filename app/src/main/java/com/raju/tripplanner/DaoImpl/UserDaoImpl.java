@@ -56,6 +56,10 @@ public class UserDaoImpl {
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                 if (!response.isSuccessful()) {
+                    if (response.code() == 500) {
+                        Toast.makeText(activity, "Image size should be less than 3mb", Toast.LENGTH_LONG).show();
+                        return;
+                    }
                     Toast.makeText(activity, "ERROR: " + response.code() + " " + response.message(), Toast.LENGTH_LONG).show();
                     return;
                 }

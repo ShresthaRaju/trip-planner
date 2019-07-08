@@ -42,6 +42,7 @@ import com.raju.tripplanner.authentication.SignInActivity;
 import com.raju.tripplanner.models.Destination;
 import com.raju.tripplanner.models.Trip;
 import com.raju.tripplanner.models.User;
+import com.raju.tripplanner.service.TripNotificationService;
 import com.raju.tripplanner.utils.ApiResponse.PhotoResponse;
 import com.raju.tripplanner.utils.Error;
 import com.raju.tripplanner.utils.RetrofitClient;
@@ -256,8 +257,9 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 new UserSession(getActivity()).endSession();
 
                 Intent signInActivity = new Intent(getActivity(), SignInActivity.class);
-                signInActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                signInActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(signInActivity);
+                getActivity().stopService(new Intent(getActivity(), TripNotificationService.class));
                 getActivity().finish();
             }
 

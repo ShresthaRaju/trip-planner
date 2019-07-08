@@ -205,4 +205,5 @@ public class ViewTripActivity extends AppCompatActivity implements ConfirmationD
     public void onTabReselected(TabLayout.Tab tab) {
 
     }
+
 }
