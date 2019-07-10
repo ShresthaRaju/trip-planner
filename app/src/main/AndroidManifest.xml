@@ -26,11 +26,7 @@
             android:name=".SplashScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashScreenTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activities.InviteFriendsActivity"
@@ -57,7 +53,13 @@
             android:theme="@style/AuthenticationTheme" />
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"

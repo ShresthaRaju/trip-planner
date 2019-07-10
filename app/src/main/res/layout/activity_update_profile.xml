@@ -2,6 +2,7 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profile_update_scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
@@ -52,6 +53,7 @@
                     android:theme="@style/EditText.BlueGrey900.Hint">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/esp_first_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableStart="@drawable/ic_face"
@@ -187,6 +189,7 @@
                     app:passwordToggleTint="@color/blue_grey_900">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/esp_old_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableStart="@drawable/ic_lock_black"
@@ -212,6 +215,7 @@
                     app:passwordToggleTint="@color/blue_grey_900">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/esp_new_password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableStart="@drawable/ic_lock_black"

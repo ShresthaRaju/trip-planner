@@ -20,6 +20,7 @@ import com.raju.tripplanner.R;
 import com.raju.tripplanner.dialogs.DialogDatePicker;
 import com.raju.tripplanner.models.Destination;
 import com.raju.tripplanner.models.Trip;
+import com.raju.tripplanner.models.User;
 import com.raju.tripplanner.utils.EditTextValidation;
 import com.raju.tripplanner.utils.Tools;
 import com.raju.tripplanner.utils.UserSession;
@@ -237,6 +238,11 @@ public class CreateTripActivity extends AppCompatActivity {
         tripDaoImpl.setTripActionsListener(new TripDaoImpl.TripActionsListener() {
             @Override
             public void onTripsReceived(List<Trip> myTrips) {
+
+            }
+
+            @Override
+            public void onTripViewed(List<User> invitees) {
 
             }
 

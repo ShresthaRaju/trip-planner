@@ -17,8 +17,8 @@ import static android.content.Context.VIBRATOR_SERVICE;
 public class Tools {
 
     public static String AUTH_TOKEN = "";
-    //    public static final String BASE_URL = "http:192.168.188.190:7000/api/";
-//    public static final String IMAGE_URI = "http:192.168.188.190:7000/uploads/";
+//        public static final String BASE_URL = "http:10.0.2.2:7000/api/";
+//    public static final String IMAGE_URI = "http:10.0.2.2:7000/uploads/";
     public static final String BASE_URL = "http:192.168.0.101:7000/api/";
     public static final String IMAGE_URI = "http:192.168.0.101:7000/uploads/";
     public static final String NEARBY_PLACE_API = "https://maps.googleapis.com/maps/api/place/nearbysearch/";

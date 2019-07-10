@@ -2,6 +2,7 @@ package com.raju.tripplanner.utils.ApiResponse;
 
 import com.google.gson.annotations.SerializedName;
 import com.raju.tripplanner.models.Trip;
+import com.raju.tripplanner.models.User;
 
 import java.util.List;
 
@@ -18,4 +19,5 @@ public class TripResponse {
     public List<Trip> getMyTrips() {
         return myTrips;
     }
+
 }
