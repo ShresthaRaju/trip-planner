@@ -55,7 +55,7 @@ public class SignUpActivity extends AppCompatActivity {
         btnGetStarted = findViewById(R.id.btn_get_started);
         signUpProgress = findViewById(R.id.sign_up_progress);
 
-        authDaoImpl = new AuthDaoImpl(this);
+        authDaoImpl = new AuthDaoImpl();
 
         errorMap = new HashMap<>();
         errorMap.put("firstName", etFirstName);
@@ -100,23 +100,18 @@ public class SignUpActivity extends AppCompatActivity {
             String username = signUpUsername.getEditText().getText().toString().trim();
             String password = signUpPassword.getEditText().getText().toString().trim();
 
-            authDaoImpl.signUp(new User(firstName, familyName, email, username, password));
+            Tools.StrictMode();
+
+            User newUser = new User(firstName, familyName, email, username, password);
+            if (authDaoImpl.signUp(newUser)) {
+                Toast.makeText(this, "Sign up successful", Toast.LENGTH_SHORT).show();
+                finish();
+            }
         }
     }
 
     private void authListener() {
         authDaoImpl.setAuthListener(new AuthDaoImpl.AuthListener() {
-            @Override
-            public void onSignedUp(User registeredUser) {
-                Toast.makeText(SignUpActivity.this, "Sign up successful...", Toast.LENGTH_LONG).show();
-                finish();
-            }
-
-            @Override
-            public void onSignedIn(User authUser, String authToken) {
-
-            }
-
             @Override
             public void onError(Error error) {
                 Tools.toggleVisibility(signUpProgress, btnGetStarted, false);

@@ -99,11 +99,6 @@ public class ViewTripActivity extends AppCompatActivity implements ConfirmationD
             }
 
             @Override
-            public void onTripCreated(Trip trip) {
-
-            }
-
-            @Override
             public void onTripUpdated() {
 
             }

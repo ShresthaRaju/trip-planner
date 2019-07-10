@@ -10,6 +10,7 @@ import com.raju.tripplanner.utils.RetrofitClient;
 import com.raju.tripplanner.utils.Tools;
 import com.raju.tripplanner.utils.UserSession;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,23 +30,23 @@ public class TripDaoImpl {
         userSession = new UserSession(activity);
     }
 
-    public void createTrip(Trip trip) {
+    public Trip createTrip(Trip trip) {
+        Trip createdTrip = null;
         Call<TripResponse> createTripCall = tripAPI.createTrip("Bearer " + userSession.getAuthToken(), trip);
-        createTripCall.enqueue(new Callback<TripResponse>() {
-            @Override
-            public void onResponse(Call<TripResponse> call, Response<TripResponse> response) {
-                if (!response.isSuccessful()) {
-                    Toast.makeText(activity, "ERROR: " + response.code() + " " + response.message(), Toast.LENGTH_LONG).show();
-                    return;
-                }
-                tripActionsListener.onTripCreated(response.body().getTrip());
+        try {
+            Response<TripResponse> tripResponse = createTripCall.execute();
+            if (!tripResponse.isSuccessful()) {
+                Toast.makeText(activity, "ERROR: " + tripResponse.code() + " " + tripResponse.message(), Toast.LENGTH_LONG).show();
+                return createdTrip;
             }
+            if (tripResponse.body().getTrip() != null) {
+                createdTrip = tripResponse.body().getTrip();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-            @Override
-            public void onFailure(Call<TripResponse> call, Throwable t) {
-                Toast.makeText(activity, "FAILED: " + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+        return createdTrip;
     }
 
     public List<Trip> getMyTrips() {
@@ -111,8 +112,6 @@ public class TripDaoImpl {
 
     public interface TripActionsListener {
         void onTripsReceived(List<Trip> myTrips);
-
-        void onTripCreated(Trip trip);
 
         void onTripUpdated();
 

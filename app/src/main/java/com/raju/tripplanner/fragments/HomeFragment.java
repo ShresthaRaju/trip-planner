@@ -292,11 +292,6 @@ public class HomeFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             }
 
             @Override
-            public void onTripCreated(Trip trip) {
-
-            }
-
-            @Override
             public void onTripUpdated() {
 
             }

@@ -15,8 +15,8 @@ public class UserSession {
     private static final String USER = "LOGGED_IN_USER";
     private static final String AUTH_TOKEN = "AUTH_TOKEN";
 
-    public UserSession(Context activity) {
-        sharedPreferences = activity.getSharedPreferences(activity.getString(R.string.user_session), Context.MODE_PRIVATE);
+    public UserSession(Context context) {
+        sharedPreferences = context.getSharedPreferences(context.getString(R.string.user_session), Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
     }
 

@@ -202,9 +202,21 @@ public class CreateTripActivity extends AppCompatActivity {
             String startDate = etStartDate.getEditText().getText().toString().trim();
             String endDate = etEndDate.getEditText().getText().toString().trim();
 
+            Tools.StrictMode();
+
             Trip trip = new Trip(tripName, startDate, endDate, destination, new UserSession(this).getUser().getId());
-            tripDaoImpl.createTrip(trip);
+
+            Trip createdTrip = tripDaoImpl.createTrip(trip);
+
+            if (createdTrip != null) {
+                Tools.toggleVisibility(progressCreateTrip, btnCreate, false);
+                Intent viewTrip = new Intent(CreateTripActivity.this, ViewTripActivity.class);
+                viewTrip.putExtra("TRIP", createdTrip);
+                startActivity(viewTrip);
+                finish();
+            }
         }
+
     }
 
     private void updateTrip() {
@@ -226,15 +238,6 @@ public class CreateTripActivity extends AppCompatActivity {
             @Override
             public void onTripsReceived(List<Trip> myTrips) {
 
-            }
-
-            @Override
-            public void onTripCreated(Trip trip) {
-                Tools.toggleVisibility(progressCreateTrip, btnCreate, false);
-                Intent viewTrip = new Intent(CreateTripActivity.this, ViewTripActivity.class);
-                viewTrip.putExtra("TRIP", trip);
-                startActivity(viewTrip);
-                finish();
             }
 
             @Override
