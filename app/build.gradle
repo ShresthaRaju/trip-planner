@@ -51,9 +51,6 @@ dependencies {
     // design support library
     implementation 'com.google.android.material:material:1.1.0-alpha07'
 
-    // google sign in
-    implementation 'com.google.android.gms:play-services-auth:17.0.0'
-
     // places library
     implementation 'com.google.android.libraries.places:places:1.1.0'
 

@@ -26,7 +26,11 @@
             android:name=".SplashScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SplashScreenTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activities.InviteFriendsActivity"
@@ -50,15 +54,13 @@
         <activity
             android:name=".authentication.SignInActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AuthenticationTheme" />
+            android:theme="@style/AuthenticationTheme">
+
+        </activity>
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
         <provider
