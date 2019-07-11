@@ -37,6 +37,7 @@ public class InvitationDaoImpl {
                 if (!response.isSuccessful()) {
                     if (response.code() == 409) {
                         Toast.makeText(activity, "Already invited", Toast.LENGTH_LONG).show();
+                        return;
                     } else {
                         Toast.makeText(activity, "ERROR: " + response.code() + " " + response.message(), Toast.LENGTH_LONG).show();
                         return;

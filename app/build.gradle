@@ -43,13 +43,13 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.2.0'
 
     // design support library
     implementation 'com.google.android.material:material:1.1.0-alpha07'
-
-    // google sign in
-    implementation 'com.google.android.gms:play-services-auth:17.0.0'
 
     // places library
     implementation 'com.google.android.libraries.places:places:1.1.0'
@@ -71,7 +71,5 @@ dependencies {
 
 //    retrofit logging interceptor
     implementation("com.squareup.okhttp3:logging-interceptor:3.14.2")
-
-    implementation("com.ramotion.cardslider:card-slider:0.3.1")
 
 }

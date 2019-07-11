@@ -54,10 +54,14 @@
         <activity
             android:name=".authentication.SignInActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AuthenticationTheme" />
+            android:theme="@style/AuthenticationTheme">
+
+        </activity>
         <activity
             android:name=".MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+
+        </activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"

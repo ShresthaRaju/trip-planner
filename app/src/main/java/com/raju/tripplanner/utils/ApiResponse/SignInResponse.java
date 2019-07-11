@@ -4,8 +4,13 @@ import com.raju.tripplanner.models.User;
 
 public class SignInResponse {
 
+    private boolean success;
     private User user;
     private String authToken;
+
+    public boolean isSuccess() {
+        return success;
+    }
 
     public User getUser() {
         return user;

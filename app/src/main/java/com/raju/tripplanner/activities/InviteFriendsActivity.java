@@ -1,18 +1,25 @@
 package com.raju.tripplanner.activities;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.raju.tripplanner.DaoImpl.InvitationDaoImpl;
+import com.raju.tripplanner.DaoImpl.TripDaoImpl;
 import com.raju.tripplanner.DaoImpl.UserDaoImpl;
 import com.raju.tripplanner.R;
 import com.raju.tripplanner.adapters.InvitationAutocompleteAdapter;
+import com.raju.tripplanner.adapters.TripInviteesAdapter;
 import com.raju.tripplanner.models.InvitationItem;
+import com.raju.tripplanner.models.Trip;
 import com.raju.tripplanner.models.User;
 import com.raju.tripplanner.utils.Error;
 import com.raju.tripplanner.utils.UserSession;
@@ -25,9 +32,14 @@ public class InviteFriendsActivity extends AppCompatActivity {
     private AutoCompleteTextView friendsAutocomplete;
     private List<InvitationItem> allUserList;
     private UserDaoImpl userDaoImpl;
+    private TripDaoImpl tripDaoImpl;
     private InvitationDaoImpl invitationDaoImpl;
-    private String tripId;
+    private String tripId, tripSlug;
     private UserSession userSession;
+
+    private RecyclerView tripInviteesContainer;
+    private TripInviteesAdapter tripInviteesAdapter;
+    private TextView tvNoInvitee;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,17 +55,30 @@ public class InviteFriendsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Invite your friends");
 
+        tripId = getIntent().getStringExtra("TRIP_ID");
+        tripSlug = getIntent().getStringExtra("TRIP_SLUG");
+
         userSession = new UserSession(this);
         allUserList = new ArrayList<>();
         userDaoImpl = new UserDaoImpl(this);
+        tripDaoImpl = new TripDaoImpl(this);
         invitationDaoImpl = new InvitationDaoImpl(this);
+
         userDaoImpl.getAllUsers();
+        tripDaoImpl.viewTrip(tripId, tripSlug);
 
         userListener();
-
-        tripId = getIntent().getStringExtra("TRIP_ID");
+        tripListener();
 
         friendsAutocomplete = findViewById(R.id.friends_autocomplete);
+        tvNoInvitee = findViewById(R.id.tv_no_invitee);
+
+        tripInviteesContainer = findViewById(R.id.trip_invitees_container);
+        tripInviteesContainer.setHasFixedSize(true);
+        tripInviteesContainer.setLayoutManager(new LinearLayoutManager(this));
+
+        tripInviteesAdapter = new TripInviteesAdapter(this, new ArrayList<>());
+        tripInviteesContainer.setAdapter(tripInviteesAdapter);
     }
 
     private void userListener() {
@@ -102,8 +127,43 @@ public class InviteFriendsActivity extends AppCompatActivity {
                         String inviteeId = adapter.getItem(position).getUserId();
 //                        Toast.makeText(InviteFriendsActivity.this, inviteeId, Toast.LENGTH_SHORT).show();
                         invitationDaoImpl.sendInvitation(inviteeId, tripId);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                tripDaoImpl.viewTrip(tripId, tripSlug);
+                            }
+                        }, 3000);
                     }
                 });
+            }
+        });
+    }
+
+    private void tripListener() {
+        tripDaoImpl.setTripActionsListener(new TripDaoImpl.TripActionsListener() {
+            @Override
+            public void onTripsReceived(List<Trip> myTrips) {
+
+            }
+
+            @Override
+            public void onTripViewed(List<User> invitees) {
+                if (invitees.isEmpty()) {
+                    tvNoInvitee.setVisibility(View.VISIBLE);
+                } else {
+                    tvNoInvitee.setVisibility(View.GONE);
+                    tripInviteesAdapter.updateInviteeList(invitees);
+                }
+            }
+
+            @Override
+            public void onTripUpdated() {
+
+            }
+
+            @Override
+            public void onTripDeleted() {
+
             }
         });
     }

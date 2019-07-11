@@ -20,6 +20,7 @@ import com.raju.tripplanner.R;
 import com.raju.tripplanner.adapters.TripOptionsPagerAdapter;
 import com.raju.tripplanner.dialogs.ConfirmationDialog;
 import com.raju.tripplanner.models.Trip;
+import com.raju.tripplanner.models.User;
 import com.raju.tripplanner.utils.Tools;
 import com.raju.tripplanner.utils.UserSession;
 import com.squareup.picasso.Picasso;
@@ -76,6 +77,7 @@ public class ViewTripActivity extends AppCompatActivity implements ConfirmationD
             public void onClick(View v) {
                 Intent inviteFriends = new Intent(ViewTripActivity.this, InviteFriendsActivity.class);
                 inviteFriends.putExtra("TRIP_ID", trip.getId());
+                inviteFriends.putExtra("TRIP_SLUG", trip.getSlug());
                 startActivity(inviteFriends);
             }
         });
@@ -99,7 +101,7 @@ public class ViewTripActivity extends AppCompatActivity implements ConfirmationD
             }
 
             @Override
-            public void onTripCreated(Trip trip) {
+            public void onTripViewed(List<User> invitees) {
 
             }
 

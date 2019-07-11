@@ -7,7 +7,7 @@
     <!--Sign In Screen-->
     <string name="welcome">Welcome</string>
     <string name="trip_plan">Let\'s plan your trip together</string>
-    <string name="classical">OR BE CLASSICAL</string>
+    <string name="classical">LOGIN NOW</string>
     <string name="email_hint">E-mail address</string>
     <string name="password_hint">Password</string>
     <string name="account_new">New to Trip Planner?</string>
@@ -128,5 +128,8 @@
     <string name="no_invitation">No Invitation Yet !</string>
     <string name="fetch_weather">Fetch Weather</string>
     <string name="accepted">Accepted</string>
+    <string name="invitees">Invitees</string>
+    <string name="none">None!</string>
+    <string name="invitee_dp">Invitee\'s Display Picture</string>
 
 </resources>

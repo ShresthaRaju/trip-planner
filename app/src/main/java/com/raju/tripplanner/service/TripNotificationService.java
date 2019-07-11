@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import com.raju.tripplanner.BroadcastReceiver.NotificationActionReceiver;
 import com.raju.tripplanner.DAO.InvitationAPI;
@@ -81,7 +82,7 @@ public class TripNotificationService extends Service {
                 .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setContentTitle("New Invitation")
                 .setContentText(message)
-                .setColor(getResources().getColor(R.color.teal_500))
+                .setColor(ContextCompat.getColor(this, R.color.teal_500))
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setContentIntent(contentIntent)
                 .setAutoCancel(true)
