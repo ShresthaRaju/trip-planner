@@ -13,8 +13,8 @@ The application is envisioned for any individual who absolutely loves travelling
 Most of the applications that offer services identified with organizing a trip are considerably huge embodying heaps of functionalities. Collaboration among various entities such as travel organizations, transportation services and hotels over different places needs to be set up. Doing thusly needs a considerable amount of time and research. But because of time constraint, I propose to objectify only the major functionalities in order to deliver a moderate application. The aim, objectives and features that are specified beneath illuminates the end goal of this project. 
 
 ### Features
-- Search for the destination you seek to visit and create a trip for the same.
-- Invite friends to join the trip.
+- 	Search for the destination you seek to visit and create a trip for the same.
+- 	Invite friends to join the trip.
 -	Notifies every invitee for the trip.
 -	Accept or reject the invitation.
 -	Details of weather forecast of five days starting from the same date as the trip.
@@ -44,7 +44,7 @@ Most of the applications that offer services identified with organizing a trip a
 ```
     POST - For Signup, SignIn, CreateTrip, SendInvitation
     GET -  For fetching AllUsers, AllTrips,Weather & Places
-	  PUT -  For UserProfileUpdate, PasswordChange, UpdateTrip, AcceptInvitation
+	PUT -  For UserProfileUpdate, PasswordChange, UpdateTrip, AcceptInvitation
     DELETE - For DeleteTrip, DeclineInvitation
 ```
   
